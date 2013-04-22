@@ -34,13 +34,6 @@ var app = {
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-        
-        
-        $("#scan").click(function(e){
-                         scan(success, fail);
-        });
-        
-        
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -53,20 +46,4 @@ var app = {
 
         console.log('Received Event: ' + id);
     }
-    
-    
-    
 };
-
-
-window.plugins.barcodeScanner.scan(
-                                   function(result) {
-                                   if (result.cancelled)
-                                   alert("the user cancelled the scan")
-                                   else
-                                   alert("we got a barcode: " + result.text)
-                                   },
-                                   function(error) {
-                                   alert("scanning failed: " + error)
-                                   }
-                                   )
