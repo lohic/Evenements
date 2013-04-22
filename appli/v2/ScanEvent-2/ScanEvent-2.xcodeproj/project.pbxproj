@@ -43,8 +43,9 @@
 		30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30FC414816E50CA1004E6F35 /* icon-72@2x.png */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
-		EB90677F17259247000FCFB7 /* CDVBarcodeScanner.mm in Sources */ = {isa = PBXBuildFile; fileRef = EB90677C17259247000FCFB7 /* CDVBarcodeScanner.mm */; };
-		EB90678017259247000FCFB7 /* zxing-all-in-one.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB90677D17259247000FCFB7 /* zxing-all-in-one.cpp */; };
+		EBA35FAB1725D71800DFBA15 /* CDVBarcodeScanner.mm in Sources */ = {isa = PBXBuildFile; fileRef = EBA35FA71725D71800DFBA15 /* CDVBarcodeScanner.mm */; };
+		EBA35FAD1725D71800DFBA15 /* zxing-all-in-one.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBA35FA91725D71800DFBA15 /* zxing-all-in-one.cpp */; };
+		EBA35FAF1725D94C00DFBA15 /* scannerOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBA35FAE1725D94C00DFBA15 /* scannerOverlay.xib */; };
 		EBA4FA081725970B00350979 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA4FA071725970B00350979 /* CoreVideo.framework */; };
 		EBA4FA0A17259CCB00350979 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA4FA0917259CCB00350979 /* libiconv.dylib */; };
 		F840E1F1165FE0F500CFE078 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = F840E1F0165FE0F500CFE078 /* config.xml */; };
@@ -110,9 +111,10 @@
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* ScanEvent-2-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ScanEvent-2-Info.plist"; path = "../ScanEvent-2-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
-		EB90677C17259247000FCFB7 /* CDVBarcodeScanner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDVBarcodeScanner.mm; sourceTree = "<group>"; };
-		EB90677D17259247000FCFB7 /* zxing-all-in-one.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "zxing-all-in-one.cpp"; sourceTree = "<group>"; };
-		EB90677E17259247000FCFB7 /* zxing-all-in-one.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "zxing-all-in-one.h"; sourceTree = "<group>"; };
+		EBA35FA71725D71800DFBA15 /* CDVBarcodeScanner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDVBarcodeScanner.mm; sourceTree = "<group>"; };
+		EBA35FA91725D71800DFBA15 /* zxing-all-in-one.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "zxing-all-in-one.cpp"; sourceTree = "<group>"; };
+		EBA35FAA1725D71800DFBA15 /* zxing-all-in-one.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "zxing-all-in-one.h"; sourceTree = "<group>"; };
+		EBA35FAE1725D94C00DFBA15 /* scannerOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = scannerOverlay.xib; sourceTree = "<group>"; };
 		EBA4FA071725970B00350979 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		EBA4FA0917259CCB00350979 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = "ScanEvent-2/config.xml"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBA35FAE1725D94C00DFBA15 /* scannerOverlay.xib */,
 				30A0434214DC770100060A13 /* de.lproj */,
 				30A0434514DC770100060A13 /* se.lproj */,
 				1F766FDB13BBADB100FB74C0 /* en.lproj */,
@@ -261,9 +264,9 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				EB90677C17259247000FCFB7 /* CDVBarcodeScanner.mm */,
-				EB90677D17259247000FCFB7 /* zxing-all-in-one.cpp */,
-				EB90677E17259247000FCFB7 /* zxing-all-in-one.h */,
+				EBA35FA71725D71800DFBA15 /* CDVBarcodeScanner.mm */,
+				EBA35FA91725D71800DFBA15 /* zxing-all-in-one.cpp */,
+				EBA35FAA1725D71800DFBA15 /* zxing-all-in-one.h */,
 			);
 			name = Plugins;
 			path = "ScanEvent-2/Plugins";
@@ -402,6 +405,7 @@
 				3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */,
 				D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */,
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
+				EBA35FAF1725D94C00DFBA15 /* scannerOverlay.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,8 +436,8 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
-				EB90677F17259247000FCFB7 /* CDVBarcodeScanner.mm in Sources */,
-				EB90678017259247000FCFB7 /* zxing-all-in-one.cpp in Sources */,
+				EBA35FAB1725D71800DFBA15 /* CDVBarcodeScanner.mm in Sources */,
+				EBA35FAD1725D71800DFBA15 /* zxing-all-in-one.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

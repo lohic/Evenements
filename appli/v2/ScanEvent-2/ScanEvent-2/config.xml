@@ -58,7 +58,7 @@
         <plugin name="Battery" value="CDVBattery" />
         <plugin name="Globalization" value="CDVGlobalization" />
         <plugin name="InAppBrowser" value="CDVInAppBrowser" />
-        <plugin name="org.apache.cordova.barcodeScanner" value="CDVBarcodeScanner" />
+        <plugin name="BarcodeScanner" value="CDVBarcodeScanner"/>
     </plugins>
 
     <access origin="*" />
