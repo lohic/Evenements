@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		creationComplete="init()">
+	
+	<fx:Metadata> 
+		[HostComponent("spark.components.Button")] 
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			
+			/************************************
+			 * 
+			 * Développement : Jon Lucas (c)2010
+			 * 
+			 * 		   www.jon-lucas.com
+			 * 
+			 ************************************/		
+			
+			[Bindable]
+			private var MaxWidth:Number;
+			
+			[Bindable]
+			private var pathData:String;
+			
+			private function init():void
+			{				
+				MaxWidth = this.width - 30;
+				
+				pathData = "M0 0 " + (this.width-10) + " 0 " + this.width + " " + (this.height/2) + " " + (this.width-10) + " " + this.height + " 0 " + this.height + "Z";			
+			}
+						
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="up"/>
+		<s:State name="down" />
+		<s:State name="over"/>
+		<s:State name="disabled"/>
+	</s:states>
+	
+	<s:Graphic x="0" y="0">
+		 <!-- Use Use compact syntax with absolute coordinates. --> 
+		<s:Path id="path" data="{pathData}" >
+			 <!-- Define the border color of the arrow. -->
+			 <!-- <s:stroke>
+				 <s:SolidColorStroke color="0x888888" />
+			 </s:stroke> -->
+			 <!-- Define the fill for the arrow. -->
+			 <s:fill>
+				 <s:LinearGradient >
+					 <s:GradientEntry color="0xCB021A" color.over="0xE03629" alpha="1"/>
+					 <s:GradientEntry color="0xE03629" alpha="1"/>
+				 </s:LinearGradient>
+			 </s:fill>
+		 </s:Path>
+	 </s:Graphic>
+	
+	<s:Label id="labelDisplay" color="#000000" fontWeight="bold" left="10" verticalCenter="0" maxWidth="{MaxWidth}" />
+		
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+</s:Skin>

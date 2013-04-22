@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:skins="skins.*" gap="0">
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			
+			/************************************
+			 * 
+			 * Développement : Jon Lucas (c)2010
+			 * 
+			 * 		   www.jon-lucas.com
+			 * 
+			 ************************************/		
+			
+			
+			[Bindable]
+			public var date:String = "Date";
+			
+			[Bindable]
+			public var horaire:String = "Horaire";
+			
+			[Bindable]
+			public var titre:String = "Titre de la conférence";
+			
+			[Bindable]
+			public var backgroundColor:Number = 0xFFFFFF;
+			
+			[Bindable]
+			public var overColor:Number = 0xCB021A;
+			
+			[Bindable]
+			public var color:Number = 0x1A1A1A;
+			
+			[Bindable]
+			public var separationColor:Number = 0xCCCCCC;
+			
+			[Bindable]
+			public var fontSize1:Number = 40;	
+			
+			[Bindable]
+			public var fontSize2:Number = 15;
+			
+			[Bindable]
+			public var lineHeight:Number = 20;
+			
+			private function changeColor():void
+			{
+				couleurFond.color = couleurFond.color == backgroundColor ? overColor : backgroundColor; 
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group width="100%" height="100%" mouseOver="changeColor()" mouseOut="changeColor()">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor id="couleurFond" color="{backgroundColor}" />
+			</s:fill>
+		</s:Rect>
+		<s:HGroup width="100%" height="100%" gap="0">
+			<s:Group width="160" height="100%">
+				<s:Label text="{date}" color="{color}" fontWeight="bold" fontSize="{fontSize1}" paddingTop="10" paddingLeft="10"/>
+			</s:Group>
+			<s:Rect width="1" height="100%">
+				<s:fill>
+					<s:SolidColor color="{separationColor}" />
+				</s:fill>
+			</s:Rect>
+			<s:Group width="100%" height="100%" >
+				<s:Label text="{titre}" maxDisplayedLines="2" color="{color}" width="480" paddingLeft="10" verticalCenter="0" fontWeight="bold" fontSize="{fontSize2}" lineHeight="{lineHeight}" />
+			</s:Group>
+			<s:Rect width="1" height="100%">
+				<s:fill>
+					<s:SolidColor color="{separationColor}" />
+				</s:fill>
+			</s:Rect>
+			<s:Group width="160" height="100%" >
+				<s:Label text="{horaire}" color="{color}" fontWeight="bold" fontSize="{fontSize1}" paddingTop="10" paddingLeft="10"/>
+			</s:Group>
+		</s:HGroup>
+	</s:Group>
+	
+</s:HGroup>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  xmlns:skins="skins.ButtonAlert"
+		  horizontalGap="0"
+		  verticalGap="0"
+		  horizontalAlign="center"
+		  verticalAlign="middle"
+		  addedToStage="init()"
+		  backgroundColor="#000000"
+		  backgroundAlpha="0.6">
+	
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+				
+			/************************************
+			 * 
+			 * Développement : Jon Lucas (c)2010
+			 * 
+			 * 		   www.jon-lucas.com
+			 * 
+			 ************************************/		
+			
+			import mx.events.CloseEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.PopUpManager;
+					
+			[Bindable]
+			public var _parent:Sprite;
+			
+			[Bindable]
+			public var image:Class;
+			
+			[Bindable]
+			public var message:String;
+			
+			[Bindable]
+			public var yesLabel:String;
+			
+			[Bindable]
+			public var noLabel:String;
+			
+			[Bindable]
+			public var bt_annulerQuitter:Boolean = false;
+			
+			[Bindable]
+			public var couleur_fond:Number = 0xCB021A;
+			
+			
+			
+			/**
+			 * Lors de l'affichage d'une alerte, 
+			 */
+			private function init():void
+			{
+				//trace("initAlerte");
+				this.width = stage.nativeWindow.width;
+				this.height = stage.nativeWindow.height;
+				_parent.addEventListener(ResizeEvent.RESIZE, centrerPopup);
+				if(noLabel == ''){
+					stage.addEventListener(KeyboardEvent.KEY_UP, keyUpListener);
+				}
+			}
+			
+			
+			
+			private function close(_choix:int):void
+			{
+				if(noLabel == '') stage.removeEventListener(KeyboardEvent.KEY_UP, keyUpListener);
+				this.dispatchEvent(new CloseEvent(CloseEvent.CLOSE, false, false, _choix));
+				PopUpManager.removePopUp(this);
+				_parent.removeEventListener(ResizeEvent.RESIZE, centrerPopup);
+			}
+			
+			
+			
+			/**
+			 * Fermeture si barre espace appuyée et un seul bouton. 
+			 */
+			private function keyUpListener(event:KeyboardEvent):void
+			{
+				if(event.keyCode == 32) close(1);
+			}
+			
+			
+			
+			/**
+			 * Centre la fenêtre d'alerte en cas de redimensionement.
+			 */
+			private function centrerPopup(event:ResizeEvent):void
+			{
+				this.width = stage.nativeWindow.width;
+				this.height = stage.nativeWindow.height;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:Group width="480" height="160">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="{couleur_fond}" />
+			</s:fill>
+		</s:Rect>
+		<s:HGroup verticalAlign="middle" width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10">
+			<s:Group width="140" height="140">
+				<s:Group horizontalCenter="0" verticalCenter="0">
+					<s:Graphic x="47.7705" y="30.8398">
+						<s:Path data="M1.59668 31.9922 0 9.43555 0 0 6.47363 0 6.47363 9.43555 4.96484 31.9922 1.59668 31.9922ZM0.232422 42.5596 0.232422 36.6084 6.24219 36.6084 6.24219 42.5596 0.232422 42.5596Z">
+							<s:fill>
+								<s:SolidColor color="#FFFFFF"/>
+							</s:fill>
+						</s:Path>
+					</s:Graphic>
+					<s:Graphic>
+						<s:Path data="M101.843 88.1982 0 88.1982 50.9219 0 101.843 88.1982ZM13.8574 80.1982 87.9873 80.1982 50.9219 16 13.8574 80.1982Z">
+							<s:fill>
+								<s:SolidColor color="#FFFFFF"/>
+							</s:fill>
+						</s:Path>
+					</s:Graphic>
+				</s:Group>
+			</s:Group>
+			<s:Label text="{message}" width="100%" color="#FFFFFF" fontSize="20" paddingRight="10"/>
+		</s:HGroup>
+	</s:Group>
+	
+	<s:HGroup gap="0" width="480" height="30" horizontalAlign="right">
+		<s:Button skinClass="skins.ButtonAlert" label="ANNULER" visible="{bt_annulerQuitter}" width="160" height="30" fontWeight="bold" click="close(2)" buttonMode="true"/>
+		<s:Button skinClass="skins.ButtonAlert" label="{noLabel}" visible="{noLabel != ''}" width="160" height="30" fontWeight="bold" click="close(0)" buttonMode="true"/>
+		<s:Button id="btYES" skinClass="skins.ButtonAlert" label="{yesLabel}" width="160" height="30" fontWeight="bold" click="close(1)" buttonMode="true"/>
+	</s:HGroup>
+	
+</mx:VBox>
