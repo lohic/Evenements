@@ -54,10 +54,5 @@
 	<string></string>
 	<key>NSMainNibFile~ipad</key>
 	<string></string>
-	<key>Plugins</key>
-	<dict>
-		<key>com.cordova.barcodeScanner</key>
-		<string>CDVBarcodeScanner</string>
-	</dict>
 </dict>
 </plist>
