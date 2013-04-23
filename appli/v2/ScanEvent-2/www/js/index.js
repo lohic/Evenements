@@ -36,6 +36,8 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
         
+        //window.barcodeScanner = cordova.require('barcodeScanner');
+        window.barcodeScanner = new BarcodeScanner();
         
         $("#scan").click(function(e){
                          scan(success, fail);
@@ -56,24 +58,62 @@ var app = {
     },
 
     scan: function() {
-        console.log('scanning');
+        /*console.log('scanning');
         try {
             window.plugins.barcodeScanner.scan(function(args) {
                 console.log("Scanner result: \n" +
                     "text: " + args.text + "\n" +
                     "format: " + args.format + "\n" +
                     "cancelled: " + args.cancelled + "\n");
-                /*
-                if (args.format == "QR_CODE") {
-                    window.plugins.childBrowser.showWebPage(args.text, { showLocationBar: false });
-                }
-                */
+         
+                //if (args.format == "QR_CODE") {
+                //    window.plugins.childBrowser.showWebPage(args.text, { showLocationBar: false });
+                //}
+                
                 document.getElementById("info").innerHTML = args.text;
                 console.log(args);
         });
         } catch (ex) {
             console.log(ex.message);
+        }*/
+        
+        console.log('scanning');
+        try {
+            window.barcodeScanner.scan(function(args) {
+                                               console.log("Scanner result: \n" +
+                                                           "text: " + args.text + "\n" +
+                                                           "format: " + args.format + "\n" +
+                                                           "cancelled: " + args.cancelled + "\n");
+                                               
+                                               //if (args.format == "QR_CODE") {
+                                               //    window.plugins.childBrowser.showWebPage(args.text, { showLocationBar: false });
+                                               //}
+                                               
+                                               document.getElementById("info").innerHTML = args.text;
+                                               console.log(args);
+                                               });
+        } catch (ex) {
+            console.log(ex.message);
         }
+        
+        
+        
+        /*console.log('Scanning barcode begin');
+        
+		window.barcodeScanner.scan(
+                                   function(result) {
+                                   if (result.cancelled)
+                                   alert("the user cancelled the scan")
+                                   else
+                                   alert("we got a barcode: " + result.text)
+                                   },
+                                   function(error) {
+                                   alert("scanning failed: " + error)
+                                   }
+                                   )
+        
+		console.log('Scanning barcode end');*/
+
     }
       
 };
