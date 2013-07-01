@@ -1,0 +1,8 @@
+AuthUserFile /store/www/www.sciencespo.fr/evenements/diplome2011/listing/.htpasswd
+AuthGroupFile /dev/null
+AuthName ByPassword
+AuthType Basic
+
+<limit GET>
+require valid-user
+</Limit>
