@@ -1,0 +1,528 @@
+<html>
+	<head>
+		<title>Science po événement</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+		<style>
+
+			html{
+				margin:0;
+			}
+			
+			body{
+				margin:0;
+				font-size:12px;
+				font-family: sans-serif;
+			}
+
+			header{
+				height: 200px;
+				background: #F00;
+			}
+
+			#image{
+				height: 200px;
+				height:200px;
+				background: #0FF;
+			}
+
+
+			.event{
+				width: 280px;
+				min-height:100px;
+				background: #CCC;
+				margin: 10px;
+				padding: 10px;
+			}		
+
+			.first {
+				/*outline: 5px solid red;*/
+				background: purple;
+			}
+			.last {
+				/*outline: 5px solid green;*/
+				background: green;
+			}
+
+
+			.nextLastRowItem{
+				background: #F00;
+			}
+
+			.selectedEvent{
+				background: #FF0;
+			}
+
+			.resume{
+				width:100%;
+				margin: -10px;
+				background: none;
+			}
+
+			.resumeContent{
+				background: #FF0;
+				margin: 10px;
+				padding:10px;
+				position: relative;;
+			}
+
+			#close{
+				position:absolute;
+			}
+
+			#vignette{
+				/*float: left;*/
+			}
+
+			.meta{
+				/*float: right;*/
+				background: #FF0000;
+				/*width:280px;*/
+			}
+
+			.column{
+				/*margin-left: 320px;
+				margin-right: 320px;*/
+				-webkit-column-width: 220px;
+				-webkit-column-gap: 20px;
+			}
+
+			.reset{
+				clear: both;
+			}
+
+			/*********************/
+			/**** CSS ISOTOPE ****/
+			/*********************/
+
+			.isotope-item {
+				z-index: 2;
+			}
+
+			.isotope-hidden.isotope-item {
+				pointer-events: none;
+				z-index: 1;
+			}
+
+			/**** Isotope CSS3 transitions ****/
+
+			.isotope,
+			.isotope .isotope-item {
+				-webkit-transition-duration: 0.8s;
+				 -moz-transition-duration: 0.8s;
+				  -ms-transition-duration: 0.8s;
+				   -o-transition-duration: 0.8s;
+				      transition-duration: 0.8s;
+			}
+
+			.isotope {
+				-webkit-transition-property: height, width;
+				 -moz-transition-property: height, width;
+				  -ms-transition-property: height, width;
+				   -o-transition-property: height, width;
+				      transition-property: height, width;
+			}
+
+			.isotope .isotope-item {
+				-webkit-transition-property: -webkit-transform, opacity;
+				 -moz-transition-property:    -moz-transform, opacity;
+				  -ms-transition-property:     -ms-transform, opacity;
+				   -o-transition-property:      -o-transform, opacity;
+				      transition-property:         transform, opacity;
+			}
+
+			/**** disabling Isotope CSS3 transitions ****/
+
+			.isotope.no-transition,
+			.isotope.no-transition .isotope-item,
+			.isotope .isotope-item.no-transition {
+				-webkit-transition-duration: 0s;
+				 -moz-transition-duration: 0s;
+				  -ms-transition-duration: 0s;
+				   -o-transition-duration: 0s;
+				      transition-duration: 0s;
+			}
+		</style>
+
+		
+	    <link rel="stylesheet" type="text/css" href="source/jquery.fancybox.css?v=2.1.4" media="screen" />
+
+		<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.isotope.min.js"></script>
+		<script type="text/javascript" src="js/ICanHaz.min.js"></script>
+		<script type="text/javascript" src="js/jquery.resizend.js"></script>
+		<script type="text/javascript" src="lib/jquery.mousewheel-3.0.6.pack.js"></script>
+	    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
+		<script type="text/javascript">
+
+			$(document).ready(function(){
+
+				var clickedElement,clickedID;
+
+				// pour ajouter une élément après un autre
+				// http://jsfiddle.net/9V2Mj/20/
+				//
+				// pour ajouter une classe first et une classe last
+				// sur le premier et le dernier élément de chaque ligne
+				// http://stackoverflow.com/questions/14552017/is-there-a-way-to-target-the-first-and-last-element-in-each-row-using-jquery-iso
+				// 
+				// var position = clickedElement.data('isotope-item-position');
+				// console.log('item position is x: ' + position.x + ', y: ' + position.y  );
+
+				$('#liste_evenements').isotope({
+					// options
+					itemSelector : '.event',
+					layoutMode : 'fitRows',
+					itemPositionDataEnabled : true,
+					animationOptions: {
+						duration: 750,
+						easing: 'linear',
+						queue: false,
+					},
+					getSortData : {
+						number : function($elem) {
+							return parseInt($elem.attr('data-sort'), 10);
+						}
+					},
+					sortBy : 'number', // on trie sur le numéro qu'on a créé
+					// pour ajouterles classes first et last 
+					onLayout: function (elems, instance) {
+						console.log('onLayout');
+						var items, rows, numRows, row, prev, i;
+
+						// gather info for each element
+						items = elems.map(function () {
+							var el = $(this), pos = el.data('isotope-item-position');
+							return {
+								x: pos.x,
+								y: pos.y,
+								w: el.width(),
+								h: el.height(),
+								el: el
+							};
+						});
+
+						// first pass to find the first and last items of each row
+						rows = [];
+						i = {};
+						items.each(function () {
+							var y = this.y, r = i[y];
+							if (!r) {
+								r = {
+									y: y,
+									first: null,
+									last: null
+								};
+								rows.push(r);
+								i[y] = r;
+							}
+							if (!r.first || this.x < r.first.x) {
+								r.first = this;
+							}
+							if (!r.last || this.x > r.last.x) {
+								r.last = this;
+							}
+						});
+						rows.sort(function (a, b) { return a.y - b.y; });
+						numRows = rows.length;
+
+						// compare items for each row against the previous row
+						for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+							row = rows[i];
+							if (prev.first.x < row.first.x &&
+								prev.first.y + prev.first.h > row.y) {
+							row.first = prev.first;
+							}
+							if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+								prev.last.y + prev.last.h > row.y) {
+							row.last = prev.last;
+							}
+						}
+
+						// assign classes to first and last elements
+						elems.removeClass('first last');
+						$.each(rows, function () {
+							this.first.el.addClass('first');
+							this.last.el.addClass('last');
+						});
+
+						getNextLast($('.selectedEvent'));
+				    }
+				});
+
+
+
+				$('.event>h1>a').click(function(e){
+					console.log('click on event');
+
+					$('.event').removeClass('selectedEvent');
+					$(this).parent().parent().addClass('selectedEvent');
+					
+					clickEvent($('.selectedEvent'));
+
+				    // on evite le comportement normal du click
+				    e.preventDefault();
+				});
+
+			})
+
+
+			function clickEvent(clickedElement){
+				var nextLastRowEvent;
+
+				// on eneleve les classe selected et selectedEvent
+				
+				console.log('> suppr resume');
+				$('#liste_evenements').isotope( 'remove', $('.resume') );
+
+
+				nextLastRowEvent = getNextLast(clickedElement);
+
+
+				event_data = {
+	                titre:   "Le titre à afficher",
+	                langue: "la langue ici du français",
+	                organisation : "Le CERI ?",
+	                inscription : "inscription obligatoire… ou pas !",
+	            };
+
+	            // Here's all the magic.
+	            //var eventDetail = ich.event_info(event_data);
+
+				// on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
+				var $newItems = ich.event_info(event_data);
+				// on récupère l'ID de l'élément sur lequel on a cliqué et on l'incrémente
+				clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
+				// on attribue le nouvel ID au bloc de résumé
+			    $newItems.attr('data-sort', clickedID);
+			    // on ajoute l'élément
+			    $('#liste_evenements').isotope('insert', $newItems);
+			    console.log('> add resume');
+
+			    // quand on clique sur le bouton de fermeture de bloc événement
+			    $('a#close').click(function(e){
+					
+					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+					$('#liste_evenements').isotope( 'remove', $('.resume') );
+					console.log('> suppr resume');
+
+					// on evite le comportement normal du click
+					e.preventDefault();
+				});
+				$('a#inscription_submit').click(function(e){
+
+					inscription_data = {
+		                titre:"titre de l'événement",
+		            };
+
+		            inscription = ich.inscription_form(inscription_data);
+
+                    $.fancybox( inscription , {
+                        title : 'inscription à un événement',
+                    });
+
+                    validFancyBox();
+
+					e.preventDefault();
+				});
+			}
+
+			function validFancyBox(){
+				$('a#envoyer').click(function(e){
+
+            		validation_data = {
+		                reponse:"Super ça fonctionne, vous êtes inscrit !",
+		                login:$('#login').val(),
+		                password:$('#password').val(),
+		                email:$('#email').val(),
+		            };
+
+		            validation = ich.validation_form(validation_data);
+
+                    $.fancybox( validation , {
+                        title : 'validation de l‘inscription',
+                    });
+
+					e.preventDefault();
+            	});
+			}
+
+			function getNextLast(cible){
+				var target;
+				$('.event').removeClass('nextLastRowItem');
+
+				if( cible.hasClass('last') ){
+					target = cible;
+				}else if( cible.next().hasClass('last') ){
+					target = cible.next();
+				}else{
+					var limit = $('.last');
+					target = cible.nextUntil(limit, ".event")
+						.last()
+						.next();
+				}
+
+				target.addClass('nextLastRowItem');
+
+				return target;
+
+			}
+
+			$(window).resize(function() {
+				console.log('> suppr resume');
+				$('#liste_evenements').isotope( 'remove', $('.resume') );
+			});
+
+			$(window).resizeend({
+				onDragEnd : function(){
+					console.log('end resize !!!');
+				},
+				runOnStart : true,
+			});
+
+		</script>
+
+	</head>
+	<body>
+
+
+		<header>
+			<h1>Science po événements</h1>
+		</header>
+		<div id="image"></div>
+		<div id="liste_evenements" class="masonry">
+
+			<!-- attention data-sort doit être un multiple de 10-->
+			
+			<div class="event" data-sort="10">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed, harum, at minus eveniet assumenda omnis optio suscipit ipsam voluptatem praesentium laborum adipisci beatae delectus perspiciatis est id incidunt et ullam.</p>
+			</div>
+
+			<div class="event" data-sort="20">
+				<h1><a href="#">evenement</a></h1>
+				<p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, at voluptatem impedit magni dolores ab atque doloribus temporibus reprehenderit sed et quam commodi. Et, voluptatem error nostrum provident non maiores.</span><span>Enim, illum, ex, error debitis architecto at assumenda magni aperiam est corporis necessitatibus doloribus iusto maxime omnis dignissimos rem ab dolor saepe eos facere repellendus adipisci consequuntur dicta ipsum iure.</span></p>
+			</div>
+
+			<div class="event" data-sort="30">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, eaque, doloribus, quod, aut sint molestias tenetur accusamus pariatur ut facere veniam possimus ullam minima atque voluptas omnis aspernatur quas est!</p>
+			</div>
+
+			<div class="event" data-sort="40">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit, exercitationem deserunt suscipit atque consequuntur vero voluptatum. Voluptatum, quae, distinctio, perspiciatis, obcaecati necessitatibus itaque earum in nisi alias accusantium temporibus eaque.</p>
+			</div>
+
+			<div class="event" data-sort="50">
+				<h1><a href="#">evenement</a></h1>
+				<p>
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem, quod, facere facilis suscipit soluta veritatis excepturi earum cum error enim sequi asperiores id dicta nam cumque fugit delectus. Vel, asperiores?</span>
+					<span>Provident, nostrum, illo. Commodi, asperiores, nam, blanditiis quos earum saepe omnis consequatur voluptates in reprehenderit possimus ullam illo eaque ad quas deserunt doloremque totam eveniet porro amet. Cupiditate, hic nemo.</span>
+					<span>Assumenda, cupiditate, deserunt! Maxime, nesciunt, unde consequatur rerum nobis animi voluptatem omnis quia eveniet esse laboriosam voluptatibus explicabo quisquam facilis cum! Odit, eaque dolorum quasi libero quam asperiores ab tempore.</span>
+				</p>
+			</div>
+
+			<div class="event" data-sort="60">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing ime excepturi laudantium ut porro rem autem accusantium debitis voluptatem omnis amet. Incidunt, earum dolorum eaque magni maxime.</p>
+			</div>
+
+			<div class="event" data-sort="70">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae recusandae ullam! Fugiat, dignissimos dolor error.</p>
+			</div>
+
+			<div class="event" data-sort="80">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="90">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="100">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="110">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="120">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="130">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="140">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="150">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="160">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="170">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+		</div>
+
+
+		<script id="event_info" type="text/html">
+	        <div class="event resume">
+	        	<div class="resumeContent">
+	        		<a href="#" id="close">FERMER</a>
+	        		
+	        		
+	        		<div class="column">
+	        			<img src="" width="280" height="200" id="vignette" />
+
+		        		<h1>{{titre}}</h1>
+		        		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae recusandae ullam! Fugiat, dignissimos dolor error.</p>
+		        		<p>Lorem ipsum dolor sit amet, consectetur adipiiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae  ullam! Fugiat, dignissimos dolor error.</p>
+
+		        		<div class="meta">
+		        			<p>{{lanque}}</p>
+		        			<p>{{organisation}}</p>
+		        			<p>{{inscription}}</p>
+		        			<p><a href="#" id="inscription_submit">S‘inscrire</a></p>
+		        		</div>
+	        		</div>
+	        		<div class="reset"></div>
+	        	</div>
+	        </div>
+	    </script>
+
+	    <script id="inscription_form" type="text/html">
+	    	<div style="width:500px;">
+	    		<form>
+	    			<h2>inscription à {{titre}}</h2>
+	    			<p><label for="login">Identifiant :</label><input type="text" id="login" name="login" /></p>
+	    			<p><label for="password">Mot de passe :</label><input type="password" id="password" name="password" /></p>
+	    			<p><label for="email">Adresse email :</label><input type="text" id="email" name="email" /></p>
+	    			<p><a href="#" id="envoyer">Envoyer</a>
+	    		</form>
+	    	</div>
+	    </script>
+
+	    <script id="validation_form" type="text/html">
+	    	<div style="width:500px;">
+	    		<h2>{{reponse}} et :</h2>
+	    		<p>votre login : <strong>{{login}}</strong></p>
+	    		<p>votre mot de passe : <strong>{{password}}</strong></p>
+	    		<p>votre adresse mail : <strong>{{email}}</strong></p>
+	    	</div>
+	    </script>
+
+		
+	</body>
+
+</html>
