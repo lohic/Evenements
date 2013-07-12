@@ -10,7 +10,8 @@ Le système est une web-app PHP/HTML/CSS/JAVASCRIPT.
 Les classes existantes :
 
 - classe_core.php (la classe qui permet de d'amorcer l'outil)
-- classe_fonctions.php (la classes statique avec les fonctions génériques)
+
+- classe_fonctions.php (la classes statique avec les fonctions génériques)
 
 - classe_organisme.php (la classe de gestion des organismes que j'avais fait)
 
@@ -26,7 +27,7 @@ Les classes à créer (à affiner) :
 
 - classe_session -> pour la gestion des sessions d'événements
 
-- classe_billet -> pour la gestion de la création des billets
+- classe_billet -> pour la gestion de la création des billets (cf https://github.com/tschoffelen/PHP-PKPass + http://www.tcpdf.org)
 
 
 
