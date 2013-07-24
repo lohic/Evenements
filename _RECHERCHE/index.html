@@ -20,6 +20,10 @@
 				background: #F00;
 			}
 
+			#liste_evenements {
+				margin: 0 auto;
+			}
+
 			#image{
 				height: 200px;
 				height:200px;
@@ -106,7 +110,7 @@
 
 			/**** Isotope CSS3 transitions ****/
 
-			.isotope,
+			/*.isotope,*/
 			.isotope .isotope-item {
 				-webkit-transition-duration: 0.8s;
 				 -moz-transition-duration: 0.8s;
@@ -115,13 +119,13 @@
 				      transition-duration: 0.8s;
 			}
 
-			.isotope {
+			/*.isotope {
 				-webkit-transition-property: height, width;
 				 -moz-transition-property: height, width;
 				  -ms-transition-property: height, width;
 				   -o-transition-property: height, width;
 				      transition-property: height, width;
-			}
+			}*/
 
 			.isotope .isotope-item {
 				-webkit-transition-property: -webkit-transform, opacity;
@@ -155,7 +159,31 @@
 	    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
 		<script type="text/javascript">
 
-			$(document).ready(function(){
+			// ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
+
+			$(document).ready(function(){			
+
+				$('.event>h1>a').click(function(e){
+					console.log('click on event');
+
+					$('.event').removeClass('selectedEvent');
+					$(this).parent().parent().addClass('selectedEvent');
+					
+					clickEvent($('.selectedEvent'));
+
+				    // on evite le comportement normal du click
+				    e.preventDefault();
+				});
+
+			})
+
+
+			$(function(){
+				var $container = $('#liste_evenements'),
+				$body = $('body'),
+				colW = 320,
+				columns = null;
+
 
 				var clickedElement,clickedID;
 
@@ -171,6 +199,7 @@
 
 				$('#liste_evenements').isotope({
 					// options
+					resizable: false,
 					itemSelector : '.event',
 					layoutMode : 'fitRows',
 					itemPositionDataEnabled : true,
@@ -251,20 +280,28 @@
 				});
 
 
+				$(window).smartresize(function(){
 
-				$('.event>h1>a').click(function(e){
-					console.log('click on event');
+					// measure the width of all the items
+					var itemTotalWidth = 0;
+					$container.children().each(function(){
+						itemTotalWidth += $(this).outerWidth(true);
+					});
 
-					$('.event').removeClass('selectedEvent');
-					$(this).parent().parent().addClass('selectedEvent');
-					
-					clickEvent($('.selectedEvent'));
+					// check if columns has changed
+					var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
+					itemColumns = Math.floor( itemTotalWidth / colW ),
+					currentColumns = Math.min( bodyColumns, itemColumns );
+					if ( currentColumns !== columns ) {
+						// set new column count
+						columns = currentColumns;
+						// apply width to container manually, then trigger relayout
+						$container.width( columns * colW )
+						.isotope('reLayout');
+					}
 
-				    // on evite le comportement normal du click
-				    e.preventDefault();
-				});
-
-			})
+				}).smartresize();
+			});
 
 
 			function clickEvent(clickedElement){
