@@ -5,9 +5,14 @@
 // 
 // 
 
+
+// a recupere dans vars/config.php
 define('REAL_LOCAL_PATH', dirname(__FILE__));
 define('ABSOLUTE_URL', 'http://localhost:8888/Site_SCIENCESPO_EVENEMENTS');
 
+
+
+// cette mecanique devra être placée dans une classe
 $template = 'default' ; 
 
 if( ! empty( $_GET['organisme'] )){
@@ -22,7 +27,7 @@ if( ! empty( $_GET['organisme'] )){
 $template_url = ABSOLUTE_URL.'/template_front/' . $template;
 $template_local_path = REAL_LOCAL_PATH.'/template_front/' . $template;
 
-echo $template_url  .' '.$template_local_path ;
+echo '$template_url :<br/>' . $template_url  .' <br/>$template_local_path :<br/>'.$template_local_path ;
 
 
 ob_start();
