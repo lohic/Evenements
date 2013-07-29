@@ -8,6 +8,7 @@
 	<body>
 		
 		<h1>FRONT OFFICE EVENEMENT</h1>
+		<p><?php echo !empty($_GET['test']) ? $_GET['test'] : ''; ?></p>
 
 	</body>
 

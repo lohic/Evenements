@@ -1,2 +1,11 @@
 # htaccess pour acceder au fichier de front office
 # via une URL propre
+
+RewriteEngine on
+#RewriteRule ^archive-([a-z0-9]+)\.html$  index.php?organisme=$1  [L]
+#
+#cf http://www.expreg.com/memo.php
+
+RewriteRule ^(evenement)\/?$ index.php?organisme=$1 [L]
+RewriteRule ^(picasso)\/?$ index.php?organisme=$1 [L]
+RewriteRule ^(ceri)\/?$ index.php?organisme=$1 [L]

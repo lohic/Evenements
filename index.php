@@ -6,28 +6,32 @@
 // 
 
 
-// a recupere dans vars/config.php
+// a récupérer dans vars/config.php
 define('REAL_LOCAL_PATH', dirname(__FILE__));
 define('ABSOLUTE_URL', 'http://localhost:8888/Site_SCIENCESPO_EVENEMENTS');
 
 
-
 // cette mecanique devra être placée dans une classe
-$template = 'default' ; 
+$template = 'default' ;
 
+// on verifie qu'un ORGANISME a bien été envoyé par le HTACCESS
 if( ! empty( $_GET['organisme'] )){
-	$template = $_GET['organisme'];
 
-	echo 'front office ORGANISME : ' . $_GET['organisme'] . '<br/>';
-} else {
-	echo 'default'. '<br/>';
+	// on verifie que l'ORGANISME correspond bien à un dossier
+	if ( is_dir ( REAL_LOCAL_PATH.'/template_front/' . $_GET['organisme'] ) ){
+
+		$template = $_GET['organisme'];
+
+	}
 }
 
 
+// on créé les variables locales et absolues pour le chemin du template
 $template_url = ABSOLUTE_URL.'/template_front/' . $template;
 $template_local_path = REAL_LOCAL_PATH.'/template_front/' . $template;
 
-echo '$template_url :<br/>' . $template_url  .' <br/>$template_local_path :<br/>'.$template_local_path ;
+
+echo '<strong>$template_url :</strong><br/>' . $template_url  .' <br/><strong>$template_local_path :</strong><br/>'.$template_local_path ;
 
 
 ob_start();
