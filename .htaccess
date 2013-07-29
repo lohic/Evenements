@@ -2,10 +2,12 @@
 # via une URL propre
 
 RewriteEngine on
-#RewriteRule ^archive-([a-z0-9]+)\.html$  index.php?organisme=$1  [L]
+# RewriteRule ^archive-([a-z0-9]+)\.html$  index.php?organisme=$1  [L]
 #
-#cf http://www.expreg.com/memo.php
+# cf http://www.expreg.com/memo.php
+# QSA permet de garder les paramètres GET
 
-RewriteRule ^(evenement)\/?$ index.php?organisme=$1 [L]
-RewriteRule ^(picasso)\/?$ index.php?organisme=$1 [L]
-RewriteRule ^(ceri)\/?$ index.php?organisme=$1 [L]
+
+RewriteRule ^(evenement)\/?$ index.php?organisme=$1 [QSA,L]
+RewriteRule ^(picasso)\/?$ index.php?organisme=$1 [QSA,L]
+RewriteRule ^(ceri)\/?$ index.php?organisme=$1 [QSA,L]
