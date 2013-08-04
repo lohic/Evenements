@@ -1,0 +1,552 @@
+<html>
+	<head>
+		<title>Science po événement</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		
+		<link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+	    <link rel="stylesheet" type="text/css" href="source/jquery.fancybox.css?v=2.1.4" media="screen" />
+
+		<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.isotope.min.js"></script>
+		<script type="text/javascript" src="js/ICanHaz.min.js"></script>
+		<script type="text/javascript" src="js/jquery.resizend.js"></script>
+		<script type="text/javascript" src="lib/jquery.mousewheel-3.0.6.pack.js"></script>
+	    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
+		<script type="text/javascript">
+
+			// ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
+
+			$(document).ready(function(){			
+
+				$('.event>h1>a').click(function(e){
+					console.log('click on event');
+
+					$('.event').removeClass('selectedEvent');
+					$(this).parent().parent().addClass('selectedEvent');
+					
+					clickEvent($('.selectedEvent'));
+
+				    // on evite le comportement normal du click
+				    e.preventDefault();
+				});
+
+				$origImgW = $('.banniere').width();
+				$origImgH = $('.banniere').height();
+				$ratioImg = $('.banniere').width() / $('.banniere').height();
+				$('.maxDivImg').css('overflow','hidden');
+				$('.maxDivImg').css('position','relative');
+				$('.banniere').css('position','relative');
+				
+				redim();
+
+				$(window).resize(function() {
+					redim();
+				});
+
+				function redim(){
+					$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
+					
+					if($ratioDiv>$ratioImg){
+						$w = $('.maxDivImg').width();
+						$h = $w/$ratioImg;
+					}else{
+						$h = $('.maxDivImg').height();
+						$w = $h*$ratioImg;
+					}
+					
+					$('.banniere').width($w);
+					$('.banniere').height($h);
+					$xPos = ($('.maxDivImg').width()-$w)/2+$('.maxDivImg').offset().left;
+					$yPos = ($('.maxDivImg').height()-$h)/2+$('.maxDivImg').offset().top;
+
+					$('.banniere').offset({left:$xPos,top:$yPos});
+
+				}
+
+			})
+
+
+			$(function(){
+				var $container = $('#liste_evenements'),
+				$body = $('body'),
+				colW = 320,
+				columns = null;
+
+
+				var clickedElement,clickedID;
+
+				// pour ajouter une élément après un autre
+				// http://jsfiddle.net/9V2Mj/20/
+				//
+				// pour ajouter une classe first et une classe last
+				// sur le premier et le dernier élément de chaque ligne
+				// http://stackoverflow.com/questions/14552017/is-there-a-way-to-target-the-first-and-last-element-in-each-row-using-jquery-iso
+				// 
+				// var position = clickedElement.data('isotope-item-position');
+				// console.log('item position is x: ' + position.x + ', y: ' + position.y  );
+
+				$('#liste_evenements').isotope({
+					// options
+					resizable: false,
+					itemSelector : '.event',
+					layoutMode : 'fitRows',
+					itemPositionDataEnabled : true,
+					animationOptions: {
+						duration: 750,
+						easing: 'linear',
+						queue: false,
+					},
+					getSortData : {
+						number : function($elem) {
+							return parseInt($elem.attr('data-sort'), 10);
+						}
+					},
+					sortBy : 'number', // on trie sur le numéro qu'on a créé
+					// pour ajouterles classes first et last 
+					onLayout: function (elems, instance) {
+						console.log('onLayout');
+						var items, rows, numRows, row, prev, i;
+
+						// gather info for each element
+						items = elems.map(function () {
+							var el = $(this), pos = el.data('isotope-item-position');
+							return {
+								x: pos.x,
+								y: pos.y,
+								w: el.width(),
+								h: el.height(),
+								el: el
+							};
+						});
+
+						// first pass to find the first and last items of each row
+						rows = [];
+						i = {};
+						items.each(function () {
+							var y = this.y, r = i[y];
+							if (!r) {
+								r = {
+									y: y,
+									first: null,
+									last: null
+								};
+								rows.push(r);
+								i[y] = r;
+							}
+							if (!r.first || this.x < r.first.x) {
+								r.first = this;
+							}
+							if (!r.last || this.x > r.last.x) {
+								r.last = this;
+							}
+						});
+						rows.sort(function (a, b) { return a.y - b.y; });
+						numRows = rows.length;
+
+						// compare items for each row against the previous row
+						for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+							row = rows[i];
+							if (prev.first.x < row.first.x &&
+								prev.first.y + prev.first.h > row.y) {
+							row.first = prev.first;
+							}
+							if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+								prev.last.y + prev.last.h > row.y) {
+							row.last = prev.last;
+							}
+						}
+
+						// assign classes to first and last elements
+						elems.removeClass('first last');
+						$.each(rows, function () {
+							this.first.el.addClass('first');
+							this.last.el.addClass('last');
+						});
+
+						getNextLast($('.selectedEvent'));
+				    }
+				});
+
+
+				$(window).smartresize(function(){
+
+					// measure the width of all the items
+					var itemTotalWidth = 0;
+					$container.children().each(function(){
+						itemTotalWidth += $(this).outerWidth(true);
+					});
+
+					// check if columns has changed
+					var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
+					itemColumns = Math.floor( itemTotalWidth / colW ),
+					currentColumns = Math.min( bodyColumns, itemColumns );
+					if ( currentColumns !== columns ) {
+						// set new column count
+						columns = currentColumns;
+						// apply width to container manually, then trigger relayout
+						$container.width( columns * colW )
+						.isotope('reLayout');
+					}
+
+				}).smartresize();
+			});
+
+
+			function clickEvent(clickedElement){
+				var nextLastRowEvent;
+
+				// on eneleve les classe selected et selectedEvent
+				
+				console.log('> suppr resume');
+				$('#liste_evenements').isotope( 'remove', $('.resume') );
+
+
+				nextLastRowEvent = getNextLast(clickedElement);
+
+
+				event_data = {
+	                titre:   "Le titre à afficher",
+	                langue: "la langue ici du français",
+	                organisation : "Le CERI ?",
+	                inscription : "inscription obligatoire… ou pas !",
+	            };
+
+	            // Here's all the magic.
+	            //var eventDetail = ich.event_info(event_data);
+
+				// on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
+				var $newItems = ich.event_info(event_data);
+				// on récupère l'ID de l'élément sur lequel on a cliqué et on l'incrémente
+				clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
+				// on attribue le nouvel ID au bloc de résumé
+			    $newItems.attr('data-sort', clickedID);
+			    // on ajoute l'élément
+			    $('#liste_evenements').isotope('insert', $newItems);
+			    console.log('> add resume');
+
+			    // quand on clique sur le bouton de fermeture de bloc événement
+			    $('a#close').click(function(e){
+					
+					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+					$('#liste_evenements').isotope( 'remove', $('.resume') );
+					console.log('> suppr resume');
+
+					// on evite le comportement normal du click
+					e.preventDefault();
+				});
+				$('a#inscription_submit').click(function(e){
+
+					inscription_data = {
+		                titre:"titre de l'événement",
+		            };
+
+		            inscription = ich.inscription_form(inscription_data);
+
+                    $.fancybox( inscription , {
+                        title : 'inscription à un événement',
+                    });
+
+                    validFancyBox();
+
+					e.preventDefault();
+				});
+			}
+
+			function validFancyBox(){
+				$('a#envoyer').click(function(e){
+
+            		validation_data = {
+		                reponse:"Super ça fonctionne, vous êtes inscrit !",
+		                login:$('#login').val(),
+		                password:$('#password').val(),
+		                email:$('#email').val(),
+		            };
+
+		            validation = ich.validation_form(validation_data);
+
+                    $.fancybox( validation , {
+                        title : 'validation de l‘inscription',
+                    });
+
+					e.preventDefault();
+            	});
+			}
+
+			function getNextLast(cible){
+				var target;
+				$('.event').removeClass('nextLastRowItem');
+
+				if( cible.hasClass('last') ){
+					target = cible;
+				}else if( cible.next().hasClass('last') ){
+					target = cible.next();
+				}else{
+					var limit = $('.last');
+					target = cible.nextUntil(limit, ".event")
+						.last()
+						.next();
+				}
+
+				target.addClass('nextLastRowItem');
+
+				return target;
+
+			}
+
+			$(window).resize(function() {
+				console.log('> suppr resume');
+				$('#liste_evenements').isotope( 'remove', $('.resume') );
+			});
+
+			$(window).resizeend({
+				onDragEnd : function(){
+					console.log('end resize !!!');
+				},
+				runOnStart : true,
+			});
+
+		</script>
+
+	</head>
+	<body>
+		<header>
+			<section id="pre_header">
+				<div>
+					<a href="soumettre.php" class="soumettre">Proposer un événement</a>
+				</div>
+				<div>
+					<img src="http://www.sciencespo.fr/evenements/images/francais_d_icn.gif" alt="français"/>		
+					<a href="index.php?lang=en"><img src="http://www.sciencespo.fr/evenements/images/english_icn.gif" alt="english"/></a>
+					<input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
+					<input type="submit" value="OK" class="valider_recherche"/>
+					<a href="rss_events.php?lang=fr" class="rss"><img src="img/icn_rss.png" alt="flux RSS"/></a>
+					<div id="recherche_avancee">
+						<div>
+							<p class="avancee ouvert">Recherche avancée</p>
+							<ul>
+								<li class="" id="entre_liste_2"><a class="rubrique_2 carre" href="#rubrique_2" style="border:2px solid #fab80e;" id="entree_2"><span style="background:#fab80e;"></span></a><a class="rubrique_2" href="#rubrique_2" id="texte_entree_2">Art et culture</a></li>
+
+								<li class="" id="entre_liste_5"><a class="rubrique_5 carre" href="#rubrique_5" style="border:2px solid #aaff55;" id="entree_5"><span style="background:#aaff55;"></span></a><a class="rubrique_5" href="#rubrique_5" id="texte_entree_5">Expositions</a></li>
+
+								<li class="" id="entre_liste_3"><a class="rubrique_3 carre" href="#rubrique_3" style="border:2px solid #e63f81;" id="entree_3"><span style="background:#e63f81;"></span></a><a class="rubrique_3" href="#rubrique_3" id="texte_entree_3">Recherche et débats</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="header">
+				<h1><span class="invisible">Science po événements</span><a href="index.php"><img src="http://www.sciencespo.fr/evenements/admin/upload/logo/logo_spo.png" alt="sciences Po événements"/></a></h1>
+				
+				<div id="filtre_categorie">
+					<ul>
+						<li class="titre_filtre bit_small">
+							<span>Catégories</span>
+							<ul id="filtering-nav-categorie">
+								<li class="" id="entree_cate_2"><a class="rubrique_2 carre" href="#rubrique_2" style="background:#fab80e;" id="entree_2"></a><a class="cate_2" href="#cate_2" id="entree_2">Art et culture</a></li>
+								<li class="" id="entree_cate_5"><a class="rubrique_5 carre" href="#rubrique_5" style="background:#aaff55;" id="entree_5"></a><a class="cate_5" href="#cate_5" id="entree_5">Expositions</a></li>
+								<li class="" id="entree_cate_3"><a class="rubrique_3 carre" href="#rubrique_3" style="background:#e63f81;" id="entree_3"></a><a class="cate_3" href="#cate_3" id="entree_3">Recherche et débats</a></li>
+							</ul>
+						</li>
+					</ul>					
+				</div>
+
+				<div id="filtre_date">
+					<ul>
+						<li class="titre_filtre bit_small">
+							<span>Dates</span>
+							<ul id="filtering-nav-date">
+								<li class="" id="entree_mois_2"><a class="mois_2" href="#mois_2" id="entree_2">juillet 2013</a></li>
+								<li class="" id="entree_mois_5"><a class="mois_5" href="#mois_5" id="entree_5">août 2013</a></li>
+								<li class="" id="entree_mois_3"><a class="mois_3" href="#mois_3" id="entree_3">septembre 2013</a></li>
+							</ul>
+						</li>
+					</ul>	
+				</div>
+
+				<div id="filtre_mot">
+					<ul>
+						<li class="titre_filtre bit_small">
+							<span>Mots-clés</span>
+							<ul id="filtering-nav-mot">
+								<li class="" id="entree_mot_2"><a class="mot_2" href="#mot_2" id="entree_2">Sciences Po Paris</a></li>
+								<li class="" id="entree_mot_5"><a class="mot_5" href="#mot_5" id="entree_5">Campus du Havre</a></li>
+								<li class="" id="entree_mot_3"><a class="mot_3" href="#mot_3" id="entree_3">Autre mot-clé</a></li>
+							</ul>
+						</li>
+					</ul>	
+				</div>
+			</section>
+			
+		</header>
+		<div id="image" class="maxDivImg conteneur_banniere">
+				<img src="http://www.sciencespo.fr/evenements/admin/upload/banniere/banniere.jpg?cache=1375289621" alt="bannière" class="banniere" width="1280" height="128"/>
+		</div>
+		<div id="liste_evenements" class="masonry">
+			<!-- attention data-sort doit être un multiple de 10-->
+			
+			<div class="event" data-sort="10">
+				<a href="/?lang=fr&amp;id=1531" rel="address:/?lang=fr&amp;id=1531" class="lien_event" id="image_lien_1531" style="float:left;">
+					<img src="http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/moyen-image.jpeg?cache=1375451151" alt="" width="320" height="180"/>
+				</a>
+				<img src="http://www.sciencespo.fr/evenements/admin/triangle_fab80e.png" alt="triangle" class="triangle"/>
+
+				<h1 style="background-color:#fab80e" class="titre">
+					<a href="/?lang=fr&amp;id=1531" rel="address:/?lang=fr&amp;id=1531" class="lien_event" id="titre_lien_1531">Exposition - Berlin</a>
+				</h1>
+
+				<p class="date">du 27/06 | 09h30 au 10/09 | 20h00</p>
+				<p>
+					Berlin vue par la photographe berlinoise Tanja WEKWERTH.<br />Une exposition proposée par la Bibliothèque de Sciences... &nbsp;
+					<a href="/?lang=fr&amp;id=1531" rel="address:/?lang=fr&amp;id=1531" class="suite" style="background-color:#fab80e" id="lien_suite_1531">
+						<img src="http://www.sciencespo.fr/evenements/images/lien_suite.png" alt=""/>
+					</a>
+				</p>
+
+				<p class="organisateur">
+						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#fab80e"/>Bibliothèque de Sciences Po									
+				</p>
+				
+				<div class="reseaux">			
+					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
+
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#fab80e"  target="_blank">
+						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+					</a>
+
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#fab80e">
+						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					</a>
+
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#fab80e">
+						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					</a>
+				</div>
+			</div>
+
+			<div class="event" data-sort="20">
+				<h1><a href="#">evenement</a></h1>
+				<p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, at voluptatem impedit magni dolores ab atque doloribus temporibus reprehenderit sed et quam commodi. Et, voluptatem error nostrum provident non maiores.</span><span>Enim, illum, ex, error debitis architecto at assumenda magni aperiam est corporis necessitatibus doloribus iusto maxime omnis dignissimos rem ab dolor saepe eos facere repellendus adipisci consequuntur dicta ipsum iure.</span></p>
+			</div>
+
+			<div class="event" data-sort="30">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, eaque, doloribus, quod, aut sint molestias tenetur accusamus pariatur ut facere veniam possimus ullam minima atque voluptas omnis aspernatur quas est!</p>
+			</div>
+
+			<div class="event" data-sort="40">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit, exercitationem deserunt suscipit atque consequuntur vero voluptatum. Voluptatum, quae, distinctio, perspiciatis, obcaecati necessitatibus itaque earum in nisi alias accusantium temporibus eaque.</p>
+			</div>
+
+			<div class="event" data-sort="50">
+				<h1><a href="#">evenement</a></h1>
+				<p>
+					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem, quod, facere facilis suscipit soluta veritatis excepturi earum cum error enim sequi asperiores id dicta nam cumque fugit delectus. Vel, asperiores?</span>
+					<span>Provident, nostrum, illo. Commodi, asperiores, nam, blanditiis quos earum saepe omnis consequatur voluptates in reprehenderit possimus ullam illo eaque ad quas deserunt doloremque totam eveniet porro amet. Cupiditate, hic nemo.</span>
+					<span>Assumenda, cupiditate, deserunt! Maxime, nesciunt, unde consequatur rerum nobis animi voluptatem omnis quia eveniet esse laboriosam voluptatibus explicabo quisquam facilis cum! Odit, eaque dolorum quasi libero quam asperiores ab tempore.</span>
+				</p>
+			</div>
+
+			<div class="event" data-sort="60">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing ime excepturi laudantium ut porro rem autem accusantium debitis voluptatem omnis amet. Incidunt, earum dolorum eaque magni maxime.</p>
+			</div>
+
+			<div class="event" data-sort="70">
+				<h1><a href="#">evenement</a></h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae recusandae ullam! Fugiat, dignissimos dolor error.</p>
+			</div>
+
+			<div class="event" data-sort="80">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="90">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="100">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="110">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="120">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="130">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="140">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="150">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="160">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+			<div class="event" data-sort="170">
+				<h1><a href="#">evenement</a></h1>
+			</div>
+
+		</div>
+
+
+		<script id="event_info" type="text/html">
+	        <div class="event resume">
+	        	<div class="resumeContent">
+	        		<a href="#" id="close">FERMER</a>
+	        		
+	        		
+	        		<div class="column">
+	        			<img src="" width="280" height="200" id="vignette" />
+
+		        		<h1>{{titre}}</h1>
+		        		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae recusandae ullam! Fugiat, dignissimos dolor error.</p>
+		        		<p>Lorem ipsum dolor sit amet, consectetur adipiiam, repudiandae, placeat, pariatur dolore nemo optio ipsum minus magnam delectus aliquam labore praes ipsum minus magnam delectus aliquam labore praesentium commodi beatae  ullam! Fugiat, dignissimos dolor error.</p>
+
+		        		<div class="meta">
+		        			<p>{{lanque}}</p>
+		        			<p>{{organisation}}</p>
+		        			<p>{{inscription}}</p>
+		        			<p><a href="#" id="inscription_submit">S‘inscrire</a></p>
+		        		</div>
+	        		</div>
+	        		<div class="reset"></div>
+	        	</div>
+	        </div>
+	    </script>
+
+	    <script id="inscription_form" type="text/html">
+	    	<div style="width:500px;">
+	    		<form>
+	    			<h2>inscription à {{titre}}</h2>
+	    			<p><label for="login">Identifiant :</label><input type="text" id="login" name="login" /></p>
+	    			<p><label for="password">Mot de passe :</label><input type="password" id="password" name="password" /></p>
+	    			<p><label for="email">Adresse email :</label><input type="text" id="email" name="email" /></p>
+	    			<p><a href="#" id="envoyer">Envoyer</a>
+	    		</form>
+	    	</div>
+	    </script>
+
+	    <script id="validation_form" type="text/html">
+	    	<div style="width:500px;">
+	    		<h2>{{reponse}} et :</h2>
+	    		<p>votre login : <strong>{{login}}</strong></p>
+	    		<p>votre mot de passe : <strong>{{password}}</strong></p>
+	    		<p>votre adresse mail : <strong>{{email}}</strong></p>
+	    	</div>
+	    </script>
+
+		
+	</body>
+
+</html>
