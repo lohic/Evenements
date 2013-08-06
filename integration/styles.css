@@ -49,7 +49,7 @@ html {
 	font-size: 62.5%;
 }
 body {
-	background-color: #fff;
+	background-color: #f0f0f0;
 	color: #000;
 	font-family: "proxima_nova_rgregular", helvetica, arial, sans-serif;
 	font-size: 1.4em; /* equiv 14px */
@@ -125,6 +125,9 @@ h6, .h6-like {
 }
 .bit_small {
 	font-size: .9285em; /* equiv 13px */
+}
+.bit_big {
+	font-size: 1.0715em; /* equiv 15px */
 }
 .big {
 	font-size: 1.1429em; /* equiv 16px */
@@ -589,9 +592,10 @@ p.avancee.ouvert{
 /* Header */
 
 #header{
-	width: 100%;
-	display:table;	
-	padding-bottom: 15px;
+	background: none repeat scroll 0 0 #FFFFFF;
+    display: table;
+    padding-bottom: 15px;
+    width: 100%;
 }
 
 #header h1{
@@ -706,6 +710,105 @@ p.avancee.ouvert{
 }
 
 /* Fin Header */
+.event{
+	background: none repeat scroll 0 0 #fff;
+    margin: 15px 8px 0px 7px;
+    min-height: 100px;
+    width: 320px;
+}		
+
+.first {
+	/*outline: 5px solid red;
+	background: purple;*/
+	margin-left:0px;
+}
+.last {
+	/*outline: 5px solid green;
+	background: green;*/
+	margin-right: 0;
+}
+
+img.triangle {
+    height: 15px;
+    margin-left: 15px;
+    margin-top: -15px;
+    width: 30px;
+}
+
+.event h1.titre a {
+    color: #FFFFFF;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+}
+
+.event h1.titre{
+	font-size: 1.43em;
+    line-height: 1em;
+    margin-top: 0;
+    padding: 6px 15px 4px;
+}
+
+.event p.date{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	margin-top: 12px;
+}
+
+.event p{
+	padding:0px 15px;
+}
+
+.event p.organisateur{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	border-top: 1px solid #ccc;
+	padding: 7px 0px 3px;
+	margin: 0 15px;
+}
+
+.event p + p.organisateur{
+	margin-top: 10px;
+}
+
+.event p.organisateur img{
+	display: block;
+    float: left;
+    margin-right: 7px;
+    margin-top: -2px;
+}
+
+.event a.suite{
+	display: inline-block;
+    height: 8px;
+    width: 4px;
+}
+
+.event div.reseaux{
+	border-top: 1px solid #CCCCCC;
+    height: 45px;
+    margin: 0 15px;
+    padding: 10px 0;
+}
+
+.event div.reseaux a.reseaux {
+    margin-top: 1px;
+}
+
+.event div.reseaux a.reseaux, #master-event .texte a.reseaux {
+    float: left;
+    height: 20px;
+    margin-right: 5px;
+    width: 20px;
+}
+
+span.complet, a.sinscrire{
+	bottom: 15px;
+    display: block;
+    height: 16px;
+    position: absolute;
+    right: 15px;
+    text-transform: uppercase;
+    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+}
 
 #liste_evenements {
 	margin: 0 auto;
@@ -717,22 +820,7 @@ p.avancee.ouvert{
 }
 
 
-.event{
-	width: 280px;
-	min-height:100px;
-	background: #CCC;
-	margin: 10px;
-	padding: 10px;
-}		
 
-.first {
-	/*outline: 5px solid red;*/
-	background: purple;
-}
-.last {
-	/*outline: 5px solid green;*/
-	background: green;
-}
 
 
 .nextLastRowItem{
