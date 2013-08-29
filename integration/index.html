@@ -312,15 +312,15 @@
 		<header>
 			<section id="pre_header">
 				<div>
-					<a href="soumettre.php" class="soumettre">Proposer un événement</a>
+					<a href="soumettre.php" class="soumettre"><span></span>Proposer un événement</a>
 				</div>
 				<div>
-					<img src="http://www.sciencespo.fr/evenements/images/francais_d_icn.gif" alt="français"/>		
-					<a href="index.php?lang=en"><img src="http://www.sciencespo.fr/evenements/images/english_icn.gif" alt="english"/></a>
+					<span class="francais"></span>
+					<a href="index.php?lang=en" title="anglais" class="anglais"><span class="anglais"></span></a>
 					<input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
 					<input type="submit" value="OK" class="valider_recherche"/>
-					<a href="rss_events.php?lang=fr" class="rss"><img src="img/icn_rss.png" alt="flux RSS"/></a>
-					<div id="recherche_avancee">
+					<a href="rss_events.php?lang=fr" class="rss"></a>
+					<!--<div id="recherche_avancee">
 						<div>
 							<p class="avancee ouvert">Recherche avancée</p>
 							<ul>
@@ -331,7 +331,7 @@
 								<li class="" id="entre_liste_3"><a class="rubrique_3 carre" href="#rubrique_3" style="border:2px solid #e63f81;" id="entree_3"><span style="background:#e63f81;"></span></a><a class="rubrique_3" href="#rubrique_3" id="texte_entree_3">Recherche et débats</a></li>
 							</ul>
 						</div>
-					</div>
+					</div>-->
 				</div>
 			</section>
 			<section id="header">
@@ -403,26 +403,23 @@
 				</p>
 
 				<p class="organisateur bit_small">
-						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#fab80e"/>Bibliothèque de Sciences Po									
+					<span style="background-color:#fab80e"></span>Bibliothèque de Sciences Po									
 				</p>
 				
 				<div class="reseaux">			
 					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
 
-	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#fab80e"  target="_blank">
-						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux facebook" style="background-color:#fab80e"  target="_blank">
 					</a>
 
-					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux twitter" style="background-color:#fab80e">
 					</a>
 
-					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux ical" style="background-color:#fab80e">
 					</a>
 				</div>
 
-				<a href="#" style="color:#fab80e" class="sinscrire bit_big" target="_blank">S'INSCRIRE</a>
+				<a href="#" class="sinscrire bit_big" target="_blank">S'INSCRIRE</a>
 			</div>
 
 			<div class="event" data-sort="20">
@@ -444,25 +441,22 @@
 				</p>
 
 				<p class="organisateur bit_small">
-						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#e63f81"/>Bibliothèque de Sciences Po									
+					<span style="background-color:#e63f81"></span>Bibliothèque de Sciences Po									
 				</p>
 				
 				<div class="reseaux">			
 					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
 
-	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#e63f81"  target="_blank">
-						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux facebook" style="background-color:#e63f81"  target="_blank">
 					</a>
 
-					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#e63f81">
-						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux twitter" style="background-color:#e63f81">
 					</a>
 
-					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#e63f81">
-						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux ical" style="background-color:#e63f81">
 					</a>
 				</div>
-				<span class="complet bit_big" style="color:#e63f81">COMPLET</span>
+				<span class="complet bit_big">COMPLET</span>
 			</div>
 
 			<div class="event" data-sort="30">
@@ -484,22 +478,19 @@
 				</p>
 
 				<p class="organisateur bit_small">
-						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#aaff55"/>Bibliothèque de Sciences Po									
+					<span style="background-color:#aaff55"></span>Bibliothèque de Sciences Po									
 				</p>
 				
 				<div class="reseaux">			
 					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
 
-	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#aaff55"  target="_blank">
-						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux facebook" style="background-color:#aaff55"  target="_blank">
 					</a>
 
-					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#aaff55">
-						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux twitter" style="background-color:#aaff55">
 					</a>
 
-					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#aaff55">
-						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux ical" style="background-color:#aaff55">
 					</a>
 				</div>
 			</div>
@@ -523,22 +514,19 @@
 				</p>
 
 				<p class="organisateur bit_small">
-						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#fab80e"/>Bibliothèque de Sciences Po									
+					<span style="background-color:#fab80e"></span>Bibliothèque de Sciences Po									
 				</p>
 				
 				<div class="reseaux">			
 					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
 
-	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#fab80e"  target="_blank">
-						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux facebook" style="background-color:#fab80e"  target="_blank">
 					</a>
 
-					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux twitter" style="background-color:#fab80e">
 					</a>
 
-					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux ical" style="background-color:#fab80e">
 					</a>
 				</div>
 			</div>
@@ -562,22 +550,19 @@
 				</p>
 
 				<p class="organisateur bit_small">
-						<img src="http://www.sciencespo.fr/evenements/images/buddy_icn.png" alt="organisateur" style="background-color:#fab80e"/>Bibliothèque de Sciences Po									
+					<span style="background-color:#fab80e"></span>Bibliothèque de Sciences Po									
 				</p>
 				
 				<div class="reseaux">			
 					<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=http://www.sciencespo.fr/evenements/index.php?id=1531&amp;picture=http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1531/mini-image.jpeg&amp;name=Exposition - Berlin&amp;caption=du 27/06 | 09h30 au 10/09 | 20h00&amp;description=Berlin vue par la photographe berlinoise Tanja WEKWERTH.
 
-	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux" style="background-color:#fab80e"  target="_blank">
-						<img src="http://www.sciencespo.fr/evenements/images/facebook_icn.png" alt="facebook"/>
+	Une exposition proposée par la Bibliothèque de Sciences Po.... &nbsp;&amp;message=Sciences Po | événements&amp;redirect_uri=http://www.sciencespo.fr/evenements/" class="reseaux facebook" style="background-color:#fab80e"  target="_blank">
 					</a>
 
-					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/twitter_icn.png" alt="twitter"/>
+					<a href="http://twitter.com/home?status=Je participe à cet événement Sciences Po :  http://www.sciencespo.fr/evenements/index.php?id=1531" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');" class="reseaux twitter" style="background-color:#fab80e">
 					</a>
 
-					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux" style="background-color:#fab80e">
-						<img src="http://www.sciencespo.fr/evenements/images/calendar_icn.png" alt="ical"/>
+					<a href="makeIcal.php?id=1531" target="_blank" class="reseaux ical" style="background-color:#fab80e">
 					</a>
 				</div>
 			</div>

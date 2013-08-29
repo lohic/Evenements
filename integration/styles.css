@@ -7,7 +7,6 @@
          url('fonts/proximanova-bold-webfont.svg#proxima_nova_rgbold') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
 
 @font-face {
@@ -474,25 +473,79 @@ textarea {
 	display: none;
 }
 
+a.facebook, a.twitter, a.ical, .event p.organisateur > span, a.rss, span.francais, span.anglais, a.soumettre span{
+	background: url("img/sprite.png") no-repeat left top;
+	width:20px;
+	height: 20px;
+}
+
 /* Pre-Header */
 a.soumettre{
-	background: url("img/icn_proposer.png") no-repeat scroll left top transparent;
-    color: #FFFFFF;
+    color: #444444;
     display: inline-block;
-    padding-left: 20px;
-    padding-top: 1px;
+    font-size: 0.9375em;
+    padding-left: 17px;
+    padding-top: 0;
+    text-decoration: underline;
+}
+
+a.soumettre span{
+	background-position: -49px 2px;
+    display: block;
+    float: left;
+    height: 23px;
+    margin-right: 4px;
+    width: 12px;
+}
+
+a.rss{
+	background-position: -20px top;
+    display: block;
+    float: right;
+    height: 16px;
+    margin-left: 12px;
+    margin-top: 3px;
+    width: 16px;
+}
+
+a.francais, a.anglais{
+	display: inline-block;
+}
+
+span.francais, span.anglais{
+	display: inline-block;
+    height: 16px;
+    margin-left: 8px;
+    width: 22px;
+    margin-top: 3px;
+}
+
+span.francais{
+	background-position: -61px top;
+}
+
+span.anglais{
+
+}
+
+a span.francais{
+
+}
+
+a span.anglais{
+	background-position: -61px -16px;
 }
 
 #pre_header{
 	display: table;
-	background: #cb0f30;
+	background: #fff;
 	width: 100%;
-	padding-bottom: 15px;
+	padding-bottom: 10px;
 }
 
 #pre_header > div{
 	display: table-cell;
-	padding: 22px 0px 0 30px;
+	padding: 14px 0px 0 40px;
 	vertical-align: top;
 }
 
@@ -502,29 +555,33 @@ a.soumettre{
 }
 
 #pre_header input[type="text"]{
-	border:none;
-	background: url("img/icn_rechercher.png") no-repeat 6px center #fff;
-	padding-left: 27px;
-	height: 20px;
-	color:#666;
-	padding-top: 3px;
-	margin-right: -5px;
-	width: 218px;
-	margin-left:10px;
+	background: url("img/icn_rechercher.png") no-repeat scroll 195px center #FFFFFF;
+    border: 1px solid #CCCCCC;
+    color: #666666;
+    height: 20px;
+    margin-left: 25px;
+    margin-right: -5px;
+    padding-left: 10px;
+    padding-top: 3px;
+    width: 218px;
+    font-style: italic;
+    vertical-align: top;
 }
 
 #pre_header input[type="submit"]{
-	background: none repeat scroll 0 0 #FFFFFF;
-    border: medium none;
-    color: #C61132;
-    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	background: none repeat scroll 0 0 #666666;
+    border: 1px solid #888888;
+    color: #FFFFFF;
     height: 20px;
-    padding: 2px 7px;
-    margin-right: 8px;
+    margin-right: 3px;
+    padding: 1px;
+    width: 34px;
+    vertical-align: top;
 }
 
 #pre_header div + div img{
-	margin-left: 3px;
+	margin-left: 10px;
+	vertical-align: bottom;
 }
 
 #recherche_avancee{
@@ -594,13 +651,13 @@ p.avancee.ouvert{
 #header{
 	background: none repeat scroll 0 0 #FFFFFF;
     display: table;
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     width: 100%;
 }
 
 #header h1{
 	display: table-cell;
-	padding: 20px 0px 20px 30px;
+	padding: 20px 0px 0px 30px;
 }
 
 .titre_filtre > span{
@@ -618,7 +675,7 @@ p.avancee.ouvert{
 #filtre_categorie, #filtre_date, #filtre_mot{
 	display: table-cell;
 	vertical-align: top;
-	padding: 40px 0px 0px 0px;
+	padding: 43px 0px 0px 0px;
 }
 
 #filtre_categorie{
@@ -765,6 +822,16 @@ img.triangle {
 	margin: 0 15px;
 }
 
+.event p.organisateur > span{
+	background-position: left -140px;
+    display: block;
+    float: left;
+    height: 20px;
+    margin-right: 8px;
+    width: 20px;
+    margin-top: -2px;
+}
+
 .event p + p.organisateur{
 	margin-top: 10px;
 }
@@ -800,6 +867,14 @@ img.triangle {
     width: 20px;
 }
 
+a.facebook{
+	background-position: left -100px;
+}
+
+a.ical{
+	background-position: left -120px;
+}
+
 span.complet, a.sinscrire{
 	bottom: 15px;
     display: block;
@@ -808,6 +883,7 @@ span.complet, a.sinscrire{
     right: 15px;
     text-transform: uppercase;
     font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    color: #000;
 }
 
 #liste_evenements {
