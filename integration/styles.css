@@ -473,7 +473,8 @@ textarea {
 	display: none;
 }
 
-a.facebook, a.twitter, a.ical, .event p.organisateur > span, a.rss, span.francais, span.anglais, a.soumettre span{
+a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
+.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
 	height: 20px;
@@ -484,7 +485,6 @@ a.soumettre{
     color: #444444;
     display: inline-block;
     font-size: 0.9375em;
-    padding-left: 17px;
     padding-top: 0;
     text-decoration: underline;
 }
@@ -657,7 +657,7 @@ p.avancee.ouvert{
 
 #header h1{
 	display: table-cell;
-	padding: 20px 0px 0px 30px;
+	padding: 20px 0px 0px 28px;
 }
 
 .titre_filtre > span{
@@ -822,7 +822,7 @@ img.triangle {
 	margin: 0 15px;
 }
 
-.event p.organisateur > span{
+.event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, .event p.infos > span{
 	background-position: left -140px;
     display: block;
     float: left;
@@ -886,6 +886,150 @@ span.complet, a.sinscrire{
     color: #000;
 }
 
+.resumeContent{
+	background: #fff;
+	margin: 30px 10px;
+	position: relative;
+}
+
+.resumeContent .fermer{
+	height:30px;
+	position: relative;
+}
+
+.resumeContent .fermer #close{
+	position: absolute;
+	right: 11px;
+	top: 7px;
+	display: block;
+	width: 19px;
+	height: 19px;
+	background-position: -83px top;
+}
+
+.resumeContent .bottom{
+	height:2px;
+}
+
+.resumeContent .texte{
+	-moz-column-count:2;
+	-webkit-column-count:2;
+	column-count:2;
+	-moz-column-gap:42px; 
+	-webkit-column-gap:42px; 
+	column-gap:42px;
+}
+
+.resumeContent .visuel{
+	width: 25%;
+	padding: 0px 13px 0px 0px;
+}
+
+.resumeContent .informations{
+	width: 25%;
+	padding: 2px 32px 0px 13px;
+}
+
+.resumeContent .contenu{
+	width: 50%;
+	padding: 50px 13px 0px;
+}
+
+.event .resumeContent h1{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    margin-top: 8px;
+    padding: 0 13px;
+}
+
+.event .resumeContent h1 span{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	text-transform: uppercase;
+	padding-right: 10px;
+}
+
+.event .resumeContent h2{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    margin-bottom: 3px;
+    margin-top: 3px;
+}
+
+.event .resumeContent p{
+	padding: 0;
+}
+
+.event .resumeContent p.organisateur{
+	border-top: none;
+}
+
+.event .resumeContent p.langue, .event .resumeContent p.lieu, .event .resumeContent p.inscription, 
+.event .resumeContent p.organisateur, .event .resumeContent p.infos{
+	border-bottom: 1px solid #CCCCCC;
+    margin: 0;
+    padding: 4px 0 3px;
+    font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+}
+
+.event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 
+.event .resumeContent p.organisateur > span, .event .resumeContent p.infos > span{
+	margin-top: 0px;
+}
+
+.event .resumeContent p.langue > span{
+	background-position: left -40px;
+}
+
+.event .resumeContent p.lieu > span{
+	background-position: left -80px;
+}
+
+.event .resumeContent p.inscription > span{
+	background-position: left -20px;
+}
+
+.event .resumeContent p.infos > span{
+	background-position: left -60px;
+}
+
+.event .resumeContent .texte p{
+	line-height: 1.3em;
+    margin-bottom: 6px;
+    margin-top: 0;
+}
+
+.event .resumeContent .texte p:last-child{
+    margin-bottom: 0px;
+}
+
+.event .resumeContent .texte p strong{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	font-weight: normal;
+}
+
+.event .resumeContent .texte p em{
+	font-style: italic;
+}
+
+.event .resumeContent .meta{
+    float:right;
+    width: 300px;
+}
+
+.event .resumeContent .meta > div{
+	display: table-cell;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.event .resumeContent .meta a.reseaux{
+	display:block;
+	float: left;
+	margin-right: 8px;
+}
+
+.meta span.complet, .meta a.sinscrire {
+	bottom: inherit;
+}
+
 #liste_evenements {
 	margin: 0 auto;
 }
@@ -913,25 +1057,8 @@ span.complet, a.sinscrire{
 	background: none;
 }
 
-.resumeContent{
-	background: #FF0;
-	margin: 10px;
-	padding:10px;
-	position: relative;;
-}
-
-#close{
-	position:absolute;
-}
-
 #vignette{
 	/*float: left;*/
-}
-
-.meta{
-	/*float: right;*/
-	background: #FF0000;
-	/*width:280px;*/
 }
 
 .column{
