@@ -118,24 +118,39 @@ h6, .h6-like {
 /* alternate font-sizing */
 .smaller {
 	font-size: .7143em; /* equiv 10px */
+	line-height: .7143em;
 }
 .small {
 	font-size: .8571em; /* equiv 12px */
+	line-height: .8571em;
 }
 .bit_small {
 	font-size: .9285em; /* equiv 13px */
+	line-height: .9285em;
 }
 .bit_big {
 	font-size: 1.0715em; /* equiv 15px */
+	line-height: 1.0715em;
 }
 .big {
 	font-size: 1.1429em; /* equiv 16px */
+	line-height: 1.1429em;
+}
+.little_bigger {
+	font-size: 1.2143em; /* equiv 17px */
+	line-height: 1.2143em;
 }
 .bigger {
 	font-size: 1.2857em; /* equiv 18px */
+	line-height: 1.2857em;
 }
 .biggest {
 	font-size: 1.4286em; /* equiv 20px */
+	line-height: 1.4286em;
+}
+.very_bigger {
+	font-size: 1.5714em; /* equiv 22px */
+	line-height: 1.5714em;
 }
 
 /* soft reset */
@@ -474,7 +489,7 @@ textarea {
 }
 
 a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
-.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close{
+.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close, body .fancybox-close{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
 	height: 20px;
@@ -1040,7 +1055,243 @@ span.complet, a.sinscrire{
 }
 
 
+body .fancybox-overlay{
+	background: url("img/fd_blanc.png");
+}
 
+body .fancybox-opened .fancybox-skin {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	width: 385px !important;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;	
+	background: #cb021a;
+}
+
+body .fancybox-close {
+    cursor: pointer;
+    height: 19px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 19px;
+    z-index: 8040;
+    background-position:-83px top; 
+}
+
+body .fancybox-inner{
+	width: 355px !important;
+	overflow: visible !important;
+	height: auto !important;
+}
+
+#cartouche{
+	color:#fff;
+}
+
+#cartouche h2{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    margin-top: -3px;
+    text-transform: uppercase;
+}
+
+.confirmation{
+	background: #fff;
+	padding: 7px;
+	margin-top: 15px;
+}
+
+.confirmation h3{
+	text-transform: uppercase;
+	color:#cb021a;
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+}
+
+.confirmation h4{
+	color: #333333;
+    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    line-height: 1.35em;
+    margin-top: 5px;
+}
+
+.confirmation p{
+	color: #333333;
+    font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    line-height: 1.25em;
+}
+
+.confirmation p.horaire, .confirmation p.lieu{
+	margin-top: 0;
+}
+
+.informations{
+	margin-top: 10px;
+}
+
+.informations p{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+}
+
+.informations p.nom, .informations p.lieu, .informations p.numero{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    line-height: 1.2em;
+    text-transform: uppercase;
+}
+
+.informations p.nom{
+	margin-top: 5px;
+}
+
+.informations p.lieu, .informations p.numero{
+	margin-top: 0;
+}
+
+.informations p.nom span{
+	text-transform: none;
+}
+
+.important{
+	background: #fff;
+	padding: 7px;
+	margin-top: 15px;
+}
+
+.important p{
+	color: #333333;
+    line-height: 1.3em;
+}
+
+.important a{
+	text-decoration: underline;
+}
+
+.important p strong{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	font-weight: normal;
+}
+
+.mentions{
+	margin-top: 20px;
+}
+
+.mentions p{
+	line-height:1.25em;
+}
+
+.deja_inscrit{
+	margin-top: 15px;
+}
+
+.deja_inscrit h3{
+	color:#cb021a;
+	text-transform: uppercase;
+	background: #fff;
+	padding: 7px;
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+}
+
+.deja_inscrit a{
+	margin-top: 15px;
+	padding-left: 13px;
+	display: block;
+	background: url("img/retour.png") no-repeat left center;
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	color: #fff;
+}
+
+.description_evenement{
+	margin-top: 10px;
+}
+
+.description_evenement h3{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    line-height: 1.2em;
+}
+
+.description_evenement p{
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+}
+
+.description_evenement p.date, .description_evenement p.horaire, .description_evenement p.lieu{
+	margin-top: 0;
+	line-height: 1.2em;
+}
+
+.description_evenement p.date{
+	margin-top: 13px;
+}
+
+.formulaire_interne{
+	background: #fff;
+	padding: 10px;
+	margin-top: 15px;
+}
+
+.formulaire_interne h3{
+	text-transform: uppercase;
+	color:#cb021a;
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	margin-bottom: 20px;
+}
+
+.formulaire_interne label{
+	color:#cc0033;
+	margin-right: 5px;
+}
+
+.formulaire_interne input{
+	border:1px solid #cb021a;
+	color:#666;
+	height: 18px;
+}
+
+.formulaire_interne p.erreur{
+	color: #333333;
+    line-height: 1.2em;
+    font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+}
+
+.formulaire_interne #envoyer{
+	text-transform: uppercase;
+	color:#f2c0c6;
+	display:block;
+	text-align: right;
+	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+}
+
+.formulaire_interne form{
+	margin-bottom: 0;
+}
+
+.plus_de_place{
+	margin-top: 15px;
+}
+
+.plus_de_place h3{
+	background: none repeat scroll 0 0 #F2C0C6;
+    color: #CB021A;
+    font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    padding: 7px 10px 5px;
+    text-transform: uppercase;
+}
+
+.plus_de_place p{
+	font-style: italic;
+}
+
+.formulaire_externe{
+	background: none repeat scroll 0 0 #FFFFFF;
+    margin-top: 15px;
+    padding: 7px 10px 5px;
+}
+
+.formulaire_externe h3{
+	color:#cb021a;
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	text-transform: uppercase;
+}
 
 
 .nextLastRowItem{
