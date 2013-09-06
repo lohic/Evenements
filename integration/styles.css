@@ -489,7 +489,7 @@ textarea {
 }
 
 a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
-.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close, body .fancybox-close{
+.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close, body .fancybox-close, a.sinscrire span{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
 	height: 20px;
@@ -679,12 +679,13 @@ p.avancee.ouvert{
 	color:#666;
 	text-transform: uppercase;
 	padding-left: 15px;
-	background: url("img/fleche_grise.png") no-repeat 5px 4px;
+	background: url("img/fleche_grise.png") no-repeat 5px 0px;
 	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+	padding-bottom: 5px;
 }
 
 .titre_filtre:hover > span{
-	background: url("img/fleche_grise_depliee.png") no-repeat left 8px;
+	background: url("img/fleche_grise_depliee.png") no-repeat left 3px;
 }
 
 #filtre_categorie, #filtre_date, #filtre_mot{
@@ -791,13 +792,13 @@ p.avancee.ouvert{
 
 .first {
 	/*outline: 5px solid red;
-	background: purple;*/
-	margin-left:0px;
+	background: purple;
+	margin-left:0px;*/
 }
 .last {
 	/*outline: 5px solid green;
-	background: green;*/
-	margin-right: 0;
+	background: green;
+	margin-right: 0;*/
 }
 
 img.triangle {
@@ -828,13 +829,14 @@ img.triangle {
 
 .event p{
 	padding:0px 15px;
+	line-height: 1.3em;
 }
 
 .event p.organisateur{
-	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
-	border-top: 1px solid #ccc;
-	padding: 7px 0px 3px;
-	margin: 0 15px;
+	border-top: 1px solid #CCCCCC;
+    font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    margin: 0 15px;
+    padding: 6px 0 4px;
 }
 
 .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, .event p.infos > span{
@@ -891,7 +893,7 @@ a.ical{
 }
 
 span.complet, a.sinscrire{
-	bottom: 15px;
+	bottom: 13px;
     display: block;
     height: 16px;
     position: absolute;
@@ -901,10 +903,20 @@ span.complet, a.sinscrire{
     color: #000;
 }
 
+a.sinscrire span{
+	background-position: left -160px;
+    display: block;
+    float: left;
+    height: 20px;
+    margin-right: 5px;
+    margin-top: -3.5px;
+    width: 20px;
+}
+
 .resumeContent{
-	background: #fff;
-	margin: 30px 10px;
-	position: relative;
+	background: none repeat scroll 0 0 #FFFFFF;
+    margin: 30px -2px 30px 17px;
+    position: relative;
 }
 
 .resumeContent .fermer{
@@ -964,8 +976,8 @@ span.complet, a.sinscrire{
 
 .event .resumeContent h2{
 	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
-    margin-bottom: 3px;
-    margin-top: 3px;
+    margin-bottom: 5px;
+    margin-top: 8px;
 }
 
 .event .resumeContent p{
@@ -979,9 +991,10 @@ span.complet, a.sinscrire{
 .event .resumeContent p.langue, .event .resumeContent p.lieu, .event .resumeContent p.inscription, 
 .event .resumeContent p.organisateur, .event .resumeContent p.infos{
 	border-bottom: 1px solid #CCCCCC;
-    margin: 0;
-    padding: 4px 0 3px;
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
+    line-height: 1.55em;
+    margin: 0;
+    padding: 4px 0 2px;
 }
 
 .event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 
@@ -1043,6 +1056,7 @@ span.complet, a.sinscrire{
 
 .meta span.complet, .meta a.sinscrire {
 	bottom: inherit;
+	padding-top: 3px;
 }
 
 #liste_evenements {
@@ -1087,6 +1101,10 @@ body .fancybox-inner{
 	height: auto !important;
 }
 
+body .fancybox-title-float-wrap .child {
+	display: none;
+}
+
 #cartouche{
 	color:#fff;
 }
@@ -1126,29 +1144,29 @@ body .fancybox-inner{
 	margin-top: 0;
 }
 
-.informations{
+.informations_inscription{
 	margin-top: 10px;
 }
 
-.informations p{
+.informations_inscription p{
 	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 }
 
-.informations p.nom, .informations p.lieu, .informations p.numero{
+.informations_inscription p.nom, .informations_inscription p.lieu, .informations_inscription p.numero{
 	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
     line-height: 1.2em;
     text-transform: uppercase;
 }
 
-.informations p.nom{
+.informations_inscription p.nom{
 	margin-top: 5px;
 }
 
-.informations p.lieu, .informations p.numero{
+.informations_inscription p.lieu, .informations p.numero{
 	margin-top: 0;
 }
 
-.informations p.nom span{
+.informations_inscription p.nom span{
 	text-transform: none;
 }
 
@@ -1245,6 +1263,12 @@ body .fancybox-inner{
 	border:1px solid #cb021a;
 	color:#666;
 	height: 18px;
+	width: 245px;
+	padding: 0 5px;
+}
+
+.formulaire_interne input#login{
+	width: 265px;
 }
 
 .formulaire_interne p.erreur{
