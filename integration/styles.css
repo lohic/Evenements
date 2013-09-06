@@ -489,7 +489,7 @@ textarea {
 }
 
 a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
-.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span, .resumeContent .fermer #close, body .fancybox-close, a.sinscrire span{
+.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span.icone, .resumeContent .fermer #close, body .fancybox-close, a.sinscrire span{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
 	height: 20px;
@@ -504,7 +504,7 @@ a.soumettre{
     text-decoration: underline;
 }
 
-a.soumettre span{
+a.soumettre span.icone{
 	background-position: -49px 2px;
     display: block;
     float: left;
@@ -672,7 +672,7 @@ p.avancee.ouvert{
 
 #header h1{
 	display: table-cell;
-	padding: 20px 0px 0px 28px;
+	padding: 20px 0px 0px 40px;
 }
 
 .titre_filtre > span{
@@ -947,8 +947,12 @@ a.sinscrire span{
 	column-gap:42px;
 }
 
+.resumeContent .conteneur_detail{
+	width: 670px;
+}
+
 .resumeContent .visuel{
-	width: 335px;
+	width: 320px;
 	padding: 0px 15px 0px 0px;
 }
 
@@ -1789,7 +1793,92 @@ ol.styled > li:before {
 }
 
 @media (max-width: 1024px) {
+	#pre_header, #header {
+	    margin: auto;
+	    width: 655px;
+	}
 
+	header{
+		background: #fff;
+		height: 155px;
+	}
+
+	header > div{
+		position: relative;
+		width: 655px;
+		margin:auto;
+	}
+	
+	.texte_icone{
+		display: none;
+	}
+
+	#header h1{
+		display: block;
+		padding: 0;
+		position: absolute;
+		left: 0;
+		top: 25px;
+	}
+	
+	#filtre_categorie, #filtre_date, #filtre_mot {
+	    padding-top: 65px;
+	}
+
+	#filtre_mot {
+	    width: 155px;
+	}
+
+	#filtre_mot > ul {
+    	padding-right: 0;
+	}
+
+	#pre_header > div + div {
+		padding-right: 0;
+		padding-top: 15px;
+	}
+
+	#pre_header input[type="text"] {
+		position: absolute;
+		right: 0;
+		top:45px;
+		margin-right: 0;
+	}
+
+	#pre_header input[type="submit"] {
+		display: none;
+	}
+
+	a.rss, span.francais, span.anglais {
+		margin-top: 0;
+	}
+
+	a.soumettre {
+		position: absolute;
+    	right: 91px;
+    	top: 13px;	
+   	}
+
+   	.resumeContent .conteneur_detail {
+	    width: 335px;
+	}
+
+	.resumeContent .conteneur_detail .col{
+	    display: block;
+	}
+
+	.resumeContent .row {
+	    width: 655px;
+	}
+
+	.resumeContent .informations {
+	    padding: 10px 30px 0 15px;
+    	width: 335px;
+	}
+
+	.resumeContent .visuel {
+	    width: 335px;
+	}
 }
 
 @media (max-width: 768px) {
