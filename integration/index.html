@@ -23,6 +23,7 @@
 					var prevFirstRowEvent;
 					console.log('click on event');
 					
+					//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
 					$('.selectedEvent > a').css('display','block');
 					$('.selectedEvent > img').css('display','inline-block');
 					$('.selectedEvent > p').css('display','block');
@@ -335,13 +336,17 @@
 
 			}
 
+			/*** Fonction récursive qui attribue à un élément la plus grande hauteur parmi des blocs d'une même ligne ***/
 			function getHauteurMax(cible, hauteur, element){
+				//on vérifie si la hauteur de la cible est supérieure à la plus grande hauteur actuelle
 				if(cible.height()>hauteur){
 					hauteur = cible.height();
 				}
+				//si on est pas en bout de ligne, on exécute à nouveau la fonction
 				if(!cible.hasClass('last')){
 					getHauteurMax(cible.next(), hauteur, element);
 				}
+				//sinon on attribue la hauteur max à l'élément cliqué
 				else{
 					$(element).css('height',hauteur+15);
 					return hauteur;
