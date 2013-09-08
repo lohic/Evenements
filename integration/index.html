@@ -17,15 +17,51 @@
 			// ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
 
 			$(document).ready(function(){			
-
+				var sauv = 0;
 				$('.event>h1>a').click(function(e){
+					var nextLastRowEvent;
+					var prevFirstRowEvent;
 					console.log('click on event');
-
+					
+					$('.selectedEvent > a').css('display','block');
+					$('.selectedEvent > img').css('display','inline-block');
+					$('.selectedEvent > p').css('display','block');
+					$('.selectedEvent > div').css('display','block');
+					$('.selectedEvent > span').css('display','block');
+					$('.selectedEvent').height(sauv);
+					sauv = $(this).parent().parent().height();
+					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 					$('.event').removeClass('selectedEvent');
+					
+					nextLastRowEvent = getNextLast($(this).parent().parent());
+					prevFirstRowEvent = getPrevFirst($(this).parent().parent());
+
+					var hauteurMaxTest=prevFirstRowEvent.height();
+					getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
+
 					$(this).parent().parent().addClass('selectedEvent');
 					
 					clickEvent($('.selectedEvent'));
+					$('.selectedEvent > a').css('display','none');
+					$('.selectedEvent > img').css('display','none');
+					$('.selectedEvent > p').css('display','none');
+					$('.selectedEvent > div').css('display','none');
+					$('.selectedEvent > span').css('display','none');
 
+				    // on evite le comportement normal du click
+				    e.preventDefault();
+				});
+
+				$('#lien_menu_smartphone').click(function(e){
+					if($('#menu_smartphone').css('display')=='block'){
+						$('#menu_smartphone').css('display','none');
+						$(this).css('left',15);
+					}
+					else{
+						$('#menu_smartphone').css('display','block');
+						$(this).css('left',285);
+					}
+					
 				    // on evite le comportement normal du click
 				    e.preventDefault();
 				});
@@ -194,7 +230,7 @@
 
 			function clickEvent(clickedElement){
 				var nextLastRowEvent;
-
+				var prevFirstRowEvent;
 				// on eneleve les classe selected et selectedEvent
 				
 				console.log('> suppr resume');
@@ -202,6 +238,7 @@
 
 
 				nextLastRowEvent = getNextLast(clickedElement);
+				prevFirstRowEvent = getPrevFirst(clickedElement);
 
 
 				event_data = {
@@ -226,7 +263,12 @@
 
 			    // quand on clique sur le bouton de fermeture de bloc événement
 			    $('a#close').click(function(e){
-					
+					$('.selectedEvent > a').css('display','block');
+					$('.selectedEvent > img').css('display','inline-block');
+					$('.selectedEvent > p').css('display','block');
+					$('.selectedEvent > div').css('display','block');
+					$('.selectedEvent > span').css('display','block');
+					$('.selectedEvent').height($('.selectedEvent').height()-15);
 					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 					$('#liste_evenements').isotope( 'remove', $('.resume') );
 					console.log('> suppr resume');
@@ -292,6 +334,40 @@
 				return target;
 
 			}
+
+			function getHauteurMax(cible, hauteur, element){
+				if(cible.height()>hauteur){
+					hauteur = cible.height();
+				}
+				if(!cible.hasClass('last')){
+					getHauteurMax(cible.next(), hauteur, element);
+				}
+				else{
+					$(element).css('height',hauteur+15);
+					return hauteur;
+				}
+			}
+
+			function getPrevFirst(cible){
+				var target;
+				$('.event').removeClass('prevFirstRowItem');
+
+				if( cible.hasClass('first') ){
+					target = cible;
+				}else if( cible.prev().hasClass('first') ){
+					target = cible.prev();
+				}else{
+					var limit = $('.first');
+					target = cible.prevUntil(limit, ".event")
+						.first()
+						.prev();
+				}
+
+				target.addClass('prevFirstRowItem');
+
+				return target;
+			}
+
 
 			$(window).resize(function() {
 				console.log('> suppr resume');
@@ -550,6 +626,7 @@
 
 					<p class="date h5-like">du 27/06 | 09h30 au 10/09 | 20h00</p>
 					<p>
+						Berlin vue par la photographe berlinoise Tanja WEKWERTH.<br />Une exposition proposée par la Bibliothèque de Sciences... &nbsp;
 						Berlin vue par la photographe berlinoise Tanja WEKWERTH.<br />Une exposition proposée par la Bibliothèque de Sciences... &nbsp;
 						<a href="/?lang=fr&amp;id=1531" rel="address:/?lang=fr&amp;id=1531" class="suite" style="background-color:#fab80e" id="lien_suite_1531">
 							<img src="http://www.sciencespo.fr/evenements/images/lien_suite.png" alt=""/>

@@ -926,7 +926,7 @@ a.sinscrire span{
 
 .resumeContent{
 	background: none repeat scroll 0 0 #FFFFFF;
-    margin: 30px -2px 30px 17px;
+    margin: 0px -2px 30px 17px;
     position: relative;
 }
 
@@ -1337,12 +1337,18 @@ body .fancybox-title-float-wrap .child {
 }
 
 .selectedEvent{
-	background: #fff;
+	background: url("img/triangle_inverse.png") no-repeat 15px bottom transparent;
+}
+
+.selectedEvent > h1{
+	position: absolute;
+	bottom:15px;
+	width: 320px;
 }
 
 .resume{
 	width:100%;
-	margin: -10px;
+	margin: 0px -10px -10px;
 	background: none;
 }
 
@@ -2026,6 +2032,7 @@ ol.styled > li:before {
 	    width: 270px;
 	    z-index: 1001;
 	    background: url("img/bg_menu_smartphone.png") right top repeat-y #cb0f30;
+	    display: none;
 	}
 
 	#image {
