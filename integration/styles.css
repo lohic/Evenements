@@ -120,6 +120,10 @@ h6, .h6-like {
 	font-size: .7143em; /* equiv 10px */
 	line-height: .7143em;
 }
+.very_small {
+	font-size: .7857em; /* equiv 11px */
+	line-height: .7857em;
+}
 .small {
 	font-size: .8571em; /* equiv 12px */
 	line-height: .8571em;
@@ -497,6 +501,13 @@ a.sinscrire span, #lien_menu_smartphone{
 }
 
 /* Pre-Header */
+header {
+    position: fixed !important;
+    z-index: 1000;
+    top: 0;
+    width: 100%;
+}
+
 a.soumettre{
     color: #444444;
     display: inline-block;
@@ -1080,6 +1091,7 @@ a.sinscrire span{
 #image{
 	height:128px;
 	background: #0FF;
+	margin-top: 137px;
 }
 
 
@@ -1825,6 +1837,10 @@ ol.styled > li:before {
 		width: 655px;
 		margin:auto;
 	}
+
+	#image{
+		margin-top: 155px;
+	}
 	
 	.texte_icone{
 		display: none;
@@ -2010,10 +2026,6 @@ ol.styled > li:before {
 	
 	header {
 	    height: 111px;
-	    position: fixed !important;
-	    z-index: 1000;
-	    width: 100%;
-	    top: 0;
 	}
 
 	#header h1 {
@@ -2025,24 +2037,23 @@ ol.styled > li:before {
 	    width: 304px;
 	}
 
-	#menu_smartphone{
-		height: 1500px;
-	    position: fixed;
-	    top: 0;
-	    width: 270px;
+	.jPanelMenu-panel #menu_smartphone{
+		display: none;
+	}
+
+	#jPanelMenu-menu{
 	    z-index: 1001;
 	    background: url("img/bg_menu_smartphone.png") right top repeat-y #cb0f30;
-	    display: none;
+	    overflow-y:auto !important;
 	}
 
 	#image {
-	    position: fixed !important;
 	    top: 111px;
-	    z-index: 1000;
+	    margin-top: 0;
 	}
 
 	#liste_evenements{
-		margin-top: 239px;
+		margin-top: 111px;
 	}
 
 	.texte_icone {
@@ -2054,14 +2065,14 @@ ol.styled > li:before {
 	    left: 15px;
 	    position: absolute;
 	    text-decoration: none;
-	    top: 650px;
+	    top: 93%;
 	}
 
 	a.soumettre span.icone {
 		background-position: -36px -13px;
 	}
 
-	#menu_smartphone input[type="text"] {
+	#jPanelMenu-menu input[type="text"] {
 	    background: url("img/icn_rechercher.png") no-repeat scroll 5px center #FFFFFF;
 	    border: medium none;
 	    color: #666666;
@@ -2081,8 +2092,7 @@ ol.styled > li:before {
 		background: none;
 		position: relative;
 		color:#fff;
-		padding-top: 8px;
-		padding-bottom: 10px;
+		padding: 8px 0px 10px;
 		border-bottom:1px solid #fff;
 	}
 
@@ -2113,11 +2123,6 @@ ol.styled > li:before {
 		background: url("img/fleche_blanche_depliee.png") no-repeat left 8px;
 	}
 
-	#filtre_date_smart > ul > li > span, #filtre_mot_smart > ul > li > span{
-		border:none;
-		padding-bottom: 0;
-	}
-
 	#filtre_categorie_smart li a, #filtre_date_smart li a, #filtre_mot_smart li a{
 		color:#fff;
 	}
@@ -2128,6 +2133,19 @@ ol.styled > li:before {
 	    margin-right: 8px;
 	    margin-top: 8px;
 	    width: 10px;
+	}
+
+	#jPanelMenu-menu input[type="submit"]{
+		border:none;
+		background: #fff;
+		display: block;
+		color:#c61132;
+		text-transform: uppercase;
+		font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+		float: right;
+		margin-right: 15px;
+		margin-top: 20px;
+		padding-top: 3px;
 	}
 }
 

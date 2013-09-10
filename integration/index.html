@@ -10,6 +10,8 @@
 		<script type="text/javascript" src="js/jquery.isotope.min.js"></script>
 		<script type="text/javascript" src="js/ICanHaz.min.js"></script>
 		<script type="text/javascript" src="js/jquery.resizend.js"></script>
+		<script type="text/javascript" src="js/jquery.jpanelmenu.min.js"></script>
+		<script type="text/javascript" src="js/jRespond.min.js"></script>
 		<script type="text/javascript" src="lib/jquery.mousewheel-3.0.6.pack.js"></script>
 	    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
 		<script type="text/javascript">
@@ -53,7 +55,7 @@
 				    e.preventDefault();
 				});
 
-				$('#lien_menu_smartphone').click(function(e){
+				/*$('#lien_menu_smartphone').click(function(e){
 					if($('#menu_smartphone').css('display')=='block'){
 						$('#menu_smartphone').css('display','none');
 						$(this).css('left',15);
@@ -65,7 +67,7 @@
 					
 				    // on evite le comportement normal du click
 				    e.preventDefault();
-				});
+				});*/
 
 				$origImgW = $('.banniere').width();
 				$origImgH = $('.banniere').height();
@@ -99,6 +101,34 @@
 					$('.banniere').offset({left:$xPos,top:$yPos});
 
 				}
+
+				var jPM = $.jPanelMenu({
+				    menu: '#menu_smartphone',
+				    trigger: '#lien_menu_smartphone',
+				    openPosition: '270px'
+				});
+
+				var jRes = jRespond([
+				    {
+				        label: 'small',
+				        enter: 0,
+				        exit: 692
+				    },{
+				        label: 'large',
+				        enter: 692,
+				        exit: 10000
+				    }
+				]);
+
+				jRes.addFunc({
+				    breakpoint: 'small',
+				    enter: function() {
+				        jPM.on();
+				    },
+				    exit: function() {
+				        jPM.off();
+				    }
+				});
 
 			})
 
@@ -430,7 +460,7 @@
 						</li>
 					</ul>	
 				</div>
-				
+				<input type="submit" value="filtrer" class="very_small"/>
 				<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
 		</section>
 		<section id="contenu_principal">
