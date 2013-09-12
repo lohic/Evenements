@@ -33,3 +33,23 @@ define ('TB',					'sp_plasma_');
 define ('EVENEMENT_DATA_URL',	'http://www.sciencespo.fr/evenements/api/');
 
 define ('METEO_DATA_URL',		'vars/meteo_json.txt');
+
+define("CHEMIN_DOCUMENTS", "http://www.sciencespo.fr/evenements/admin/upload/medias/");
+define("CHEMIN_IMAGES", "http://www.sciencespo.fr/evenements/admin/upload/photos/");
+define("ABSOLU_IMAGES", "http://www.sciencespo.fr/evenements/admin/upload/photos/");
+define("CHEMIN_GENERAL", "http://www.sciencespo.fr/evenements/"); 
+define("CHEMIN_TRIANGLES", "http://www.sciencespo.fr/evenements/admin/");
+define("CHEMIN_BACK", "http://www.sciencespo.fr/evenements/admin/");
+
+define("CHEMIN_FRONT_OFFICE", "http://www.sciencespo.fr/evenements/");
+define("CHEMIN_INSCRIPTION", "http://www.sciencespo.fr/evenements/inscription/");
+define("CHEMIN_ICONES", "http://www.sciencespo.fr/evenements/images/");
+define("CHEMIN_BANNIERE", "http://www.sciencespo.fr/evenements/admin/upload/banniere/");
+define("CHEMIN_LOGO", "http://www.sciencespo.fr/evenements/admin/upload/logo/"); 
+
+define("CHEMIN_BANNIERE_DEFAUT", "http://www.sciencespo.fr/evenements/admin/upload/banniere/"); 
+define("CHEMIN_LOGO_DEFAUT", "http://www.sciencespo.fr/evenements/admin/upload/logo/");
+
+define("CHEMIN_UPLOAD", "admin/upload/photos/");
+
+define("PREFIXE_TABLES", "sp_evenements_");

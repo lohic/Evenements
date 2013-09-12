@@ -247,7 +247,120 @@
 				// filter items when filter link is clicked
 				$('#filtre_categorie a').click(function(){
 					var selector = $(this).attr('data-filter');
-					$container.isotope({ filter: selector });
+					$container.isotope({ 
+						filter: selector,
+						resizable: false,
+						itemSelector : '.event:not(.isotope-hidden)',
+						layoutMode : 'fitRows',
+						itemPositionDataEnabled : true,
+						animationOptions: {
+							duration: 750,
+							easing: 'linear',
+							queue: false,
+						},
+						getSortData : {
+							number : function($elem) {
+								return parseInt($elem.attr('data-sort'), 10);
+							}
+						},
+						sortBy : 'number', // on trie sur le numéro qu'on a créé
+						// pour ajouterles classes first et last 
+						onLayout: function (elems, instance) {
+							console.log('onLayout');
+							var items, rows, numRows, row, prev, i;
+
+							// gather info for each element
+							items = elems.map(function () {
+								var el = $(this), pos = el.data('isotope-item-position');
+								return {
+									x: pos.x,
+									y: pos.y,
+									w: el.width(),
+									h: el.height(),
+									el: el
+								};
+							});
+
+							// first pass to find the first and last items of each row
+							rows = [];
+							i = {};
+							items.each(function () {
+								var y = this.y, r = i[y];
+								if (!r) {
+									r = {
+										y: y,
+										first: null,
+										last: null
+									};
+									rows.push(r);
+									i[y] = r;
+								}
+								if (!r.first || this.x < r.first.x) {
+									r.first = this;
+								}
+								if (!r.last || this.x > r.last.x) {
+									r.last = this;
+								}
+							});
+							rows.sort(function (a, b) { return a.y - b.y; });
+							numRows = rows.length;
+
+							// compare items for each row against the previous row
+							for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+								row = rows[i];
+								if (prev.first.x < row.first.x &&
+									prev.first.y + prev.first.h > row.y) {
+								row.first = prev.first;
+								}
+								if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+									prev.last.y + prev.last.h > row.y) {
+								row.last = prev.last;
+								}
+							}
+
+							// assign classes to first and last elements
+							elems.removeClass('first last');
+							$.each(rows, function () {
+								this.first.el.addClass('first');
+								this.last.el.addClass('last');
+							});
+
+							getNextLast($('.selectedEvent'));
+					    }
+					});
+					var sauv = 0;
+					$('.event>h1>a').click(function(e){
+						var nextLastRowEvent;
+						var prevFirstRowEvent;
+						console.log('click on event');
+						//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
+						$('.selectedEvent > a').css('display','block');
+						$('.selectedEvent > img').css('display','inline-block');
+						$('.selectedEvent > p').css('display','block');
+						$('.selectedEvent > div').css('display','block');
+						$('.selectedEvent > span').css('display','block');
+						$('.selectedEvent').height(sauv);
+						sauv = $(this).parent().parent().height();
+						$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+						$('.event').removeClass('selectedEvent');
+
+						nextLastRowEvent = getNextLast($(this).parent().parent());
+						prevFirstRowEvent = getPrevFirst($(this).parent().parent());
+
+						var hauteurMaxTest=prevFirstRowEvent.height();
+						getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
+
+						$(this).parent().parent().addClass('selectedEvent');
+						
+						clickEvent($('.selectedEvent'));
+						$('.selectedEvent > a').css('display','none');
+						$('.selectedEvent > img').css('display','none');
+						$('.selectedEvent > p').css('display','none');
+						$('.selectedEvent > div').css('display','none');
+						$('.selectedEvent > span').css('display','none');
+					    // on evite le comportement normal du click
+					    e.preventDefault();
+					});
 					return false;
 				});
 
@@ -366,12 +479,12 @@
 				var target;
 				$('.event').removeClass('nextLastRowItem');
 
-				if( cible.hasClass('last') ){
+				if( cible.hasClass('last:not(.isotope-hidden)')){
 					target = cible;
-				}else if( cible.next().hasClass('last') ){
+				}else if( cible.next().hasClass('last:not(.isotope-hidden)')){
 					target = cible.next();
 				}else{
-					var limit = $('.last');
+					var limit = $('.last:not(.isotope-hidden)');
 					target = cible.nextUntil(limit, ".event")
 						.last()
 						.next();
@@ -390,7 +503,7 @@
 					hauteur = cible.height();
 				}
 				//si on est pas en bout de ligne, on exécute à nouveau la fonction
-				if(!cible.hasClass('last')){
+				if(!cible.hasClass('last:not(.isotope-hidden)')){
 					getHauteurMax(cible.next(), hauteur, element);
 				}
 				//sinon on attribue la hauteur max à l'élément cliqué
@@ -404,12 +517,12 @@
 				var target;
 				$('.event').removeClass('prevFirstRowItem');
 
-				if( cible.hasClass('first') ){
+				if( cible.hasClass('first:not(.isotope-hidden)')){
 					target = cible;
-				}else if( cible.prev().hasClass('first') ){
+				}else if( cible.prev().hasClass('first:not(.isotope-hidden)')){
 					target = cible.prev();
 				}else{
-					var limit = $('.first');
+					var limit = $('.first:not(.isotope-hidden)');
 					target = cible.prevUntil(limit, ".event")
 						.first()
 						.prev();
