@@ -28,7 +28,7 @@ define ('ACTU_MEDIA_FOLDER',	'actu_medias/');
 define ('SLIDESHOW_FOLDER',		'slideshow/');
 define ('IMG_SLIDES',			'slides_images/');
 
-define ('TB',					'sp_plasma_');
+define ('TB',					'sp_');
 
 define ('EVENEMENT_DATA_URL',	'http://www.sciencespo.fr/evenements/api/');
 
