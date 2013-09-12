@@ -1,8 +1,8 @@
 <?php
 
 include_once('../vars/config.php');
-include_once(REAL_LOCAL_PATH.'classe_connexion.php');
-include_once(REAL_LOCAL_PATH.'classe_fonctions.php');
+include_once('classe_connexion.php');
+include_once('classe_fonctions.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -142,7 +142,151 @@ class Evenement {
 			$delete_session_query = mysql_query($deleteSessionsSQL) or die(mysql_error());
 		}
 	}
+
+	/**
+	* get_events_organism récupération des événements d'un organisme à venir pour le front office
+	* @param $_id => id de l'organisme
+	*/
+	function get_events_organism($_id=1){
+		$this->evenement_db->connect_db();
+
+		if(isset($_id)){
+			$tableauDesEvents=array();
+		    $aujourdhui = mktime(0,0,0,date("n"),date("d"),date("Y"));
+
+			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s  AND session_fin >=%s AND spg.groupe_id=spr.rubrique_groupe_id AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
+							func::GetSQLValueString($_id, "int"),
+							func::GetSQLValueString($aujourdhui, "text"));
+			$res = mysql_query($sql)or die(mysql_error());
+			
+			while($row = mysql_fetch_array($res)){
+				$tableauDesEvents[] = $row['evenement_id']; 
+			}
+			return $tableauDesEvents;
+		}
+	}
+
+	/**
+	* get_events_partages récupération des événements partagés à venir pour le front office
+	* @param $_id => id de l'organisme
+	*/
+	function get_events_partages($_id=1){
+		$this->evenement_db->connect_db();
+
+		if(isset($_id)){
+			$tableauDesEvents=array();
+		    $aujourdhui = mktime(0,0,0,date("n"),date("d"),date("Y"));
+			
+			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg, ".TB."sessions AS sps WHERE spe.evenement_statut=3 AND evenement_date >=%s  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
+									func::GetSQLValueString($aujourdhui, "text"),
+									func::GetSQLValueString($rowOrganisme['organisme_id'], "int"));
+
+			$res = mysql_query($sql)or die(mysql_error());
+		  
+		  	while($row = mysql_fetch_array($res)){ 
+				$tableauDesEvents[] = $row['evenement_id']; 
+			}
+			return $tableauDesEvents;
+		}
+	}
 	
+	/**
+	* get_title affiche le titre d'un événement sur le front office en fonction de la langue
+	* @param $row => tableau contenant les infos de l'événement
+	* @param $lang => langue du front office
+	*/
+	function get_title($row, $lang){
+		if($lang=="fr"){
+			$titre = $row['evenement_titre'];
+		}
+		else{
+			$titre = $row['evenement_titre_en'];
+		}
+
+		return $titre;
+	}
+
+	/**
+	* get_organisateur affiche l'organisateur d'un événement sur le front office en fonction de la langue
+	* @param $row => tableau contenant les infos de l'événement
+	* @param $lang => langue du front office
+	*/
+	function get_organisateur($row, $lang){
+		if($lang=="fr"){
+			$organisateur = $row['evenement_organisateur'];
+		}
+		else{
+			$organisateur = $row['evenement_organisateur_en'];
+		}
+
+		return $organisateur;
+	}
+
+	/**
+	* affiche_resume affiche le résumé d'un événement sur le front office en fonction de la langue et retourne le résumé facebook
+	* @param $row => tableau contenant les infos de l'événement
+	* @param $lang => langue du front office
+	*/
+	function affiche_resume($row, $lang){
+		if($lang=="fr"){
+			$resumeGeneral = explode(" ",strip_tags($row['evenement_texte']));
+			$resume = explode(" ",strip_tags($row['evenement_texte'],'<br>'));
+		}
+		else{
+			$resumeGeneral = explode(" ",strip_tags($row['evenement_texte_en']));
+			$resume = explode(" ",strip_tags($row['evenement_texte_en'],'<br>'));
+		}
+
+		$resumeFacebook = "";
+		$borne = 15;
+		$bornefacebook = 15;
+		if (count($resume)<15){
+			$borne = count($resume);
+		}
+		
+		if (count($resumeGeneral)<15){
+			$bornefacebook = count($resumeGeneral);
+		}
+
+		if($row['evenement_image']==""){
+			$borne=60; 
+			if (count($resume)<60){
+				$borne = count($resume);
+			}
+		}
+		
+		if($row['evenement_image']==""){
+			$bornefacebook=60; 
+			if (count($resumeGeneral)<60){
+				$bornefacebook = count($resumeGeneral);
+			}
+		}
+
+		for($i = 0 ; $i < $borne ; $i++){
+			if($i != ($borne-1)){
+				echo $resume[$i]." ";
+			}
+			else{
+				echo $resume[$i]."... &nbsp;";
+			}
+		}
+
+		for($i = 0 ; $i < $bornefacebook ; $i++){
+			if($i != ($bornefacebook-1)){
+				str_replace('"','', $resumeGeneral[$i]);
+				$resumeFacebook .= $resumeGeneral[$i]." ";
+			}
+			else{
+				str_replace('"','', $resumeGeneral[$i]);
+				$resumeFacebook .= $resumeGeneral[$i]."... &nbsp;";
+			}
+		}
+
+		return $resumeFacebook;
+	}
+
+	
+
 	
 	function get_default_template($_template=NULL,$_image=NULL){
 		// exemple pour le fonctionnement d'un template
@@ -155,7 +299,7 @@ class Evenement {
 
 		ob_start();
 
-		include(REAL_LOCAL_PATH.'template_front/'.$_template.'/index.php')
+		include(REAL_LOCAL_PATH.'template_front/'.$_template.'/index.php');
 
 		$contents .= ob_get_contents();
 
