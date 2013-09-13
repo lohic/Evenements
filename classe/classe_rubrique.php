@@ -32,6 +32,7 @@ class Rubrique {
 
 
 	function updater($_array_val,$_id){
+		$valeur = 0;
 		// ici on place toutes les fonctions qui servent à mettre à jour ou à créer des objets
 		//
 		// ici on peut aussi normaliser les données à l'aide de :
