@@ -31,9 +31,10 @@
 			$(document).ready(function(){			
 				var sauv = 0;
 				$('.event>h1>a').click(function(e){
+					e.preventDefault();
+					
 					var nextLastRowEvent;
 					var prevFirstRowEvent;
-					console.log('click on event');
 					
 					//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
 					$('.selectedEvent > a').css('display','block');
@@ -48,7 +49,6 @@
 					
 					nextLastRowEvent = getNextLast($(this).parent().parent());
 					prevFirstRowEvent = getPrevFirst($(this).parent().parent());
-
 					var hauteurMaxTest=prevFirstRowEvent.height();
 					getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
 
@@ -60,24 +60,10 @@
 					$('.selectedEvent > p').css('display','none');
 					$('.selectedEvent > div').css('display','none');
 					$('.selectedEvent > span').css('display','none');
-
-				    // on evite le comportement normal du click
-				    e.preventDefault();
-				});
-
-				/*$('#lien_menu_smartphone').click(function(e){
-					if($('#menu_smartphone').css('display')=='block'){
-						$('#menu_smartphone').css('display','none');
-						$(this).css('left',15);
-					}
-					else{
-						$('#menu_smartphone').css('display','block');
-						$(this).css('left',285);
-					}
 					
 				    // on evite le comportement normal du click
-				    e.preventDefault();
-				});*/
+				    
+				});
 
 				$origImgW = $('.banniere').width();
 				$origImgH = $('.banniere').height();
@@ -241,16 +227,24 @@
 						});
 
 						getNextLast($('.selectedEvent'));
+						$('.isotope-hidden').removeClass('first last');
 				    }
 				});
 
 				// filter items when filter link is clicked
 				$('#filtre_categorie a').click(function(){
+					$('.selectedEvent > a').css('display','block');
+					$('.selectedEvent > img').css('display','inline-block');
+					$('.selectedEvent > p').css('display','block');
+					$('.selectedEvent > div').css('display','block');
+					$('.selectedEvent > span').css('display','block');
+					$('.selectedEvent').height($('.selectedEvent').height()-15);
+					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 					var selector = $(this).attr('data-filter');
 					$container.isotope({ 
 						filter: selector,
 						resizable: false,
-						itemSelector : '.event:not(.isotope-hidden)',
+						itemSelector : '.event',
 						layoutMode : 'fitRows',
 						itemPositionDataEnabled : true,
 						animationOptions: {
@@ -272,6 +266,7 @@
 							// gather info for each element
 							items = elems.map(function () {
 								var el = $(this), pos = el.data('isotope-item-position');
+								alert(pos.x);
 								return {
 									x: pos.x,
 									y: pos.y,
@@ -326,10 +321,12 @@
 							});
 
 							getNextLast($('.selectedEvent'));
+							$('.isotope-hidden').removeClass('first last');
 					    }
 					});
 					var sauv = 0;
 					$('.event>h1>a').click(function(e){
+						e.preventDefault();
 						var nextLastRowEvent;
 						var prevFirstRowEvent;
 						console.log('click on event');
@@ -343,7 +340,6 @@
 						sauv = $(this).parent().parent().height();
 						$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 						$('.event').removeClass('selectedEvent');
-
 						nextLastRowEvent = getNextLast($(this).parent().parent());
 						prevFirstRowEvent = getPrevFirst($(this).parent().parent());
 
@@ -359,8 +355,10 @@
 						$('.selectedEvent > div').css('display','none');
 						$('.selectedEvent > span').css('display','none');
 					    // on evite le comportement normal du click
-					    e.preventDefault();
+					    
 					});
+
+					
 					return false;
 				});
 
@@ -393,14 +391,10 @@
 				var nextLastRowEvent;
 				var prevFirstRowEvent;
 				// on eneleve les classe selected et selectedEvent
-				
-				console.log('> suppr resume');
 				$('#liste_evenements').isotope( 'remove', $('.resume') );
-
 
 				nextLastRowEvent = getNextLast(clickedElement);
 				prevFirstRowEvent = getPrevFirst(clickedElement);
-
 
 				event_data = {
 	                titre:   "Le titre à afficher",
@@ -418,6 +412,7 @@
 				clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
 				// on attribue le nouvel ID au bloc de résumé
 			    $newItems.attr('data-sort', clickedID);
+			    $newItems.addClass('rubrique_3');
 			    // on ajoute l'élément
 			    $('#liste_evenements').isotope('insert', $newItems);
 			    console.log('> add resume');
@@ -479,12 +474,12 @@
 				var target;
 				$('.event').removeClass('nextLastRowItem');
 
-				if( cible.hasClass('last:not(.isotope-hidden)')){
+				if( cible.hasClass('last')){
 					target = cible;
-				}else if( cible.next().hasClass('last:not(.isotope-hidden)')){
+				}else if( cible.next().hasClass('last')){
 					target = cible.next();
 				}else{
-					var limit = $('.last:not(.isotope-hidden)');
+					var limit = $('.last');
 					target = cible.nextUntil(limit, ".event")
 						.last()
 						.next();
@@ -499,17 +494,22 @@
 			/*** Fonction récursive qui attribue à un élément la plus grande hauteur parmi des blocs d'une même ligne ***/
 			function getHauteurMax(cible, hauteur, element){
 				//on vérifie si la hauteur de la cible est supérieure à la plus grande hauteur actuelle
-				if(cible.height()>hauteur){
-					hauteur = cible.height();
-				}
-				//si on est pas en bout de ligne, on exécute à nouveau la fonction
-				if(!cible.hasClass('last:not(.isotope-hidden)')){
+				if(cible.hasClass('isotope-hidden')){
 					getHauteurMax(cible.next(), hauteur, element);
 				}
-				//sinon on attribue la hauteur max à l'élément cliqué
 				else{
-					$(element).css('height',hauteur+15);
-					return hauteur;
+					if(cible.height()>hauteur){
+						hauteur = cible.height();
+					}
+					//si on est pas en bout de ligne, on exécute à nouveau la fonction
+					if(!cible.hasClass('last')){
+						getHauteurMax(cible.next(), hauteur, element);
+					}
+					//sinon on attribue la hauteur max à l'élément cliqué
+					else{
+						$(element).css('height',hauteur+15);
+						return hauteur;
+					}
 				}
 			}
 
@@ -517,12 +517,12 @@
 				var target;
 				$('.event').removeClass('prevFirstRowItem');
 
-				if( cible.hasClass('first:not(.isotope-hidden)')){
+				if( cible.hasClass('first')){
 					target = cible;
-				}else if( cible.prev().hasClass('first:not(.isotope-hidden)')){
+				}else if( cible.prev().hasClass('first')){
 					target = cible.prev();
 				}else{
-					var limit = $('.first:not(.isotope-hidden)');
+					var limit = $('.first');
 					target = cible.prevUntil(limit, ".event")
 						.first()
 						.prev();
@@ -537,6 +537,13 @@
 			$(window).resize(function() {
 				console.log('> suppr resume');
 				$('#liste_evenements').isotope( 'remove', $('.resume') );
+				$('.selectedEvent > a').css('display','block');
+				$('.selectedEvent > img').css('display','inline-block');
+				$('.selectedEvent > p').css('display','block');
+				$('.selectedEvent > div').css('display','block');
+				$('.selectedEvent > span').css('display','block');
+				$('.selectedEvent').height($('.selectedEvent').height()-15);
+				$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 			});
 
 			$(window).resizeend({
