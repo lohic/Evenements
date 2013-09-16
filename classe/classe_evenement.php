@@ -152,11 +152,9 @@ class Evenement {
 
 		if(isset($_id)){
 			$tableauDesEvents=array();
-		    $aujourdhui = mktime(0,0,0,date("n"),date("d"),date("Y"));
 
-			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s  AND session_fin >=%s AND spg.groupe_id=spr.rubrique_groupe_id AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
-							func::GetSQLValueString($_id, "int"),
-							func::GetSQLValueString($aujourdhui, "text"));
+			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() AND spg.groupe_id=spr.rubrique_groupe_id AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
+							func::GetSQLValueString($_id, "int"));
 			$res = mysql_query($sql)or die(mysql_error());
 			
 			while($row = mysql_fetch_array($res)){
@@ -175,11 +173,11 @@ class Evenement {
 
 		if(isset($_id)){
 			$tableauDesEvents=array();
-		    $aujourdhui = mktime(0,0,0,date("n"),date("d"),date("Y"));
+		    $aujourdhui = date("Y-m-d").' 00:00:00';
 			
-			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg, ".TB."sessions AS sps WHERE spe.evenement_statut=3 AND evenement_date >=%s  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
+			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg, ".TB."sessions AS sps WHERE spe.evenement_statut=3 AND evenement_datetime >=%s  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s AND sps.evenement_id=spe.evenement_id GROUP BY spe.evenement_id", 
 									func::GetSQLValueString($aujourdhui, "text"),
-									func::GetSQLValueString($rowOrganisme['organisme_id'], "int"));
+									func::GetSQLValueString($_id, "int"));
 
 			$res = mysql_query($sql)or die(mysql_error());
 		  
@@ -283,6 +281,74 @@ class Evenement {
 		}
 
 		return $resumeFacebook;
+	}
+
+	/**
+	* get_fin_event récupère la date de fin d'événement au format datetime
+	* @param $_id => id de l'événement
+	*/
+	function get_fin_event($_id=1){
+		$this->evenement_db->connect_db();
+		$sqlsessions = sprintf("SELECT * FROM ".TB."sessions WHERE evenement_id=%s", func::GetSQLValueString($_id, "int"));
+		$ressessions = mysql_query($sqlsessions) or die(mysql_error());
+		$finEvenement="1980-01-01 00:00:00";
+		while($rowsession = mysql_fetch_array($ressessions)){
+			if($rowsession['session_fin_datetime']>$finEvenement){
+				$finEvenement = $rowsession['session_fin_datetime'];
+			}
+		}
+		return $finEvenement;
+	}
+
+	/**
+	* get_events_months récupération des différents mois des événements à venir du front office 
+	* @param $evenements => tableau contenant l'ensemble des id des événements publiés à venir
+	*/
+	function get_events_months($evenements){
+		$this->evenement_db->connect_db();
+		$objDateTime = date("Y-m-d H:i:s", time());
+		$tableauTest = array();
+		$tableauMois = array();
+		$indice = 0;
+		foreach($evenements as $evenement){
+			$sqlsessions = sprintf("SELECT * FROM ".TB."sessions WHERE evenement_id=%s", func::GetSQLValueString($evenement, "int"));
+			$ressessions = mysql_query($sqlsessions) or die(mysql_error());
+			$finEvenement="1980-01-01 00:00:00";
+			while($rowsession = mysql_fetch_array($ressessions)){
+				if($rowsession['session_fin_datetime']>$finEvenement){
+					$finEvenement = $rowsession['session_fin_datetime'];
+				}
+			}
+			if($finEvenement>$objDateTime){
+				$sql = sprintf("SELECT EXTRACT(YEAR_MONTH FROM evenement_datetime) as leTest, EXTRACT(MONTH FROM evenement_datetime) as leMois, EXTRACT(YEAR FROM evenement_datetime) as lAnnee FROM ".TB."evenements WHERE evenement_id=%s", 
+							func::GetSQLValueString($evenement, "int"));
+				$res = mysql_query($sql)or die(mysql_error());
+				$row = mysql_fetch_array($res);
+
+				if(!in_array($row['leTest'], $tableauTest)){
+					$tableauMois[$indice]['mois'] = $row['leMois'];
+					$tableauMois[$indice]['annee'] = $row['lAnnee'];
+					$tableauMois[$indice]['unique'] = $row['leTest'];
+					$tableauTest[]=$row['leTest'];
+					$indice++;
+				}
+			}
+		}
+		return $tableauMois;
+	}
+
+	/**
+	* get_event_unique_month récupére le mois unique (année+mois) d'un événement
+	* @param $_id => id de l'événement
+	*/
+	function get_event_unique_month($_id){
+		$this->evenement_db->connect_db();
+		$sql = sprintf("SELECT EXTRACT(YEAR_MONTH FROM evenement_datetime) as moisUnique FROM ".TB."evenements WHERE evenement_id=%s", 
+							func::GetSQLValueString($_id, "int"));
+		$res = mysql_query($sql)or die(mysql_error());
+		$row = mysql_fetch_array($res);
+
+		return $row['moisUnique'];
 	}
 
 	

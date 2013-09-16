@@ -50,6 +50,57 @@ class Func {
 		}
 		return $theValue;
 	}
+
+	/*
+	@ Retourne les dates et horaires d'un événement en fonction de la langue
+	@
+	@
+	*/
+	static function getHorairesEvent($debut, $fin, $lang){
+		$jourDebut  =   new DateTime($debut);
+		$jourFin  =   new DateTime($fin);
+
+		$testDebut = $jourDebut->format('d');
+		$testFin = $jourFin->format('d');
+
+		if($testDebut==$testFin){
+			if($jourFin->format('H:i')!="23:59"){
+				if($lang=="fr"){
+					$horaires = $jourDebut->format('d/m | H')."h".$jourDebut->format('i-').$jourFin->format('H')."h".$jourFin->format('i');
+				}
+				else{
+					$horaires = $jourDebut->format('d/m | H:i-').$jourFin->format('H:i');
+				}
+			}
+			else{
+				if($lang=="fr"){
+					$horaires = $jourDebut->format('d/m | H')."h".$jourDebut->format('i');
+				}
+				else{
+					$horaires = $jourDebut->format('d/m | H:i');
+				}
+			}	
+		}
+		else{
+			if($jourFin->format('H:i')!="23:59"){
+				if($lang=="fr"){
+					$horaires = "du ".$jourDebut->format('d/m | H')."h".$jourDebut->format('i')." au ".$jourFin->format('d/m | H')."h".$jourFin->format('i');
+				}
+				else{
+					$horaires = "from ".$jourDebut->format('d/m | H:i')." to ".$jourFin->format('d/m | H:i');
+				}
+			}
+			else{
+				if($lang=="fr"){
+					$horaires = "du ".$jourDebut->format('d/m | H')."h".$jourDebut->format('i')." au ".$jourFin->format('d/m');
+				}
+				else{
+					$horaires = "from ".$jourDebut->format('d/m | H:i')." to ".$jourFin->format('d/m');
+				}
+			}
+		}
+		return $horaires;
+	}
 	
 	
 	/*

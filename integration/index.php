@@ -6,6 +6,13 @@
 	$organisme = new organisme();
 	$event = new evenement();
 	$rubrique = new rubrique();
+
+	if($_GET['lang']=="en"){
+		$lang="en";
+	}
+	else{
+		$lang="fr";
+	}
 ?>
 
 <html>
@@ -232,7 +239,7 @@
 				});
 
 				// filter items when filter link is clicked
-				$('#filtre_categorie a').click(function(){
+				$('.filtre_isotope a').click(function(){
 					$('.selectedEvent > a').css('display','block');
 					$('.selectedEvent > img').css('display','inline-block');
 					$('.selectedEvent > p').css('display','block');
@@ -557,15 +564,26 @@
 
 	</head>
 	<body>
+		<?php
+			$rowOrganisme = $organisme->get_organisme();
+			$rubriques_organisme = $rubrique->get_rubriques_organism($rowOrganisme['organisme_id']);
+			$rubriques_partages = $rubrique->get_rubriques_partages($rowOrganisme['organisme_id']);
+			$rubriques_organisme = array_merge($rubriques_organisme, $rubriques_partages);
+
+			$evenements_organisme=array();
+			$evenements_organisme = $event->get_events_organism();
+			$evenements_partages = $event->get_events_partages();
+			$evenements_organisme = array_merge($evenements_organisme, $evenements_partages);
+
+			$nomMoisAnglais = array(1=>'January', 2=>'February', 3=>'March', 4=>'April', 5=>'May', 6=>'June', 7=>'July', 8=>'August', 9=>'September', 10=>'October', 11=>'November', 12=>'December');
+			$nomMoisFrancais = array(1=>'Janvier', 2=>'Février', 3=>'Mars', 4=>'Avril', 5=>'Mai', 6=>'Juin', 7=>'Juillet', 8=>'Août', 9=>'Septembre', 10=>'Octobre', 11=>'Novembre', 12=>'Décembre');
+					
+			$tableauMois = array();
+			$tableauMois = $event->get_events_months($evenements_organisme);
+		?>
 		<section id="menu_smartphone" class="grand-hidden">
 			<input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
-			<?php
-				$rowOrganisme = $organisme->get_organisme();
-				$debutmois = mktime(0,0,0,date("n"),date("j"),date("Y"));
-				$rubriques_organisme = $rubrique->get_rubriques_organism($rowOrganisme['organisme_id'],$debutmois);
-				$rubriques_partages = $rubrique->get_rubriques_partages($rowOrganisme['organisme_id'],$debutmois);
-				$rubriques_organisme = array_merge($rubriques_organisme, $rubriques_partages);
-			?>
+
 			<?php
 				if(count($rubriques_organisme)>0){
 					$sql = "SELECT * FROM ".TB."rubriques WHERE rubrique_id IN (".implode(',',$rubriques_organisme).") ORDER BY rubrique_titre";
@@ -610,19 +628,35 @@
 						</li>
 					</ul>	
 				</div>
-
-				<div id="filtre_date_smart">
-					<ul>
-						<li class="titre_filtre little_bigger">
-							<span>Dates</span>
-							<ul id="filtering-nav-date">
-								<li class="" id="entree_mois_2"><a class="rubrique_2 carre" href="#rubrique_2" style="background:#fff;" id="entree_2"></a><a class="mois_2" href="#mois_2" id="entree_2">juillet 2013</a></li>
-								<li class="" id="entree_mois_5"><a class="rubrique_5 carre" href="#rubrique_5" style="background:#fff;" id="entree_5"></a><a class="mois_5" href="#mois_5" id="entree_5">août 2013</a></li>
-								<li class="" id="entree_mois_3"><a class="rubrique_3 carre" href="#rubrique_3" style="background:#fff;" id="entree_3"></a><a class="mois_3" href="#mois_3" id="entree_3">septembre 2013</a></li>
-							</ul>
-						</li>
-					</ul>	
-				</div>
+			<?php
+				if(count($tableauMois)>0){
+			?>
+					<div id="filtre_date_smart">
+						<ul>
+							<li class="titre_filtre little_bigger">
+								<span>Dates</span>
+								<ul id="filtering-nav-date">
+			<?php
+									foreach($tableauMois as $mois){
+										if($lang=="fr"){
+			?>
+											<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="mois_<?php echo $mois['unique'];?> carre" href="#mois_<?php echo $mois['unique'];?>" style="background:#fff;" id="entree_mois_smart_<?php echo $mois['unique'];?>"></a><a class="mois_<?php echo $mois['unique'];?>" href="#mois_<?php echo $mois['unique'];?>" id="entree_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+			<?php
+										}
+										else{
+			?>
+											<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="mois_<?php echo $mois['unique'];?> carre" href="#mois_<?php echo $mois['unique'];?>" style="background:#fff;" id="entree_mois_smart_<?php echo $mois['unique'];?>"></a><a class="mois_<?php echo $mois['unique'];?>" href="#mois_<?php echo $mois['unique'];?>" id="entree_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+			<?php
+										}
+									}
+			?>
+								</ul>
+							</li>
+						</ul>	
+					</div>
+			<?php		
+				}
+			?>
 				<input type="submit" value="filtrer" class="very_small"/>
 				<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
 		</section>
@@ -666,7 +700,7 @@
 						}
 						if($res!=-1){
 					?>
-							<div id="filtre_categorie" class="small-hidden">
+							<div id="filtre_categorie" class="small-hidden filtre_isotope">
 								<ul>
 									<li class="titre_filtre bit_small">
 										<span>Catégories</span>
@@ -689,20 +723,37 @@
 						}
 					?>
 
-						<div id="filtre_date" class="small-hidden">
-							<ul>
-								<li class="titre_filtre bit_small">
-									<span>Dates</span>
-									<ul id="filtering-nav-date">
-										<li class="" id="entree_mois_2"><a class="mois_2" href="#mois_2" id="entree_2">juillet 2013</a></li>
-										<li class="" id="entree_mois_5"><a class="mois_5" href="#mois_5" id="entree_5">août 2013</a></li>
-										<li class="" id="entree_mois_3"><a class="mois_3" href="#mois_3" id="entree_3">septembre 2013</a></li>
-									</ul>
-								</li>
-							</ul>	
-						</div>
-
-						<div id="filtre_mot" class="small-hidden">
+					<?php
+						if(count($tableauMois)>0){
+					?>
+							<div id="filtre_date" class="small-hidden filtre_isotope">
+								<ul>
+									<li class="titre_filtre bit_small">
+										<span>Dates</span>
+										<ul id="filtering-nav-date">
+					<?php
+											foreach($tableauMois as $mois){
+												if($lang=="fr"){
+					?>
+													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+					<?php
+												}
+												else{
+					?>
+													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+					<?php
+												}
+											}
+					?>
+										</ul>
+									</li>
+								</ul>	
+							</div>
+					<?php		
+						}
+					?>
+						
+						<div id="filtre_mot" class="small-hidden filtre_isotope">
 							<ul>
 								<li class="titre_filtre bit_small">
 									<span>Mots-clés</span>
@@ -723,20 +774,8 @@
 			<div id="liste_evenements" class="masonry">
 				<!-- attention data-sort doit être un multiple de 10-->
 				<?php
-					if($_GET['lang']=="en"){
-						$lang="en";
-					}
-					else{
-						$lang="fr";
-					}
-					$evenements_organisme=array();
-					
-					$evenements_organisme = $event->get_events_organism();
-					$evenements_partages = $event->get_events_partages();
-					$evenements_organisme = array_merge($evenements_organisme, $evenements_partages);
-
 					if(count($evenements_organisme)>0){
-						$sql = "SELECT * FROM ".TB."evenements AS spe, ".TB."rubriques AS spr WHERE spe.evenement_rubrique=spr.rubrique_id AND evenement_id IN (".implode(',',$evenements_organisme).") ORDER BY spe.evenement_date";
+						$sql = "SELECT * FROM ".TB."evenements AS spe, ".TB."rubriques AS spr WHERE spe.evenement_rubrique=spr.rubrique_id AND evenement_id IN (".implode(',',$evenements_organisme).") ORDER BY spe.evenement_datetime";
 						$res = mysql_query($sql)or die(mysql_error());
 					}
 					else{
@@ -758,8 +797,13 @@
 							}
 							$multiple = 10*$multiplicateur;
 							$multiplicateur++;
+
+							$moisId = $event->get_event_unique_month($row['evenement_id']);
+							$finEvenement = $event->get_fin_event($row['evenement_id']);
+						
+							$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 				?>
-							<div class="event rubrique_<?php echo $rubrique_id;?>" data-sort="<?php echo $multiple;?>">
+							<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?>" data-sort="<?php echo $multiple;?>">
 								<?php
 									if($row['evenement_image']!=""){
 								?>
@@ -774,7 +818,7 @@
 									<a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
 								</h1>								
 
-								<p class="date h5-like">du 27/06 | 09h30 au 10/09 | 20h00</p>
+								<p class="date h5-like"><?php echo $horaires;?></p>
 								<p>
 									<?php $resumeFacebook = $event->affiche_resume($row, $lang);?>
 									<a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="suite" style="background-color:<?php echo $rubrique_couleur; ?>" id="lien_suite_<?php echo $row['evenement_id'];?>">

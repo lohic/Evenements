@@ -64,7 +64,7 @@ class Rubrique {
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
-			$sqlRubrique = sprintf("SELECT * FROM ".TB."rel_evenement_rubrique AS spre, ".TB."rubriques AS spr WHERE spre.rubrique_id=spr.rubrique_id AND spre.evenement_id=%s", GetSQLValueString($_id, "int"));
+			$sqlRubrique = sprintf("SELECT * FROM ".TB."rel_evenement_rubrique AS spre, ".TB."rubriques AS spr WHERE spre.rubrique_id=spr.rubrique_id AND spre.evenement_id=%s", func::GetSQLValueString($_id, "int"));
 			$resRubrique = mysql_query($sqlRubrique)or die(mysql_error());
 			$rowRubrique = mysql_fetch_array($resRubrique);
 			return $rowRubrique;
@@ -74,16 +74,14 @@ class Rubrique {
 	/**
 	* get_rubriques_organism récupération des rubriques des événements à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
-	* @param $debut => date du jour
 	*/
 	function get_rubriques_organism($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			$tableauRubriques=array();
-			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_id=sps.evenement_id AND spe.evenement_statut=3 AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s  AND session_fin >=%s AND spg.groupe_id=spr.rubrique_groupe_id GROUP BY spe.evenement_rubrique", 
-									func::GetSQLValueString($_id, "int"),
-									func::GetSQLValueString($debut, "int"));
+			$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_id=sps.evenement_id AND spe.evenement_statut=3 AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() AND spg.groupe_id=spr.rubrique_groupe_id GROUP BY spe.evenement_rubrique", 
+									func::GetSQLValueString($_id, "int"));
 			
 			$res = mysql_query($sql)or die(mysql_error());
 			
@@ -97,15 +95,13 @@ class Rubrique {
 	/**
 	* get_rubriques_partages récupération des rubriques des événements partagés à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
-	* @param $debut => date du jour
 	*/
 	function get_rubriques_partages($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			$tableauRubriques=array();
-		    $sql = sprintf("SELECT spre.rubrique_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id=sps.evenement_id AND spe.evenement_statut=3 AND session_fin >=%s  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spre.rubrique_id", 
-									func::GetSQLValueString($debut, "int"),
+		    $sql = sprintf("SELECT spre.rubrique_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id=sps.evenement_id AND spe.evenement_statut=3 AND session_fin_datetime >=NOW()  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spre.rubrique_id", 
 									func::GetSQLValueString($_id, "int")
 									);
 
