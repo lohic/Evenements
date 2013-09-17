@@ -41,3 +41,6 @@ Le fichier `config-sample.php` contient les exemples des variables à déclarer,
 
 Le système de template fonctionne avec la fonction `ob_content` qui permet de garder en cache le résultat d'un include (cf **classe_default.php**).
 
+
+Pour les filtres isotopes avec checkbox :
+- http://jsfiddle.net/bj5WG/
