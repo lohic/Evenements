@@ -136,8 +136,8 @@
 			})
 
 
-			$(function(){
-				var $container = $('#liste_evenements'),
+			$(function(){        
+				var $container = $('#liste_evenements'), filters = {};
 				$body = $('body'),
 				colW = 335,
 				columns = null;
@@ -247,9 +247,30 @@
 					$('.selectedEvent > span').css('display','block');
 					$('.selectedEvent').height($('.selectedEvent').height()-15);
 					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-					var selector = $(this).attr('data-filter');
-					$container.isotope({ 
-						filter: selector,
+
+					var $this = $(this);
+					// don't proceed if already selected
+					if ( $this.hasClass('selected') ) {
+					return;
+					}
+
+					var $optionSet = $this.parents('.option-set');
+					// change selected class
+					$optionSet.find('.selected').removeClass('selected');
+					$this.addClass('selected');
+
+					// store filter value in object
+					// i.e. filters.color = 'red'
+					var group = $optionSet.attr('data-filter-group');
+					filters[ group ] = $this.attr('data-filter-value');
+					// convert object into array
+					var isoFilters = [];
+					for ( var prop in filters ) {
+					isoFilters.push( filters[ prop ] )
+					}
+					var selector = isoFilters.join('');
+
+					$container.isotope({ filter: selector,
 						resizable: false,
 						itemSelector : '.event',
 						layoutMode : 'fitRows',
@@ -331,6 +352,9 @@
 							$('.isotope-hidden').removeClass('first last');
 					    }
 					});
+
+					return false;
+
 					var sauv = 0;
 					$('.event>h1>a').click(function(e){
 						e.preventDefault();
@@ -700,17 +724,17 @@
 						}
 						if($res!=-1){
 					?>
-							<div id="filtre_categorie" class="small-hidden filtre_isotope">
+							<div id="filtre_categorie" class="small-hidden">
 								<ul>
 									<li class="titre_filtre bit_small">
 										<span>Catégories</span>
-										<ul id="filtering-nav-categorie">
+										<ul id="filtering-nav-categorie" class="filtre_isotope option-set" data-filter-group="rubrique">
 									<?php		
 											while($row = mysql_fetch_array($res)){
 									?>
 												<li class="" id="entre_cate_<?php echo $row['rubrique_id'];?>">
-													<a class="carre" href="#" style="background:<?php echo $row['rubrique_couleur']; ?>;" data-filter=".rubrique_<?php echo $row['rubrique_id'];?>"></a>
-													<a class="" href="#" data-filter=".rubrique_<?php echo $row['rubrique_id'];?>"><?php echo utf8_encode($row['rubrique_titre']);?></a>
+													<a class="carre" href="#" style="background:<?php echo $row['rubrique_couleur']; ?>;" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"></a>
+													<a class="" href="#" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"><?php echo utf8_encode($row['rubrique_titre']);?></a>
 												</li>
 									<?php
 											}
@@ -726,21 +750,21 @@
 					<?php
 						if(count($tableauMois)>0){
 					?>
-							<div id="filtre_date" class="small-hidden filtre_isotope">
+							<div id="filtre_date" class="small-hidden">
 								<ul>
 									<li class="titre_filtre bit_small">
 										<span>Dates</span>
-										<ul id="filtering-nav-date">
+										<ul id="filtering-nav-date" class="filtre_isotope option-set" data-filter-group="month">
 					<?php
 											foreach($tableauMois as $mois){
 												if($lang=="fr"){
 					?>
-													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
 					<?php
 												}
 												else{
 					?>
-													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+													<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
 					<?php
 												}
 											}
