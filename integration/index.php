@@ -9,9 +9,15 @@
 
 	if($_GET['lang']=="en"){
 		$lang="en";
+		$complet = "FULL";
+		$sinscrire = "SIGN UP";
+		$aucun = "No event to come.";
 	}
 	else{
 		$lang="fr";
+		$complet = "COMPLET";
+		$sinscrire = "S'INSCRIRE";
+		$aucun = "Il n'y a aucun événement à venir.";
 	}
 ?>
 
@@ -31,561 +37,8 @@
 		<script type="text/javascript" src="js/jRespond.min.js"></script>
 		<script type="text/javascript" src="lib/jquery.mousewheel-3.0.6.pack.js"></script>
 	    <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
-		<script type="text/javascript">
 
-			// ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
-
-			$(document).ready(function(){			
-				var sauv = 0;
-				$('.event>h1>a').click(function(e){
-					e.preventDefault();
-					
-					var nextLastRowEvent;
-					var prevFirstRowEvent;
-					
-					//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
-					$('.selectedEvent > a').css('display','block');
-					$('.selectedEvent > img').css('display','inline-block');
-					$('.selectedEvent > p').css('display','block');
-					$('.selectedEvent > div').css('display','block');
-					$('.selectedEvent > span').css('display','block');
-					$('.selectedEvent').height(sauv);
-					sauv = $(this).parent().parent().height();
-					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-					$('.event').removeClass('selectedEvent');
-					
-					nextLastRowEvent = getNextLast($(this).parent().parent());
-					prevFirstRowEvent = getPrevFirst($(this).parent().parent());
-					var hauteurMaxTest=prevFirstRowEvent.height();
-					getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
-
-					$(this).parent().parent().addClass('selectedEvent');
-					
-					clickEvent($('.selectedEvent'));
-					$('.selectedEvent > a').css('display','none');
-					$('.selectedEvent > img').css('display','none');
-					$('.selectedEvent > p').css('display','none');
-					$('.selectedEvent > div').css('display','none');
-					$('.selectedEvent > span').css('display','none');
-					
-				    // on evite le comportement normal du click
-				    
-				});
-
-				$origImgW = $('.banniere').width();
-				$origImgH = $('.banniere').height();
-				$ratioImg = $('.banniere').width() / $('.banniere').height();
-				$('.maxDivImg').css('overflow','hidden');
-				$('.maxDivImg').css('position','relative');
-				$('.banniere').css('position','relative');
-				
-				redim();
-
-				$(window).resize(function() {
-					redim();
-				});
-
-				function redim(){
-					$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
-					
-					if($ratioDiv>$ratioImg){
-						$w = $('.maxDivImg').width();
-						$h = $w/$ratioImg;
-					}else{
-						$h = $('.maxDivImg').height();
-						$w = $h*$ratioImg;
-					}
-					
-					$('.banniere').width($w);
-					$('.banniere').height($h);
-					$xPos = ($('.maxDivImg').width()-$w)/2+$('.maxDivImg').offset().left;
-					$yPos = ($('.maxDivImg').height()-$h)/2+$('.maxDivImg').offset().top;
-
-					$('.banniere').offset({left:$xPos,top:$yPos});
-
-				}
-
-				var jPM = $.jPanelMenu({
-				    menu: '#menu_smartphone',
-				    trigger: '#lien_menu_smartphone',
-				    openPosition: '270px'
-				});
-
-				var jRes = jRespond([
-				    {
-				        label: 'small',
-				        enter: 0,
-				        exit: 692
-				    },{
-				        label: 'large',
-				        enter: 692,
-				        exit: 10000
-				    }
-				]);
-
-				jRes.addFunc({
-				    breakpoint: 'small',
-				    enter: function() {
-				        jPM.on();
-				    },
-				    exit: function() {
-				        jPM.off();
-				    }
-				});
-
-			})
-
-
-			$(function(){        
-				var $container = $('#liste_evenements'), filters = {};
-				$body = $('body'),
-				colW = 335,
-				columns = null;
-
-
-				var clickedElement,clickedID;
-
-				// pour ajouter une élément après un autre
-				// http://jsfiddle.net/9V2Mj/20/
-				//
-				// pour ajouter une classe first et une classe last
-				// sur le premier et le dernier élément de chaque ligne
-				// http://stackoverflow.com/questions/14552017/is-there-a-way-to-target-the-first-and-last-element-in-each-row-using-jquery-iso
-				// 
-				// var position = clickedElement.data('isotope-item-position');
-				// console.log('item position is x: ' + position.x + ', y: ' + position.y  );
-
-				$('#liste_evenements').isotope({
-					// options
-					resizable: false,
-					itemSelector : '.event',
-					layoutMode : 'fitRows',
-					itemPositionDataEnabled : true,
-					animationOptions: {
-						duration: 750,
-						easing: 'linear',
-						queue: false,
-					},
-					getSortData : {
-						number : function($elem) {
-							return parseInt($elem.attr('data-sort'), 10);
-						}
-					},
-					sortBy : 'number', // on trie sur le numéro qu'on a créé
-					// pour ajouterles classes first et last 
-					onLayout: function (elems, instance) {
-						console.log('onLayout');
-						var items, rows, numRows, row, prev, i;
-
-						// gather info for each element
-						items = elems.map(function () {
-							var el = $(this), pos = el.data('isotope-item-position');
-							return {
-								x: pos.x,
-								y: pos.y,
-								w: el.width(),
-								h: el.height(),
-								el: el
-							};
-						});
-
-						// first pass to find the first and last items of each row
-						rows = [];
-						i = {};
-						items.each(function () {
-							var y = this.y, r = i[y];
-							if (!r) {
-								r = {
-									y: y,
-									first: null,
-									last: null
-								};
-								rows.push(r);
-								i[y] = r;
-							}
-							if (!r.first || this.x < r.first.x) {
-								r.first = this;
-							}
-							if (!r.last || this.x > r.last.x) {
-								r.last = this;
-							}
-						});
-						rows.sort(function (a, b) { return a.y - b.y; });
-						numRows = rows.length;
-
-						// compare items for each row against the previous row
-						for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
-							row = rows[i];
-							if (prev.first.x < row.first.x &&
-								prev.first.y + prev.first.h > row.y) {
-							row.first = prev.first;
-							}
-							if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
-								prev.last.y + prev.last.h > row.y) {
-							row.last = prev.last;
-							}
-						}
-
-						// assign classes to first and last elements
-						elems.removeClass('first last');
-						$.each(rows, function () {
-							this.first.el.addClass('first');
-							this.last.el.addClass('last');
-						});
-
-						getNextLast($('.selectedEvent'));
-						$('.isotope-hidden').removeClass('first last');
-				    }
-				});
-
-				// filter items when filter link is clicked
-				$('.filtre_isotope a').click(function(){
-					$('.selectedEvent > a').css('display','block');
-					$('.selectedEvent > img').css('display','inline-block');
-					$('.selectedEvent > p').css('display','block');
-					$('.selectedEvent > div').css('display','block');
-					$('.selectedEvent > span').css('display','block');
-					$('.selectedEvent').height($('.selectedEvent').height()-15);
-					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-
-					var $this = $(this);
-					// don't proceed if already selected
-					if ( $this.hasClass('selected') ) {
-					return;
-					}
-
-					var $optionSet = $this.parents('.option-set');
-					// change selected class
-					$optionSet.find('.selected').removeClass('selected');
-					$this.addClass('selected');
-
-					// store filter value in object
-					// i.e. filters.color = 'red'
-					var group = $optionSet.attr('data-filter-group');
-					filters[ group ] = $this.attr('data-filter-value');
-					// convert object into array
-					var isoFilters = [];
-					for ( var prop in filters ) {
-					isoFilters.push( filters[ prop ] )
-					}
-					var selector = isoFilters.join('');
-
-					$container.isotope({ filter: selector,
-						resizable: false,
-						itemSelector : '.event',
-						layoutMode : 'fitRows',
-						itemPositionDataEnabled : true,
-						animationOptions: {
-							duration: 750,
-							easing: 'linear',
-							queue: false,
-						},
-						getSortData : {
-							number : function($elem) {
-								return parseInt($elem.attr('data-sort'), 10);
-							}
-						},
-						sortBy : 'number', // on trie sur le numéro qu'on a créé
-						// pour ajouterles classes first et last 
-						onLayout: function (elems, instance) {
-							console.log('onLayout');
-							var items, rows, numRows, row, prev, i;
-
-							// gather info for each element
-							items = elems.map(function () {
-								var el = $(this), pos = el.data('isotope-item-position');
-								alert(pos.x);
-								return {
-									x: pos.x,
-									y: pos.y,
-									w: el.width(),
-									h: el.height(),
-									el: el
-								};
-							});
-
-							// first pass to find the first and last items of each row
-							rows = [];
-							i = {};
-							items.each(function () {
-								var y = this.y, r = i[y];
-								if (!r) {
-									r = {
-										y: y,
-										first: null,
-										last: null
-									};
-									rows.push(r);
-									i[y] = r;
-								}
-								if (!r.first || this.x < r.first.x) {
-									r.first = this;
-								}
-								if (!r.last || this.x > r.last.x) {
-									r.last = this;
-								}
-							});
-							rows.sort(function (a, b) { return a.y - b.y; });
-							numRows = rows.length;
-
-							// compare items for each row against the previous row
-							for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
-								row = rows[i];
-								if (prev.first.x < row.first.x &&
-									prev.first.y + prev.first.h > row.y) {
-								row.first = prev.first;
-								}
-								if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
-									prev.last.y + prev.last.h > row.y) {
-								row.last = prev.last;
-								}
-							}
-
-							// assign classes to first and last elements
-							elems.removeClass('first last');
-							$.each(rows, function () {
-								this.first.el.addClass('first');
-								this.last.el.addClass('last');
-							});
-
-							getNextLast($('.selectedEvent'));
-							$('.isotope-hidden').removeClass('first last');
-					    }
-					});
-
-					return false;
-
-					var sauv = 0;
-					$('.event>h1>a').click(function(e){
-						e.preventDefault();
-						var nextLastRowEvent;
-						var prevFirstRowEvent;
-						console.log('click on event');
-						//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
-						$('.selectedEvent > a').css('display','block');
-						$('.selectedEvent > img').css('display','inline-block');
-						$('.selectedEvent > p').css('display','block');
-						$('.selectedEvent > div').css('display','block');
-						$('.selectedEvent > span').css('display','block');
-						$('.selectedEvent').height(sauv);
-						sauv = $(this).parent().parent().height();
-						$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-						$('.event').removeClass('selectedEvent');
-						nextLastRowEvent = getNextLast($(this).parent().parent());
-						prevFirstRowEvent = getPrevFirst($(this).parent().parent());
-
-						var hauteurMaxTest=prevFirstRowEvent.height();
-						getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
-
-						$(this).parent().parent().addClass('selectedEvent');
-						
-						clickEvent($('.selectedEvent'));
-						$('.selectedEvent > a').css('display','none');
-						$('.selectedEvent > img').css('display','none');
-						$('.selectedEvent > p').css('display','none');
-						$('.selectedEvent > div').css('display','none');
-						$('.selectedEvent > span').css('display','none');
-					    // on evite le comportement normal du click
-					    
-					});
-
-					
-					return false;
-				});
-
-
-				$(window).smartresize(function(){
-
-					// measure the width of all the items
-					var itemTotalWidth = 0;
-					$container.children().each(function(){
-						itemTotalWidth += $(this).outerWidth(true);
-					});
-
-					// check if columns has changed
-					var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
-					itemColumns = Math.floor( itemTotalWidth / colW ),
-					currentColumns = Math.min( bodyColumns, itemColumns );
-					if ( currentColumns !== columns ) {
-						// set new column count
-						columns = currentColumns;
-						// apply width to container manually, then trigger relayout
-						$container.width( columns * colW )
-						.isotope('reLayout');
-					}
-
-				}).smartresize();
-			});
-
-
-			function clickEvent(clickedElement){
-				var nextLastRowEvent;
-				var prevFirstRowEvent;
-				// on eneleve les classe selected et selectedEvent
-				$('#liste_evenements').isotope( 'remove', $('.resume') );
-
-				nextLastRowEvent = getNextLast(clickedElement);
-				prevFirstRowEvent = getPrevFirst(clickedElement);
-
-				event_data = {
-	                titre:   "Le titre à afficher",
-	                langue: "la langue ici du français",
-	                organisation : "Le CERI ?",
-	                inscription : "inscription obligatoire… ou pas !",
-	            };
-
-	            // Here's all the magic.
-	            //var eventDetail = ich.event_info(event_data);
-
-				// on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
-				var $newItems = ich.event_info(event_data);
-				// on récupère l'ID de l'élément sur lequel on a cliqué et on l'incrémente
-				clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
-				// on attribue le nouvel ID au bloc de résumé
-			    $newItems.attr('data-sort', clickedID);
-			    $newItems.addClass('rubrique_3');
-			    // on ajoute l'élément
-			    $('#liste_evenements').isotope('insert', $newItems);
-			    console.log('> add resume');
-
-			    // quand on clique sur le bouton de fermeture de bloc événement
-			    $('a#close').click(function(e){
-					$('.selectedEvent > a').css('display','block');
-					$('.selectedEvent > img').css('display','inline-block');
-					$('.selectedEvent > p').css('display','block');
-					$('.selectedEvent > div').css('display','block');
-					$('.selectedEvent > span').css('display','block');
-					$('.selectedEvent').height($('.selectedEvent').height()-15);
-					$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-					$('#liste_evenements').isotope( 'remove', $('.resume') );
-					console.log('> suppr resume');
-
-					// on evite le comportement normal du click
-					e.preventDefault();
-				});
-				$('a#inscription_submit').click(function(e){
-
-					inscription_data = {
-		                titre:"titre de l'événement",
-		            };
-
-		            inscription = ich.inscription_form(inscription_data);
-
-                    $.fancybox( inscription , {
-                        title : 'inscription à un événement',
-                    });
-
-                    validFancyBox();
-
-					e.preventDefault();
-				});
-			}
-
-			function validFancyBox(){
-				$('a#envoyer').click(function(e){
-
-            		validation_data = {
-		                reponse:"Super ça fonctionne, vous êtes inscrit !",
-		                login:$('#login').val(),
-		                password:$('#password').val(),
-		                email:$('#email').val(),
-		            };
-
-		            validation = ich.validation_form(validation_data);
-
-                    $.fancybox( validation , {
-                        title : 'validation de l‘inscription',
-                    });
-
-					e.preventDefault();
-            	});
-			}
-
-			function getNextLast(cible){
-				var target;
-				$('.event').removeClass('nextLastRowItem');
-
-				if( cible.hasClass('last')){
-					target = cible;
-				}else if( cible.next().hasClass('last')){
-					target = cible.next();
-				}else{
-					var limit = $('.last');
-					target = cible.nextUntil(limit, ".event")
-						.last()
-						.next();
-				}
-
-				target.addClass('nextLastRowItem');
-
-				return target;
-
-			}
-
-			/*** Fonction récursive qui attribue à un élément la plus grande hauteur parmi des blocs d'une même ligne ***/
-			function getHauteurMax(cible, hauteur, element){
-				//on vérifie si la hauteur de la cible est supérieure à la plus grande hauteur actuelle
-				if(cible.hasClass('isotope-hidden')){
-					getHauteurMax(cible.next(), hauteur, element);
-				}
-				else{
-					if(cible.height()>hauteur){
-						hauteur = cible.height();
-					}
-					//si on est pas en bout de ligne, on exécute à nouveau la fonction
-					if(!cible.hasClass('last')){
-						getHauteurMax(cible.next(), hauteur, element);
-					}
-					//sinon on attribue la hauteur max à l'élément cliqué
-					else{
-						$(element).css('height',hauteur+15);
-						return hauteur;
-					}
-				}
-			}
-
-			function getPrevFirst(cible){
-				var target;
-				$('.event').removeClass('prevFirstRowItem');
-
-				if( cible.hasClass('first')){
-					target = cible;
-				}else if( cible.prev().hasClass('first')){
-					target = cible.prev();
-				}else{
-					var limit = $('.first');
-					target = cible.prevUntil(limit, ".event")
-						.first()
-						.prev();
-				}
-
-				target.addClass('prevFirstRowItem');
-
-				return target;
-			}
-
-
-			$(window).resize(function() {
-				console.log('> suppr resume');
-				$('#liste_evenements').isotope( 'remove', $('.resume') );
-				$('.selectedEvent > a').css('display','block');
-				$('.selectedEvent > img').css('display','inline-block');
-				$('.selectedEvent > p').css('display','block');
-				$('.selectedEvent > div').css('display','block');
-				$('.selectedEvent > span').css('display','block');
-				$('.selectedEvent').height($('.selectedEvent').height()-15);
-				$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-			});
-
-			$(window).resizeend({
-				onDragEnd : function(){
-					console.log('end resize !!!');
-				},
-				runOnStart : true,
-			});
-
-		</script>
-
+	    <script type="text/javascript" src="js/general.js"></script>
 	</head>
 	<body>
 		<?php
@@ -607,7 +60,7 @@
 		?>
 		<section id="menu_smartphone" class="grand-hidden">
 			<input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
-
+			<div id="options_smart" class="little_bigger">
 			<?php
 				if(count($rubriques_organisme)>0){
 					$sql = "SELECT * FROM ".TB."rubriques WHERE rubrique_id IN (".implode(',',$rubriques_organisme).") ORDER BY rubrique_titre";
@@ -618,74 +71,66 @@
 				}
 				if($res!=-1){
 			?>
-					<div id="filtre_categorie_smart" class="mb1">
-						<ul>
-							<li class="titre_filtre little_bigger">
-								<span>Catégories</span>
-								<ul id="filtering-nav-categorie">
-							<?php		
-									while($row = mysql_fetch_array($res)){
-							?>
-										<li class="" id="entre_cate_<?php echo $row['rubrique_id'];?>">
-											<a class="rubrique_<?php echo $row['rubrique_id'];?> carre" href="#rubrique_<?php echo $row['rubrique_id'];?>" style="background:<?php echo $row['rubrique_couleur']; ?>;" id="entree_<?php echo $row['rubrique_id'];?>"></a>
-											<a class="rubrique_<?php echo $row['rubrique_id'];?>" href="#rubrique_<?php echo $row['rubrique_id'];?>" id="entree_<?php echo $row['rubrique_id'];?>"><?php echo utf8_encode($row['rubrique_titre']);?></a>
-										</li>
-							<?php
-									}
-							?>
-								</ul>
-							</li>
-						</ul>					
+					<div id="filtre_categorie_smart" class="mb1 option-set" data-group="rubrique">
+						<span>Catégories</span>
+						<div class="conteneur_filtre">
+						<input type="checkbox" value=""        id="rubrique_toutes" class="all checkbox_smart" checked />
+						<label for="rubrique_toutes" class="all"><span class="" style="background:#fff;"></span>toutes</label>
+						<?php		
+								while($row = mysql_fetch_array($res)){
+						?>
+									<input type="checkbox" value=".rubrique_<?php echo $row['rubrique_id'];?>" id="rubrique_<?php echo $row['rubrique_id'];?>" class="checkbox_smart" />
+									<label for="rubrique_<?php echo $row['rubrique_id'];?>"><span class="vide" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo utf8_encode($row['rubrique_titre']);?></label>
+						<?php
+								}
+						?>
+						</div>			
 					</div>
 			<?php
 				}
 			?>
-				<div id="filtre_mot_smart" class="mb1">
-					<ul>
-						<li class="titre_filtre little_bigger">
-							<span>Mots-clés</span>
-							<ul id="filtering-nav-mot">
-								<li class="" id="entree_mot_2"><a class="rubrique_2 carre" href="#rubrique_2" style="background:#fff;" id="entree_2"></a><a class="mot_2" href="#mot_2" id="entree_2">Sciences Po Paris</a></li>
-								<li class="" id="entree_mot_5"><a class="rubrique_5 carre" href="#rubrique_5" style="background:#fff;" id="entree_5"></a><a class="mot_5" href="#mot_5" id="entree_5">Campus du Havre</a></li>
-								<li class="" id="entree_mot_3"><a class="rubrique_3 carre" href="#rubrique_3" style="background:#fff;" id="entree_3"></a><a class="mot_3" href="#mot_3" id="entree_3">Autre mot-clé</a></li>
-							</ul>
-						</li>
-					</ul>	
-				</div>
+				<!--<div id="filtre_mot_smart" class="mb1 option-set" data-group="mots">
+					<span>Mots-clés</span>
+					<input type="checkbox" value=""        id="mots-tous" class="all" checked /><label for "mots-tous">tous</label>
+				</div>-->
 			<?php
 				if(count($tableauMois)>0){
 			?>
-					<div id="filtre_date_smart">
-						<ul>
-							<li class="titre_filtre little_bigger">
-								<span>Dates</span>
-								<ul id="filtering-nav-date">
+					<div id="filtre_date_smart" class="option-set" data-group="dates">
+						<span>Dates</span>
+						<div class="conteneur_filtre">
+						<input type="checkbox" value=""        id="dates_toutes" class="all checkbox_smart" checked />
+						<label for="dates_toutes" class="all"><span class="" style="background:#fff;"></span>toutes</label>
+						
 			<?php
-									foreach($tableauMois as $mois){
-										if($lang=="fr"){
+						foreach($tableauMois as $mois){
+							if($lang=="fr"){
 			?>
-											<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="mois_<?php echo $mois['unique'];?> carre" href="#mois_<?php echo $mois['unique'];?>" style="background:#fff;" id="entree_mois_smart_<?php echo $mois['unique'];?>"></a><a class="mois_<?php echo $mois['unique'];?>" href="#mois_<?php echo $mois['unique'];?>" id="entree_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+								<input type="checkbox" value=".mois_<?php echo $mois['unique'];?>" id="mois_<?php echo $mois['unique'];?>" class="checkbox_smart"/>
+								<label for="mois_<?php echo $mois['unique'];?>"><span class="vide" style="background:#fff;"></span><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></label>
 			<?php
-										}
-										else{
+							}
+							else{
 			?>
-											<li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="mois_<?php echo $mois['unique'];?> carre" href="#mois_<?php echo $mois['unique'];?>" style="background:#fff;" id="entree_mois_smart_<?php echo $mois['unique'];?>"></a><a class="mois_<?php echo $mois['unique'];?>" href="#mois_<?php echo $mois['unique'];?>" id="entree_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+								<input type="checkbox" value=".mois_<?php echo $mois['unique'];?>" id="mois_<?php echo $mois['unique'];?>" class="checkbox_smart"/>
+								<label for="mois_<?php echo $mois['unique'];?>"><span class="vide" style="background:#fff;"></span><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></label>
 			<?php
-										}
-									}
-			?>
-								</ul>
-							</li>
-						</ul>	
+							}
+						}
+			?>		
+						</div>
 					</div>
 			<?php		
 				}
 			?>
-				<input type="submit" value="filtrer" class="very_small"/>
+				</div>
+
+				<button id="validation_smart" class="very_small">Filtrer</button>
 				<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
 		</section>
 		<section id="contenu_principal">
 			<header>
+				
 				<div>
 					<section id="pre_header">
 						<a href="#" id="lien_menu_smartphone" class="grand-hidden"></a>
@@ -693,23 +138,23 @@
 							<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
 						</div>
 						<div>
-							<span class="francais"></span>
-							<a href="index.php?lang=en" title="anglais" class="anglais"><span class="anglais"></span></a>
+						<?php
+							if($lang=="fr"){
+						?>
+								<span class="francais"></span>
+								<a href="index.php?lang=en" title="anglais" class="anglais"><span class="anglais"></span></a>
+						<?php
+							}
+							else{
+						?>
+								<a href="index.php?lang=fr" title="français" class="francais"><span class="francais"></span></a>
+								<span class="anglais"></span>
+						<?php
+							}
+						?>
 							<input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher" class="small-hidden"/>
 							<input type="submit" value="OK" class="valider_recherche small-hidden"/>
 							<a href="rss_events.php?lang=fr" class="rss"></a>
-							<!--<div id="recherche_avancee">
-								<div>
-									<p class="avancee ouvert">Recherche avancée</p>
-									<ul>
-										<li class="" id="entre_liste_2"><a class="rubrique_2 carre" href="#rubrique_2" style="border:2px solid #fab80e;" id="entree_2"><span style="background:#fab80e;"></span></a><a class="rubrique_2" href="#rubrique_2" id="texte_entree_2">Art et culture</a></li>
-
-										<li class="" id="entre_liste_5"><a class="rubrique_5 carre" href="#rubrique_5" style="border:2px solid #aaff55;" id="entree_5"><span style="background:#aaff55;"></span></a><a class="rubrique_5" href="#rubrique_5" id="texte_entree_5">Expositions</a></li>
-
-										<li class="" id="entre_liste_3"><a class="rubrique_3 carre" href="#rubrique_3" style="border:2px solid #e63f81;" id="entree_3"><span style="background:#e63f81;"></span></a><a class="rubrique_3" href="#rubrique_3" id="texte_entree_3">Recherche et débats</a></li>
-									</ul>
-								</div>
-							</div>-->
 						</div>
 					</section>
 					<section id="header">
@@ -849,11 +294,18 @@
 										<img src="http://www.sciencespo.fr/evenements/images/lien_suite.png" alt=""/>
 									</a>
 								</p>
-
-								<p class="organisateur bit_small">
-									<span style="background-color:<?php echo $rubrique_couleur; ?>"></span><?php echo $event->get_organisateur($row, $lang);?>									
-								</p>
 								
+								<?php
+									$organisateur = $event->get_organisateur($row, $lang);
+									if($organisateur!=""){
+								?>
+										<p class="organisateur bit_small">
+											<span style="background-color:<?php echo $rubrique_couleur; ?>"></span><?php echo $organisateur;?>									
+										</p>
+								<?php
+									}
+								?>
+
 								<div class="reseaux">			
 									<a href="http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=<?php echo CHEMIN_FRONT_OFFICE; ?>index.php?id=<?php echo $row['evenement_id']; ?>&amp;picture=<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id']; ?>/mini-<?php echo $row['evenement_image'];?>&amp;name=<?php echo $row['evenement_titre_en']; ?>&amp;caption=<?php echo $horaires; ?>&amp;description=<?php echo $resumeFacebook; ?>&amp;message=Sciences Po | events&amp;redirect_uri=<?php echo CHEMIN_FRONT_OFFICE; ?>" class="reseaux facebook" style="background-color:<?php echo $rubrique_couleur; ?>"  target="_blank">
 									</a>
@@ -865,14 +317,14 @@
 									</a>
 								</div>
 
-								<a href="#" class="sinscrire bit_big" target="_blank"><span style="background-color:<?php echo $rubrique_couleur; ?>"></span>S'INSCRIRE</a>
+								<a href="#" class="sinscrire bit_big" target="_blank"><span style="background-color:<?php echo $rubrique_couleur; ?>"></span><?php echo $sinscrire;?></a>
 							</div>
 				<?php
 						}
 					}
 					else{
 				?>
-						<div id="pasderesultat"><p>Il n'y a aucun événement à venir.</p></div>
+						<div id="pasderesultat"><p><?php echo $aucun;?></p></div>
 				<?php
 					}
 				?>

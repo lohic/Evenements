@@ -2087,8 +2087,7 @@ ol.styled > li:before {
 	    width: 240px;
 	}
 
-	#filtre_categorie_smart .titre_filtre > ul, #filtre_date_smart .titre_filtre > ul, #filtre_mot_smart .titre_filtre > ul{
-		display: none;
+	#options_smart span + div{
 		background: none;
 		position: relative;
 		color:#fff;
@@ -2100,7 +2099,7 @@ ol.styled > li:before {
 		border-color: #fff;
 	}
 
-	#filtre_categorie_smart > ul, #filtre_date_smart > ul, #filtre_mot_smart > ul{
+	#options_smart{
 		padding-left: 15px;
 		padding-right: 15px;
 	}
@@ -2113,39 +2112,55 @@ ol.styled > li:before {
 		margin-top: 70px;
 	}
 
-	.titre_filtre > span{
-		color: #fff;
-		text-transform: none;
+	#options_smart > div > span{
 		background: url("img/fleche_blanche.png") no-repeat scroll 3px 5px transparent;
+	    border-bottom: 1px solid #FFFFFF;
+	    color: #FFFFFF;
+	    display: block;
+	    padding-left: 15px;
+	    text-transform: none;
+	    padding-bottom: 5px;
 	}    
 
-	.titre_filtre:hover > span{
+	#options_smart > div > span:hover{
 		background: url("img/fleche_blanche_depliee.png") no-repeat left 8px;
 	}
 
-	#filtre_categorie_smart li a, #filtre_date_smart li a, #filtre_mot_smart li a{
-		color:#fff;
+	#jPanelMenu-menu input[type="checkbox"]{
+		display: none;
 	}
 
-	#filtre_categorie_smart a.carre, #filtre_date_smart a.carre , #filtre_mot_smart a.carre  {
-	    display: inline-block;
-	    height: 10px;
-	    margin-right: 8px;
-	    margin-top: 8px;
-	    width: 10px;
-	}
-
-	#jPanelMenu-menu input[type="submit"]{
-		border:none;
-		background: #fff;
+	#jPanelMenu-menu label{
 		display: block;
-		color:#c61132;
-		text-transform: uppercase;
-		font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
-		float: right;
-		margin-right: 15px;
-		margin-top: 20px;
-		padding-top: 3px;
+	}
+
+	#jPanelMenu-menu label span{
+		border: 2px solid #FFFFFF;
+	    content: " ";
+	    display: block;
+	    height: 13px;
+	    margin-right: 13px;
+	    margin-top: 6px;
+	    width: 13px;
+	    float: left;
+	}
+
+	#jPanelMenu-menu label span.vide{
+		background: transparent !important;
+	}
+
+	#jPanelMenu-menu button{
+		background: none repeat scroll 0 0 #FFFFFF;
+	    border: medium none;
+	    color: #C61132;
+	    display: block;
+	    float: right;
+	    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	    margin-right: 15px;
+	    margin-top: 20px;
+	    padding-bottom: 3px;
+	    padding-top: 4px;
+	    text-transform: uppercase;
 	}
 }
 
