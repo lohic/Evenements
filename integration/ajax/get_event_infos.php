@@ -8,7 +8,6 @@ include_once('../../classe/classe_fonctions.php');
 
 $event = new evenement();
 
-$test = $event->get_event_infos($_GET['id_event']);
+echo $event->get_event_infos($_GET['id_event']);
 
-return $test;
 ?>

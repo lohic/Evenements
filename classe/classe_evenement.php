@@ -360,7 +360,6 @@ class Evenement {
 	function get_event_infos($_id){
 		$this->evenement_db->connect_db();
 		$retour = new stdClass();
-		$tableau_JSON = array();
 
 		$sql = sprintf("SELECT evenement_titre FROM ".TB."evenements WHERE evenement_id=%s", 
 							func::GetSQLValueString($_id, "int"));
@@ -368,12 +367,8 @@ class Evenement {
 		$res = mysql_query($sql)or die(mysql_error());
 		$row = mysql_fetch_array($res);
 		
-		$tableau_JSON[] = '{
-		    "titre":'. $row['evenement_titre'] .',
-		}';
-		
-		$retour->json 	= implode(",\n", $tableau_JSON);
-		return $retour;
+		$retour->titre 	= $row['evenement_titre'];
+		return json_encode($retour);
 	}
 
 	
