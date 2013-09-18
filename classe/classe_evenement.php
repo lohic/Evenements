@@ -351,7 +351,30 @@ class Evenement {
 		return $row['moisUnique'];
 	}
 
-	
+
+	/**
+	* get_event_infos récupére les infos pour le détail d'un événement
+	* @param $_id => id de l'événement
+	* @return JSON => l'objet JSON contiendra les infos de l'événement
+	*/
+	function get_event_infos($_id){
+		$this->evenement_db->connect_db();
+		$retour = new stdClass();
+		$tableau_JSON = array();
+
+		$sql = sprintf("SELECT evenement_titre FROM ".TB."evenements WHERE evenement_id=%s", 
+							func::GetSQLValueString($_id, "int"));
+
+		$res = mysql_query($sql)or die(mysql_error());
+		$row = mysql_fetch_array($res);
+		
+		$tableau_JSON[] = '{
+		    "titre":'. $row['evenement_titre'] .',
+		}';
+		
+		$retour->json 	= implode(",\n", $tableau_JSON);
+		return $retour;
+	}
 
 	
 	function get_default_template($_template=NULL,$_image=NULL){

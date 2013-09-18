@@ -523,13 +523,31 @@ function clickEvent(clickedElement){
 	nextLastRowEvent = getNextLast(clickedElement);
 	prevFirstRowEvent = getPrevFirst(clickedElement);
 
-	event_data = {
+	var evenement_id = clickedElement.find('h1 > a').attr('id').split('_')[2];
+	$.ajax({
+        url     :"ajax/get_event_infos.php",
+        type    : "GET",
+        dataType:'json',
+        data    : {
+            id_event : evenement_id
+        }
+    }).done(function (dataJSON) {
+    	console.log('ok');
+    	event_data = {
+	        titre:   "Le titre à afficher",
+	        langue: "la langue ici du français",
+	        organisation : "Le CERI ?",
+	        inscription : "inscription obligatoire… ou pas !",
+	    };
+        console.log(dataJSON);
+    });
+
+    event_data = {
         titre:   "Le titre à afficher",
         langue: "la langue ici du français",
         organisation : "Le CERI ?",
         inscription : "inscription obligatoire… ou pas !",
     };
-
     // Here's all the magic.
     //var eventDetail = ich.event_info(event_data);
 
