@@ -272,7 +272,7 @@
 						
 							$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 				?>
-							<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?>" data-sort="<?php echo $multiple;?>">
+							<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>">
 								<?php
 									if($row['evenement_image']!=""){
 								?>
@@ -334,47 +334,29 @@
 			<script id="event_info" type="text/html">
 		        <article class="event resume">
 		        	<div class="resumeContent">
-		        		<div class="fermer" style="background-color:#fab80e">
+		        		<div class="fermer" style="background-color:{{couleur}}">
 		        			<a href="#" id="close"></a>
 		        		</div>
 		        		<div class="row">
 		        			<div class="conteneur_detail">
 			        			<div class="col visuel">
-			        				<img src="img/visuel.png" id="vignette" />
-			        				<h1 class="bit_big"><span class="bit_small">Art et culture</span> Germany before the elections</h1>
+			        				{{#image}}<img src="{{image}}" alt="{{texte_image}}" id="vignette" width="320"/>{{/image}}
+			        				<h1 class="bit_big">{{#rubrique}}<span class="bit_small">{{rubrique}}</span>{{/rubrique}}{{titre}}</h1>
 			        			</div>
 			        			
 			        			<div class="col informations">
-			        				<h2 class="biggest">05/09 | 16h30-19h00</h2>
-			        				<p class="langue"><span style="background-color:#fab80e"></span>Anglais</p>
-				        			<p class="lieu"><span style="background-color:#fab80e"></span>Lieu</p>
-				        			<p class="inscription"><span style="background-color:#fab80e"></span>Inscription obligatoire</p>
-				        			<p class="organisateur"><span style="background-color:#fab80e"></span>Bibliothèque de Sciences Po</p>
-				        			<p class="infos"><span style="background-color:#fab80e"></span>Infos</p>
+			        				<h2 class="biggest">{{date}}</h2>
+			        				{{#langue}}<p class="langue"><span style="background-color:{{couleur}}"></span>{{langue}}</p>{{/langue}}
+				        			{{#lieu}}<p class="lieu"><span style="background-color:{{couleur}}"></span>{{lieu}}, {{batiment}}</p>{{/lieu}}
+				        			{{#inscription}}<p class="inscription"><span style="background-color:{{couleur}}"></span>{{{inscription}}}</p>{{/inscription}}
+				        			{{#organisateur}}<p class="organisateur"><span style="background-color:{{couleur}}"></span>{{organisateur}}<br/>{{coorganisateur}}</p>{{/organisateur}}
+				        			{{#infos}}<p class="infos"><span style="background-color:{{couleur}}"></span><a href="{{infos}}" target="_blank">{{infos_texte}}</a></p>{{/infos}}
 			        			</div>
 				        	</div>	
 
 			        		<div class="col contenu">
 			        			<div class="texte bit_big">
-			        				<p>Guest speakers :</p>
-			        				<p>Chair : <strong>Catherine Perron</strong>, CERI-Sciences Po</p>
-									<p>- Ulrike Guérot, Representative for Germany and Senior Policy Fellow, European Council on Foreign Relations, Berlin German-European policy after the elections - business as usual?</p>
-									<p>- Discussant : Christian Lequesne, Director, CERI-Sciences P</p>
-									<p>- Prof. Klaus Dörre, Institute of Sociology, Friedrich Schiller University of Jena</p>
-									<p>Activating Labour Market Reforms In Germany : <em>How Do They Impact Labour Market Orientations of Unemployed and Precarious Workers?</em></p>
-									<p>- Discussant : to be determined</p>
-									<p>- Severin Fischer, Fellow,  Stiftung für Wissenschaft und Politik (SWP), Berlin The Energiewende in the electoral campaign</p>
-									<p>Discussant : Rachel Guyet, Project Manager, CERI-Sciences Po</p>
-									<p>Activating Labour Market Reforms In Germany : <em>How Do They Impact Labour Market Orientations of Unemployed and Precarious Workers?</em></p>
-									<p>- Discussant : to be determined</p>
-									<p>- Severin Fischer, Fellow,  Stiftung für Wissenschaft und Politik (SWP), Berlin The Energiewende in the electoral campaign
-									Discussant : Rachel Guyet, Project Manager, CERI-Sciences Po</p>
-									<p>Discussant : Rachel Guyet, Project Manager, CERI-Sciences Po</p>
-									<p>Guest speakers :</p>
-			        				<p>Chair : Catherine Perron, CERI-Sciences Po</p>
-									<p>- Ulrike Guérot, Representative for Germany and Senior Policy Fellow, European Council on Foreign Relations, Berlin German-European policy after the elections - business as usual?</p>
-									<p>- Discussant : Christian Lequesne, Director, CERI-Sciences P</p>
-									<p>- Prof. Klaus Dörre, Institute of Sociology, Friedrich Schiller University of Jena</p>
+			        				{{{texte}}}
 								</div>
 		        			</div>
 
@@ -382,19 +364,18 @@
 		        		<div class="reset"></div>
 		        		<div class="meta">
 		        			<div>
-				        		<a href="#" class="reseaux facebook" style="background-color:#fab80e"  target="_blank">
+		        				<a href="{{facebook}}" class="reseaux facebook" style="background-color:{{couleur}}"  target="_blank"></a>
+
+								<a href="{{twitter}}" class="reseaux twitter" style="background-color:{{couleur}}" target="_blank" onclick="javascript:pageTracker._trackPageview ('/outbound/twitter.com');">
 								</a>
 
-								<a href="#" class="reseaux twitter" style="background-color:#fab80e">
+								<a href="{{ical}}" target="_blank" class="reseaux ical" style="background-color:{{couleur}}">
 								</a>
-
-								<a href="#" target="_blank" class="reseaux ical" style="background-color:#fab80e">
-								</a>
-								<a href="#" class="sinscrire bit_big" id="inscription_submit"><span style="background-color:#fab80e"></span>SINSCRIRE</a>
+								<a href="#" class="sinscrire bit_big" id="inscription_submit"><span style="background-color:{{couleur}}"></span>SINSCRIRE</a>
 							</div>
 				        </div>
 			        	<div class="reset"></div>
-			        	<div class="bottom"  style="background-color:#fab80e"></div>
+			        	<div class="bottom"  style="background-color:{{couleur}}"></div>
 		        	</div>
 		        </article>
 		    </script>

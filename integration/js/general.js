@@ -524,59 +524,76 @@ function clickEvent(clickedElement){
 	prevFirstRowEvent = getPrevFirst(clickedElement);
 
 	var evenement_id = clickedElement.find('h1 > a').attr('id').split('_')[2];
+
+	if(clickedElement.hasClass('en')){
+		var la_langue="en";
+	}
+	else{
+		var la_langue="fr";
+	}
+
 	$.ajax({
         url     :"ajax/get_event_infos.php",
         type    : "GET",
         dataType:'json',
         data    : {
-            id_event : evenement_id
+            id_event : evenement_id,
+            langue : la_langue
         }
     }).done(function (dataJSON) {
-    	console.log('ok');
+    	console.log(dataJSON.titre);
     	event_data = {
-	        titre:   "Le titre à afficher",
-	        langue: "la langue ici du français",
-	        organisation : "Le CERI ?",
-	        inscription : "inscription obligatoire… ou pas !",
+	        titre:   dataJSON.titre,
+	        date: dataJSON.date,
+	        rubrique: dataJSON.rubrique,
+	        couleur: dataJSON.couleur,
+	        langue: dataJSON.langue,
+	        lieu: dataJSON.lieu,
+	        batiment: dataJSON.batiment,
+	        organisateur: dataJSON.organisateur,
+	        coorganisateur: dataJSON.coorganisateur,
+	        infos: dataJSON.lien,
+	        infos_texte: dataJSON.texte_lien,
+	        inscription: dataJSON.inscription,
+	        image: dataJSON.image,
+	        texte_image: dataJSON.texte_image,
+	        texte: dataJSON.texte,
+	        facebook: dataJSON.facebook,
+	        twitter: dataJSON.twitter,
+	        ical: dataJSON.ical,
 	    };
+	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
+		var $newItems = ich.event_info(event_data);
+		// on récupère l'ID de l'élément sur lequel on a cliqué et on l'incrémente
+		clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
+		// on attribue le nouvel ID au bloc de résumé
+	    $newItems.attr('data-sort', clickedID);
+	    $newItems.addClass('rubrique_'+dataJSON.rubrique_id);
+	    // on ajoute l'élément
+	    $('#liste_evenements').isotope('insert', $newItems);
+	    console.log('> add resume');
         console.log(dataJSON);
+
+        // quand on clique sur le bouton de fermeture de bloc événement
+	    $('a#close').click(function(e){
+			$('.selectedEvent > a').css('display','block');
+			$('.selectedEvent > img').css('display','inline-block');
+			$('.selectedEvent > p').css('display','block');
+			$('.selectedEvent > div').css('display','block');
+			$('.selectedEvent > span').css('display','block');
+			$('.selectedEvent').height($('.selectedEvent').height()-15);
+			$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+			$('#liste_evenements').isotope( 'remove', $('.resume') );
+			console.log('> suppr resume');
+
+			// on evite le comportement normal du click
+			e.preventDefault();
+		});
     });
 
-    event_data = {
-        titre:   "Le titre à afficher",
-        langue: "la langue ici du français",
-        organisation : "Le CERI ?",
-        inscription : "inscription obligatoire… ou pas !",
-    };
-    // Here's all the magic.
-    //var eventDetail = ich.event_info(event_data);
+	
 
-	// on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
-	var $newItems = ich.event_info(event_data);
-	// on récupère l'ID de l'élément sur lequel on a cliqué et on l'incrémente
-	clickedID = parseInt(nextLastRowEvent.attr('data-sort'),10)+1;
-	// on attribue le nouvel ID au bloc de résumé
-    $newItems.attr('data-sort', clickedID);
-    $newItems.addClass('rubrique_3');
-    // on ajoute l'élément
-    $('#liste_evenements').isotope('insert', $newItems);
-    console.log('> add resume');
-
-    // quand on clique sur le bouton de fermeture de bloc événement
-    $('a#close').click(function(e){
-		$('.selectedEvent > a').css('display','block');
-		$('.selectedEvent > img').css('display','inline-block');
-		$('.selectedEvent > p').css('display','block');
-		$('.selectedEvent > div').css('display','block');
-		$('.selectedEvent > span').css('display','block');
-		$('.selectedEvent').height($('.selectedEvent').height()-15);
-		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-		$('#liste_evenements').isotope( 'remove', $('.resume') );
-		console.log('> suppr resume');
-
-		// on evite le comportement normal du click
-		e.preventDefault();
-	});
+    
 	$('a#inscription_submit').click(function(e){
 
 		inscription_data = {

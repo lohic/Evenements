@@ -355,19 +355,109 @@ class Evenement {
 	/**
 	* get_event_infos récupére les infos pour le détail d'un événement
 	* @param $_id => id de l'événement
+	* @param $lang => langue du front office
 	* @return JSON => l'objet JSON contiendra les infos de l'événement
 	*/
-	function get_event_infos($_id){
+	function get_event_infos($_id, $lang){
 		$this->evenement_db->connect_db();
 		$retour = new stdClass();
 
-		$sql = sprintf("SELECT evenement_titre FROM ".TB."evenements WHERE evenement_id=%s", 
+		$sql = sprintf("SELECT * FROM ".TB."evenements as spe, ".TB."rubriques as spr WHERE spe.evenement_rubrique=spr.rubrique_id AND evenement_id=%s", 
 							func::GetSQLValueString($_id, "int"));
 
 		$res = mysql_query($sql)or die(mysql_error());
 		$row = mysql_fetch_array($res);
+
+		$finEvenement = $this->get_fin_event($row['evenement_id']);
+		$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 		
-		$retour->titre 	= $row['evenement_titre'];
+		$sqlsession1 = sprintf("SELECT * FROM ".TB."sessions WHERE evenement_id =%s LIMIT 1", func::GetSQLValueString($row['evenement_id'], "int"));
+		$ressession1 = mysql_query($sqlsession1) or die(mysql_error());
+		$rowsession1 = mysql_fetch_array($ressession1);
+
+		if($rowsession1['session_langue']!="" && $rowsession1['session_langue']!="33"){ 
+			foreach($langues_evenement as $cle => $valeur){
+				if($rowsession1['session_langue']==$valeur){
+					$langue=$cle;
+				}
+			}
+		}
+		else{
+			$langue = "Français";
+		}
+
+		if($rowsession1['session_lieu']!=-1){
+			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($rowsession1['session_lieu'], "int"));
+			$reslieu = mysql_query($sqllieu) or die(mysql_error());
+			$rowlieu = mysql_fetch_array($reslieu);
+			$lieu = utf8_encode($rowlieu['lieu_nom']);
+		}
+		else{
+			$lieu = $rowsession1['session_adresse1'];
+		}
+
+		if($rowsession1['session_code_batiment']!=-1){
+			$sqlcode = sprintf("SELECT * FROM ".TB."codes_batiments WHERE code_batiment_id=%s", func::GetSQLValueString($rowsession1['session_code_batiment'], "int"));
+			$rescode = mysql_query($sqlcode) or die(mysql_error());
+			$rowcode = mysql_fetch_array($rescode);
+			$batiment = utf8_encode($rowcode['code_batiment_nom']);
+		}
+		else{
+			$batiment = $rowsession1['session_adresse2'];
+		}
+
+		$image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/grande-".$row['evenement_image']."?cache=".time();
+
+		$inscription = func::detectURL($rowsession1['session_complement_type_inscription']);
+
+		if($lang=="en"){
+			$resume = explode(" ",strip_tags($row['evenement_texte_en'])); 
+		}
+		else{
+			$resume = explode(" ",strip_tags($row['evenement_texte'])); 
+		}
+		$resumeFacebook = "";
+		for($i = 0 ; $i < 15 ; $i++){
+			if($i != 14){
+				$resumeFacebook .= $resume[$i]." ";
+			}
+			else{
+				$resumeFacebook .= $resume[$i]."... &nbsp;";
+			}
+		}
+
+		if($lang=="en"){
+			$retour->titre 	= $row['evenement_titre_en'];
+			$retour->rubrique 	= $row['rubrique_titre_en'];
+			$retour->organisateur 	= $row['evenement_organisateur_en'];
+			$retour->coorganisateur 	= $row['evenement_coorganisateur_en'];
+			$retour->lien 	= $rowsession1['session_lien_en'];
+			$retour->texte_lien 	= $rowsession1['session_texte_lien_en'];
+			$retour->texte 	= $row['evenement_texte_en'];
+			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre_en']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
+		}
+		else{
+			$retour->titre 	= $row['evenement_titre'];
+			$retour->rubrique 	= $row['rubrique_titre'];
+			$retour->organisateur 	= $row['evenement_organisateur'];
+			$retour->coorganisateur 	= $row['evenement_coorganisateur'];
+			$retour->lien 	= $rowsession1['session_lien'];
+			$retour->texte_lien 	= $rowsession1['session_texte_lien'];
+			$retour->texte 	= $row['evenement_texte'];
+			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
+		}
+
+		$retour->date 	= $horaires;
+		$retour->rubrique_id 	= $row['rubrique_id'];
+		$retour->couleur 	= $row['rubrique_couleur'];
+		$retour->langue 	= $langue;
+		$retour->lieu 	= $lieu;
+		$retour->batiment 	= $batiment;
+		$retour->inscription = $inscription;
+		$retour->image 	= $image;
+		$retour->texte_image 	= $row['evenement_texte_image'];
+		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
+		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		return json_encode($retour);
 	}
 

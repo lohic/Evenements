@@ -57,6 +57,7 @@ body {
 
 a{
 	text-decoration: none;
+	color:#000;
 }
 
 /* font-sizing for content */
@@ -1020,6 +1021,12 @@ a.sinscrire span{
     line-height: 1.55em;
     margin: 0;
     padding: 4px 0 2px;
+}
+
+.event .resumeContent p.langue a, .event .resumeContent p.lieu a, .event .resumeContent p.inscription a, 
+.event .resumeContent p.organisateur a, .event .resumeContent p.infos a{
+    font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+    color:#000;
 }
 
 .event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 

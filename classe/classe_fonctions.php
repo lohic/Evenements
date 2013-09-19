@@ -101,6 +101,37 @@ class Func {
 		}
 		return $horaires;
 	}
+
+	/*
+	@ Détecte l'url dans une chaine de caractères et la retourne
+	@
+	@
+	*/
+	static function detectURL($t) {
+		// link URLs
+		$t = str_replace("\\r","\r",$t);
+		$t = str_replace("\\n","\n<BR>",$t);
+		$t = str_replace("\\n\\r","\n\r",$t);
+		
+		$trans = array("http://" => "");
+		$t = strtr($t, $trans);
+
+		$in=array(
+		'`((?:https?|ftp)://\S+[[:alnum:]]/?)`si',
+		'`((?<!//)(www\.\S+[[:alnum:]]/?))`si'
+		);
+		$out=array(
+		'<a href="$1" target="_blank">$1</a> ',
+		'<a href="http://$1" target="_blank">$1</a>'
+		);
+		$t = preg_replace($in,$out,$t); 
+
+		// link mailtos
+		$t = preg_replace( "/(([a-z0-9_]|\\-|\\.)+@([^[:space:]]*)".
+			"([[:alnum:]-]))/i", "<a href=\"mailto:\\1\">\\1</a>", $t);
+
+		return trim($t);
+	}
 	
 	
 	/*
