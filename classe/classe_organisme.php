@@ -104,6 +104,19 @@ class Organisme {
 		return $rowOrganisme;
 	}
 
+	/**
+	* get_URL_front_from_group Récupère l'URL du front en fonction du groupe auquel appartient l'événement
+	* @param $_id => id du groupe
+	* @return $rowUrl['organisme_url_front'] => l'URL du front
+	*
+	*/
+	function get_URL_front_from_group($_id){
+		$sqlUrl = sprintf("SELECT organisme_url_front FROM ".TB."groupes, ".TB."organismes WHERE groupe_id =%s AND groupe_organisme_id=organisme_id", func::GetSQLValueString($_id, "int"));
+		$resUrl = mysql_query($sqlUrl) or die(mysql_error());
+		$rowUrl = mysql_fetch_array($resUrl);
+		return $rowUrl['organisme_url_front'];
+	}
+
 	
 	
 	/*

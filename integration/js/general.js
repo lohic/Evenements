@@ -385,7 +385,6 @@ $(function(){
 				// gather info for each element
 				items = elems.map(function () {
 					var el = $(this), pos = el.data('isotope-item-position');
-					alert(pos.x);
 					return {
 						x: pos.x,
 						y: pos.y,
@@ -561,6 +560,7 @@ function clickEvent(clickedElement){
 	        facebook: dataJSON.facebook,
 	        twitter: dataJSON.twitter,
 	        ical: dataJSON.ical,
+	        sinscrire: dataJSON.sinscrire,
 	    };
 	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
 		var $newItems = ich.event_info(event_data);

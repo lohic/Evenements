@@ -3,6 +3,7 @@
 include_once('../vars/config.php');
 include_once('classe_connexion.php');
 include_once('classe_fonctions.php');
+include_once('classe_session.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -412,9 +413,13 @@ class Evenement {
 
 		if($lang=="en"){
 			$resume = explode(" ",strip_tags($row['evenement_texte_en'])); 
+			$complet = "FULL";
+        	$sinscrire = "SIGN UP";
 		}
 		else{
 			$resume = explode(" ",strip_tags($row['evenement_texte'])); 
+			$complet = "COMPLET";
+        	$sinscrire = "S'INSCRIRE";
 		}
 		$resumeFacebook = "";
 		for($i = 0 ; $i < 15 ; $i++){
@@ -425,6 +430,12 @@ class Evenement {
 				$resumeFacebook .= $resume[$i]."... &nbsp;";
 			}
 		}
+
+		$sinscrireTexte = "";
+		$session = new session();
+
+		$rowSession = $session->get_session($row['evenement_id']);
+        $sinscrireTexte = $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $row['rubrique_couleur']); 
 
 		if($lang=="en"){
 			$retour->titre 	= $row['evenement_titre_en'];
@@ -458,6 +469,7 @@ class Evenement {
 		$retour->texte_image 	= $row['evenement_texte_image'];
 		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
+		$retour->sinscrire = $sinscrireTexte;
 		return json_encode($retour);
 	}
 
