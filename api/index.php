@@ -129,6 +129,8 @@ if(isset($_GET['session']) && !empty($_GET['session']) && empty($_GET['inscrits'
 	$json->session->type_inscription		= $event_info['type_inscription'];
 	$json->session->event_id				= $event_info['event_id'];
 	$json->session->event_date				= date("Y-m-d",$event_info['event_date']);
+	$json->session->annee					= date("Y",$event_info['event_date']);
+	$json->session->mois					= date("m",$event_info['event_date']);
 	$json->session->organisme_id			= $event_info['organisme_id'];
 	
 	echo json_encode($json);
@@ -186,15 +188,20 @@ if(isset($_GET['event']) && empty($_GET['event'])){
 	
 		$sql_liste_events		= sprintf('SELECT E.evenement_id AS id,
 											E.evenement_titre'.$add.' AS titre,
-											E.evenement_date AS date1 
-											FROM sp_evenements AS E, sp_organismes AS O, sp_groupes AS G
+											E.evenement_date AS date1 ,
+											S.session_id AS session_id,
+											S.session_nom'.$add.' AS session_titre,
+											S.session_debut AS session_date1
+											FROM sp_evenements AS E, sp_organismes AS O, sp_groupes AS G, sp_sessions AS S
 											WHERE E.evenement_statut=3
 											AND E.evenement_date >= %s
 											AND E.evenement_date < %s
 											AND E.evenement_groupe_id = G. groupe_id
 											AND G.groupe_organisme_id = O.organisme_id
 											AND O.organisme_id = %s
-											ORDER BY E.evenement_date DESC',$timestamp_start,
+											AND S.evenement_id = E.evenement_id
+											ORDER BY E.evenement_date DESC,
+											S.session_debut ASC',$timestamp_start,
 																			$timestamp_end,
 																			$id_organisme);
 		
@@ -205,13 +212,28 @@ if(isset($_GET['event']) && empty($_GET['event'])){
 
 		while ($eventdata = mysql_fetch_assoc($sql_liste_events_query)){
 
-			$event = new stdClass();
+			if(! isset( $liste_events[$eventdata['id']] )) {
+				$event = new stdClass();
+				$event->id 		= $eventdata['id'];
+				$event->titre 	= $eventdata['titre'];
+				$event->date 	= date('Y-m-d', $eventdata['date1']);
 
-			$event->id 		= $eventdata['id'];
-			$event->titre 	= $eventdata['titre'];
-			$event->date 	= date('Y-m-d', $eventdata['date1']);
+				$session = new stdClass();
+				$session->id	= $eventdata['session_id'];
+				$session->titre = $eventdata['session_titre'];
+				$session->date 	= date('Y-m-d', $eventdata['session_date1']);
 
-			$liste_events[] = $event;
+				$event->sessions[$eventdata['session_id']] = $session;
+
+				$liste_events[$eventdata['id']] = $event;
+			}else{
+				$session = new stdClass();
+				$session->id	= $eventdata['session_id'];
+				$session->titre = $eventdata['session_titre'];
+				$session->date 	= date('Y-m-d', $eventdata['session_date1']);
+
+				$liste_events[$eventdata['id']]->sessions[$eventdata['session_id']] = $session;
+			}
 
 		}
 		
