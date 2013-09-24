@@ -301,6 +301,9 @@ if(isset($_GET['event'])  && !empty($_GET['event']) ){
 	$json->evenement->couleur 					= $event_info['couleur'];
 
 	
+
+
+
 	// information des session
 	$sql_event_info			= sprintf("SELECT 			S.session_id AS id,
 														S.session_nom".$add." AS titre,		
@@ -308,12 +311,16 @@ if(isset($_GET['event'])  && !empty($_GET['event']) ){
 														S.session_fin AS date2,	
 														S.session_langue AS langue,
 														L.lieu_nom AS lieu,
-														S.session_code_batiment AS code_batiment,
+														B.code_batiment_nom AS code_batiment_nom,
 														S.session_lien".$add." AS url,
-														S.session_complement_type_inscription AS type_inscription
+														S.session_complement_type_inscription AS type_inscription,
+														S.session_adresse1 AS nom_adresse,
+														S.session_adresse2 AS adresse
 												FROM sp_sessions AS S
 												LEFT JOIN sp_lieux AS L
 													ON S.session_lieu = L.lieu_id
+												LEFT JOIN sp_codes_batiments AS B
+													ON S.session_code_batiment = B.code_batiment_id
 												WHERE S.evenement_id = %s",GetSQLValueString($_GET['event'],'int'));
 	
 	$sql_event_info_query	= mysql_query($sql_event_info) or die(mysql_error());
@@ -331,13 +338,15 @@ if(isset($_GET['event'])  && !empty($_GET['event']) ){
 		$sessionjson->horaire_debut 	= date("H:i:s",$session['date1']);
 		$sessionjson->horaire_fin 		= date("H:i:s",$session['date2']);
 		$sessionjson->code_langue 		= $langues_evenement[$session['langue']];
-		$sessionjson->lieu 				= $session['lieu'];
-		$sessionjson->code_batiment 	= $session['code_batiment'];
+		$sessionjson->code_batiment 	= utf8_encode($session['code_batiment_nom']);
+		$sessionjson->lieu 				= utf8_encode($session['lieu']);
+		$sessionjson->adresse_nom		= $session['nom_adresse'];
+		$sessionjson->adresse 			= $session['adresse'];
 		$sessionjson->url 				= $session['url'];
 		$sessionjson->type_inscription 	= $session['type_inscription'];
 
-		$sessions[] = $sessionjson;
 
+		$sessions[] = $sessionjson;
 	}
 
 	
