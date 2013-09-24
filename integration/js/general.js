@@ -593,7 +593,8 @@ function clickEvent(clickedElement){
 		        data    : {
 		            id_event : evenement_id,
 		            langue : la_langue,
-		            code : code
+		            code : code,
+		            cache : new Date()
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
