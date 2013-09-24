@@ -483,9 +483,6 @@ $(function(){
 		return false;
 	});
 
-	
-	
-
 	$(window).smartresize(function(){
 
 		// measure the width of all the items
@@ -507,9 +504,6 @@ $(function(){
 		}
 
 	}).smartresize();
-
-
-
 });
 
 
@@ -540,7 +534,6 @@ function clickEvent(clickedElement){
             langue : la_langue
         }
     }).done(function (dataJSON) {
-    	console.log(dataJSON.titre);
     	event_data = {
 	        titre:   dataJSON.titre,
 	        date: dataJSON.date,
@@ -589,27 +582,47 @@ function clickEvent(clickedElement){
 			// on evite le comportement normal du click
 			e.preventDefault();
 		});
+
+		$('a.sinscrire').click(function(e){
+			var code = "";
+			e.preventDefault();
+			$.ajax({
+		        url     :"ajax/get_event_infos_inscription.php",
+		        type    : "GET",
+		        dataType:'json',
+		        data    : {
+		            id_event : evenement_id,
+		            langue : la_langue,
+		            code : code
+		        }
+		    }).done(function (dataJSON) {
+		    	console.log(dataJSON.titre);
+				inscription_data = {
+					id:   dataJSON.evenement_id,
+		            titre:   dataJSON.titre,
+			        date: dataJSON.date,
+			        lieu: dataJSON.lieu,
+			        casque:   dataJSON.casque,
+			        interneOuvert: dataJSON.interneOuvert,
+			        interneComplet: dataJSON.interneComplet,
+			        externeOuvert:   dataJSON.externeOuvert,
+			        externeComplet: dataJSON.externeComplet,
+			        toutClos: dataJSON.toutClos,
+			        toutComplet:   dataJSON.toutComplet,
+			        alerteInterne: dataJSON.alerteInterne,
+			        alerteExterne: dataJSON.alerteExterne,
+		        };
+
+		        inscription = ich.inscription_form(inscription_data);
+
+		        $.fancybox( inscription , {
+		            title : 'Inscription',
+		        });
+
+		        validFancyBox();
+		    });
+		});
     });
-
-	
-
-    
-	$('a#inscription_submit').click(function(e){
-
-		inscription_data = {
-            titre:"titre de l'événement",
-        };
-
-        inscription = ich.inscription_form(inscription_data);
-
-        $.fancybox( inscription , {
-            title : 'inscription à un événement',
-        });
-
-        validFancyBox();
-
-		e.preventDefault();
-	});
 }
 
 function validFancyBox(){

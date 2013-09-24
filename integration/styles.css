@@ -1280,37 +1280,53 @@ body .fancybox-title-float-wrap .child {
 	margin-top: 15px;
 }
 
-.formulaire_interne h3{
+.formulaire_interne h3, .formulaire_externe h3{
 	text-transform: uppercase;
 	color:#cb021a;
 	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 	margin-bottom: 20px;
 }
 
-.formulaire_interne label{
+.formulaire_interne label, .formulaire_externe label{
 	color:#cc0033;
 	margin-right: 5px;
 }
 
-.formulaire_interne input{
+.formulaire_interne input, .formulaire_externe input{
 	border:1px solid #cb021a;
 	color:#666;
 	height: 18px;
-	width: 245px;
+	width: 240px;
 	padding: 0 5px;
 }
 
-.formulaire_interne input#login{
-	width: 265px;
+.formulaire_externe input{
+	width: 250px;
 }
 
-.formulaire_interne p.erreur{
+.formulaire_interne input#login{
+	width: 260px;
+}
+
+.formulaire_externe input#nom{
+	width: 292px;
+}
+
+.formulaire_externe input#prenom, .formulaire_externe input#fonction{
+	width: 274px;
+}
+
+.formulaire_externe input#mail{
+	width: 296px;
+}
+
+.formulaire_interne p.erreur, .formulaire_externe p.erreur{
 	color: #333333;
     line-height: 1.2em;
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 }
 
-.formulaire_interne #envoyer{
+.formulaire_interne #envoyer, .formulaire_externe #envoyer_externe{
 	text-transform: uppercase;
 	color:#f2c0c6;
 	display:block;
@@ -1318,7 +1334,7 @@ body .fancybox-title-float-wrap .child {
 	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
 }
 
-.formulaire_interne form{
+.formulaire_interne form, .formulaire_externe form{
 	margin-bottom: 0;
 }
 

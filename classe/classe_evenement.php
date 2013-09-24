@@ -293,9 +293,9 @@ class Evenement {
 		$sqlsessions = sprintf("SELECT * FROM ".TB."sessions WHERE evenement_id=%s", func::GetSQLValueString($_id, "int"));
 		$ressessions = mysql_query($sqlsessions) or die(mysql_error());
 		$finEvenement="1980-01-01 00:00:00";
-		while($rowsession = mysql_fetch_array($ressessions)){
-			if($rowsession['session_fin_datetime']>$finEvenement){
-				$finEvenement = $rowsession['session_fin_datetime'];
+		while($row = mysql_fetch_array($ressessions)){
+			if($row['session_fin_datetime']>$finEvenement){
+				$finEvenement = $row['session_fin_datetime'];
 			}
 		}
 		return $finEvenement;
@@ -458,6 +458,7 @@ class Evenement {
 			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
 		}
 
+		$retour->evenement_id 	= $row['evenement_id'];
 		$retour->date 	= $horaires;
 		$retour->rubrique_id 	= $row['rubrique_id'];
 		$retour->couleur 	= $row['rubrique_couleur'];
@@ -470,6 +471,139 @@ class Evenement {
 		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		$retour->sinscrire = $sinscrireTexte;
+		$retour->interneOuvert = $interneOuvert;
+		$retour->interneComplet = $interneComplet;
+		$retour->externeOuvert  = $externeOuvert;
+		$retour->externeComplet = $externeComplet;
+		return json_encode($retour);
+	}
+
+	/**
+	* get_event_infos_inscription récupére les infos pour l'inscription à un événement
+	* @param $_id => id de l'événement
+	* @param $lang => langue du front office
+	* @param $code => code externe passé par l'url
+	* @return JSON => l'objet JSON contiendra les infos de l'événement
+	*/
+	function get_event_infos_inscription($_id, $lang, $code){
+		$this->evenement_db->connect_db();
+		$retour = new stdClass();
+
+		$sql = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND spe.evenement_id =%s", 
+							func::GetSQLValueString($_id, "int"));
+		$res = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($res);
+
+		$finEvenement = $this->get_fin_event($row['evenement_id']);
+		$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
+		
+		if($row['session_lieu']!=-1){
+			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($row['session_lieu'], "int"));
+			$reslieu = mysql_query($sqllieu) or die(mysql_error());
+			$rowlieu = mysql_fetch_array($reslieu);
+			$lieu = utf8_encode($rowlieu['lieu_nom']);
+		}
+		else{
+			$lieu = $row['session_adresse1'];
+		}
+
+		$alerteInterne = "";
+		$alerteExterne = "";
+
+		$casque = "";
+
+		$interneOuvert = "";
+		$interneComplet = "";
+		$externeOuvert = "";
+		$externeComplet = "";
+
+		$toutComplet = "";
+		$toutClos = "";
+
+		$totalInterne = $row['session_places_internes_totales']+$row['session_places_internes_totales_visio'];
+		$totalInternePrises = $row['session_places_internes_prises']+$row['session_places_internes_prises_visio'];
+		$differenceInterneTotale = $totalInterne - $totalInternePrises;
+		$differenceInterneAmphi = $row['session_places_internes_totales'] - $row['session_places_internes_prises'];
+		$differenceInterneVisio = $row['session_places_internes_totales_visio'] - $row['session_places_internes_prises_visio'];
+
+		$totalExterne = $row['session_places_externes_totales']+$row['session_places_externes_totales_visio'];
+		$totalExternePrises = $row['session_places_externes_prises']+$row['session_places_externes_prises_visio'];
+		$differenceExterneTotale = $totalExterne - $totalExternePrises;
+		$differenceExterneAmphi = $row['session_places_externes_totales'] - $row['session_places_externes_prises'];
+		$differenceExterneVisio = $row['session_places_externes_totales_visio'] - $row['session_places_externes_prises_visio'];
+
+		if($row['session_statut_inscription']==1){
+			if($differenceInterneAmphi==0){
+				$alerteInterne = "<p class=\"alerte_statut\">Le nombre de places disponibles pour cet événement étant atteint,
+				nous vous proposons de vous inscrire à la retransmission en direct.</p>";
+			}
+			if($differenceExterneAmphi==0){
+				$alerteExterne = "<p class=\"alerte_statut\">Le nombre de places disponibles pour cet événement étant atteint,
+				nous vous proposons de vous inscrire à la retransmission en direct.</p>";
+			}
+		}
+		else{
+			$alerteInterne = "<p class=\"alerte_statut\">Le nombre de places disponibles pour cet événement étant atteint,
+			nous vous proposons de vous inscrire à la retransmission en direct.</p>";
+			$alerteExterne = "<p class=\"alerte_statut\">Le nombre de places disponibles pour cet événement étant atteint,
+			nous vous proposons de vous inscrire à la retransmission en direct.</p>";
+		}
+
+		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale!=0){
+			if((($differenceInterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceInterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceInterneVisio!=0)) && $code==NULL){
+				$interneOuvert = true;
+				if($row['session_traduction']==1){
+					$casque=true;
+				}
+			}
+			else{
+				$interneComplet = true;
+			}
+		}
+
+
+		if(($row['session_places_externes_totales']!=0 || $row['session_places_externes_totales_visio']!=0) && $differenceExterneTotale!=0){
+			if((($differenceExterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceExterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceExterneVisio!=0)) && ($row['session_code_externe']!="" && ($_GET['code']!=NULL && ($_GET['code']==$row['session_code_externe'])||$_GET['codeExterne']!=NULL))){
+				$externeOuvert = true;
+				if($row['session_traduction']==1){
+					$casque=true;
+				}
+			}
+			else{
+				$externeComplet = true;
+			}
+		}
+
+		if($differenceExterneTotale==0 && $differenceInterneTotale==0){
+			$toutComplet = '<div class="plus_de_place"><p class="bit_small">Désolé Il n\'y a plus de places pour cet événement.</p></div>';
+		}
+
+		if($closInterne && $closExterne && !$interneOuvert && !$externeOuvert){
+			$toutClos = '<div class="plus_de_place"><p class="bit_small">Désolé les inscriptions pour cet événement sont actuellement closes.</p></div>';
+		}
+
+		if($lang=="en"){
+			$retour->titre 	= $row['evenement_titre_en'];
+		}
+		else{
+			$retour->titre 	= $row['evenement_titre'];
+		}
+
+		$retour->evenement_id 	= $row['evenement_id'];
+		$retour->date 	= $horaires;
+		$retour->lieu 	= $lieu;
+		$retour->casque  = $casque;
+		$retour->interneOuvert = $interneOuvert;
+		$retour->interneComplet = $interneComplet;
+		$retour->externeOuvert  = $externeOuvert;
+		$retour->externeComplet = $externeComplet;
+
+		$retour->toutClos  = $toutClos;
+		$retour->toutComplet = $toutComplet;
+
+		$retour->alerteInterne = $alerteInterne;
+		$retour->alerteExterne  = $alerteExterne;
+
 		return json_encode($retour);
 	}
 

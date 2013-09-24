@@ -15,7 +15,6 @@
 
     $moisId = $event->get_event_unique_month($row['evenement_id']);
     $finEvenement = $event->get_fin_event($row['evenement_id']);
-
     $horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 ?>
 <div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>">
