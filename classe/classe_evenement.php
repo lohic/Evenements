@@ -510,12 +510,12 @@ class Evenement {
 		$alerteInterne = "";
 		$alerteExterne = "";
 
-		$casque = "";
+		$casque = false;
 
-		$interneOuvert = "";
-		$interneComplet = "";
-		$externeOuvert = "";
-		$externeComplet = "";
+		$interneOuvert = false;
+		$interneComplet = false;
+		$externeOuvert = false;
+		$externeComplet = false;
 
 		$toutComplet = "";
 		$toutClos = "";
