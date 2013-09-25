@@ -12,7 +12,7 @@
 				<td colspan="3" height="25" style="background:<?php echo $this->code_couleur; ?> url(<?php echo $this->absoluteBilletFolder.'images/bordure-header.png'; ?>) center top;"></td>
 			</tr>
 			<tr>
-				<td colspan="3" style="background:<?php echo $this->code_couleur; ?>;">Sciences Po</td>
+				<td colspan="3" style="background:<?php echo $this->code_couleur; ?>;"><img src="<?php echo $this->absoluteBilletFolder.'images/logo.png'; ?>" width="280" alt="Sciences Po"></td>
 			</tr>
 			<tr>
 				<td colspan="3" style="background:<?php echo $this->code_couleur; ?>;">
@@ -54,7 +54,7 @@
 					<p><?php echo $this->acces ?></p>
 				</td>
 				<td width="33%" valign="top" style="text-align:center;background:<?php echo $this->code_couleur; ?>;">
-					<img src="<?php echo $this->absoluteBilletFolder.'images/picto-amphi.png'; ?>" width="68" height="68">
+					<img src="<?php echo $this->ecouteurs? $this->absoluteBilletFolder.'images/ecouteurs.png' : $this->absoluteBilletFolder.'images/ecouteurs-no.png'; ?>" width="68" height="68">
 					<p><?php echo $this->ecouteurs? 'Écouteurs réservés' : ''; ?></p>
 				</td>
 				<td width="33%" valign="top" style="text-align:center;background:<?php echo $this->code_couleur; ?>;">
