@@ -1151,7 +1151,7 @@ body .fancybox-title-float-wrap .child {
 .confirmation{
 	background: #fff;
 	padding: 7px;
-	margin-top: 15px;
+	margin-top: 25px;
 }
 
 .confirmation h3{
@@ -1300,6 +1300,10 @@ body .fancybox-title-float-wrap .child {
 	padding: 0 5px;
 }
 
+.formulaire_interne input[type="checkbox"], .formulaire_externe input[type="checkbox"]{
+	width: 20px;
+}
+
 .formulaire_externe input{
 	width: 250px;
 }
@@ -1326,7 +1330,7 @@ body .fancybox-title-float-wrap .child {
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 }
 
-.formulaire_interne #envoyer, .formulaire_externe #envoyer_externe{
+.formulaire_interne #envoyer, .formulaire_externe #envoyer_externe, .formulaire_interne #renvoyer, .formulaire_externe #renvoyer_externe{
 	text-transform: uppercase;
 	color:#f2c0c6;
 	display:block;

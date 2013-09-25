@@ -471,10 +471,6 @@ class Evenement {
 		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		$retour->sinscrire = $sinscrireTexte;
-		$retour->interneOuvert = $interneOuvert;
-		$retour->interneComplet = $interneComplet;
-		$retour->externeOuvert  = $externeOuvert;
-		$retour->externeComplet = $externeComplet;
 		return json_encode($retour);
 	}
 
@@ -510,12 +506,12 @@ class Evenement {
 		$alerteInterne = "";
 		$alerteExterne = "";
 
-		$casque = false;
+		$casque = "";
 
-		$interneOuvert = false;
-		$interneComplet = false;
-		$externeOuvert = false;
-		$externeComplet = false;
+		$interneOuvert = "";
+		$interneComplet = "";
+		$externeOuvert = "";
+		$externeComplet = "";
 
 		$toutComplet = "";
 		$toutClos = "";
@@ -548,30 +544,38 @@ class Evenement {
 			$alerteExterne = "<p class=\"alerte_statut\">Le nombre de places disponibles pour cet événement étant atteint,
 			nous vous proposons de vous inscrire à la retransmission en direct.</p>";
 		}
-
+		
+		//Cas où il reste des places internes
 		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale!=0){
+			//Si les inscriptions sont encore ouvertes et si on est bien en inscription interne (pas de code)
 			if((($differenceInterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceInterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceInterneVisio!=0)) && $code==NULL){
 				$interneOuvert = true;
 				if($row['session_traduction']==1){
 					$casque=true;
 				}
 			}
-			else{
-				$interneComplet = true;
-			}
+		}
+
+		// cas où il y avait possibilité de s'inscrire en interne mais où toutes les places internes sont prises
+		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale==0 && $code==NULL){
+			$interneComplet = true;
 		}
 
 
+		//Cas où il reste des places externes
 		if(($row['session_places_externes_totales']!=0 || $row['session_places_externes_totales_visio']!=0) && $differenceExterneTotale!=0){
-			if((($differenceExterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceExterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceExterneVisio!=0)) && ($row['session_code_externe']!="" && ($_GET['code']!=NULL && ($_GET['code']==$row['session_code_externe'])||$_GET['codeExterne']!=NULL))){
+			//Si les inscriptions sont encore ouvertes et si on est bien en inscription externe (avec le code)
+			if((($differenceExterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceExterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceExterneVisio!=0)) && ($row['session_code_externe']!="" && ($code!=NULL && ($code==$row['session_code_externe'])||$code!=NULL))){
 				$externeOuvert = true;
 				if($row['session_traduction']==1){
 					$casque=true;
 				}
 			}
-			else{
-				$externeComplet = true;
-			}
+		}
+
+		// cas où il y avait possibilité de s'inscrire en externe mais où toutes les places externes sont prises
+		if(($row['session_places_externes_totales']!=0 || $row['session_places_externes_totales_visio']!=0) && $differenceExterneTotale==0 && $code!=NULL){
+			$externeComplet = true;
 		}
 
 		if($differenceExterneTotale==0 && $differenceInterneTotale==0){
@@ -589,6 +593,7 @@ class Evenement {
 			$retour->titre 	= $row['evenement_titre'];
 		}
 
+		$retour->session_id 	= $row['session_id'];
 		$retour->evenement_id 	= $row['evenement_id'];
 		$retour->date 	= $horaires;
 		$retour->lieu 	= $lieu;
@@ -604,6 +609,8 @@ class Evenement {
 		$retour->alerteInterne = $alerteInterne;
 		$retour->alerteExterne  = $alerteExterne;
 
+		$retour->codeExterne  = $code;
+		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
 		return json_encode($retour);
 	}
 
