@@ -495,7 +495,7 @@ textarea {
 
 a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
 .event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span.icone, .resumeContent .fermer #close, body .fancybox-close, 
-a.sinscrire span, #lien_menu_smartphone{
+a.sinscrire span, a.sinscrire_multiple span, #lien_menu_smartphone{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
 	height: 20px;
@@ -915,7 +915,7 @@ a.ical{
 	background-position: left -120px;
 }
 
-span.complet, a.sinscrire{
+span.complet, a.sinscrire, a.sinscrire_multiple{
 	bottom: 13px;
     display: block;
     height: 16px;
@@ -926,7 +926,7 @@ span.complet, a.sinscrire{
     color: #000;
 }
 
-a.sinscrire span{
+a.sinscrire span, a.sinscrire_multiple span{
 	background-position: left -160px;
     display: block;
     float: left;
@@ -1086,7 +1086,7 @@ a.sinscrire span{
 	margin-right: 8px;
 }
 
-.meta span.complet, .meta a.sinscrire {
+.meta span.complet, .meta a.sinscrire, .meta a.sinscrire_multiple {
 	bottom: inherit;
 	padding-top: 3px;
 }
@@ -1280,6 +1280,14 @@ body .fancybox-title-float-wrap .child {
 	margin-top: 15px;
 }
 
+.formulaire_interne div.session, .formulaire_externe div.session{
+	margin-bottom: 30px;
+}
+
+.formulaire_interne div.session p.lieu, .formulaire_interne div.session p.horaire, .formulaire_externe div.session p.lieu, .formulaire_externe div.session p.horaire{
+	color:#cb021a;
+}
+
 .formulaire_interne h3, .formulaire_externe h3{
 	text-transform: uppercase;
 	color:#cb021a;
@@ -1290,6 +1298,10 @@ body .fancybox-title-float-wrap .child {
 .formulaire_interne label, .formulaire_externe label{
 	color:#cc0033;
 	margin-right: 5px;
+}
+
+.formulaire_interne label.session, .formulaire_externe label.session{
+	margin: 2px 0 0 5px;
 }
 
 .formulaire_interne input, .formulaire_externe input{
@@ -1330,7 +1342,8 @@ body .fancybox-title-float-wrap .child {
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 }
 
-.formulaire_interne #envoyer, .formulaire_externe #envoyer_externe, .formulaire_interne #renvoyer, .formulaire_externe #renvoyer_externe{
+.formulaire_interne #envoyer, .formulaire_externe #envoyer_externe, .formulaire_interne #renvoyer, .formulaire_externe #renvoyer_externe,
+.formulaire_interne #envoyer_multiple, .formulaire_externe #envoyer_externe_multiple, .formulaire_interne #renvoyer_multiple, .formulaire_externe #renvoyer_externe_multiple{
 	text-transform: uppercase;
 	color:#f2c0c6;
 	display:block;

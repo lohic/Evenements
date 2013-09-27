@@ -6,7 +6,8 @@ include_once('classe_fonctions.php');
 include_once('classe_session.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
-
+include_once('class.phpmailer.php');
+include_once('class.smtp.php');
 
 class Evenement {
 	
@@ -475,7 +476,7 @@ class Evenement {
 	}
 
 	/**
-	* get_event_infos_inscription récupére les infos pour l'inscription à un événement
+	* get_event_infos_inscription récupére les infos pour l'inscription à un événement simple
 	* @param $_id => id de l'événement
 	* @param $lang => langue du front office
 	* @param $code => code externe passé par l'url
@@ -611,6 +612,375 @@ class Evenement {
 
 		$retour->codeExterne  = $code;
 		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
+		return json_encode($retour);
+	}
+
+	/**
+	* get_event_infos_inscription_multiple récupére les infos pour l'inscription à un événement multiple
+	* @param $_id => id de l'événement
+	* @param $lang => langue du front office
+	* @param $code => code externe passé par l'url
+	* @return JSON => l'objet JSON contiendra les infos de l'événement
+	*/
+	function get_event_infos_inscription_multiple($_id, $lang, $code){
+		$this->evenement_db->connect_db();
+		$retour = new stdClass();
+
+		$session = new session();
+
+		$horairesSessions = array();
+		$lesSessions = array();
+
+		$sql = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND spe.evenement_id =%s LIMIT 1", 
+							func::GetSQLValueString($_id, "int"));
+		$res = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($res);
+
+
+		$sqlSessions = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND spe.evenement_id =%s", 
+							func::GetSQLValueString($_id, "int"));
+		$resSessions = mysql_query($sqlSessions) or die(mysql_error());
+		$indice = 0;
+		while($rowSession = mysql_fetch_array($resSessions)){ 
+			$sqllieux = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id =%s", 
+								func::GetSQLValueString($rowSession['session_lieu'], "int"));
+			$reslieux = mysql_query($sqllieux) or die(mysql_error());
+			$rowlieu = mysql_fetch_array($reslieux);
+
+			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
+			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
+			$differenceInterneTotale = $totalInterne - $totalInternePrises;
+			$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
+			$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
+
+			$lesSessions[$indice]['identifiant'] = $rowSession['session_id'];
+			$lesSessions[$indice]['nom'] = $rowSession['session_nom'];
+
+			if($rowSession['session_traduction']==1){
+				$lesSessions[$indice]['casque'] = true;
+			}
+			else{
+				$lesSessions[$indice]['casque'] = "";
+			}
+
+			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
+			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+
+			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
+				$lesSessions[$indice]['placement'] = ""; 
+			}
+			else{
+				if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
+					$lesSessions[$indice]['placement'] = true; 
+				}
+				else{
+					$lesSessions[$indice]['placement'] = ""; 
+				}
+			}
+			$indice++;
+		}
+		
+		$finEvenement = $this->get_fin_event($_id);
+		$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
+
+		if($lang=="en"){
+			$retour->titre 	= $row['evenement_titre_en'];
+		}
+		else{
+			$retour->titre 	= $row['evenement_titre'];
+		}
+
+		$retour->evenement_id 	= $_id;
+		$retour->date 	= $horaires;
+		$retour->sessions 	= $lesSessions;
+		$retour->codeExterne  = $code;
+		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
+		return json_encode($retour);
+	}
+
+	/**
+	* make_inscription_multiple réalise une inscription interne à un événement avec une session unique
+	* @param $sessions => sessions cochées dans le formulaire
+	* @param $casques => casques cochés dans le formulaire
+	* @param $_id => id l'événement multisessions
+	* @param $login => login LDAP passé par le formulaire
+	* @param $password => mot de passe LDAP passé par le formulaire
+	* @param $titre => titre de l'événement passé par le formulaire
+	* @param $date => date de l'événement passé par le formulaire
+	* @return JSON => l'objet JSON contiendra les infos de l'événement
+	*/
+	function make_inscription_multiple($sessions, $casques, $_id, $login, $password, $titre, $date){
+		$this->evenement_db->connect_db();
+		$retour = new stdClass();
+
+		$session = new session();
+
+		session_start();
+
+		$erreurLDAP = "";
+		$erreurSessionComplete = "";
+		$erreurDejaInscrit = "";
+		$confirmation = "";
+
+		$champVide = "";
+		$erreurChamps = "";
+
+		$lesSessions = array();
+
+		if(isset($login) && isset($password) && $login!="" && $password!=""){
+			$infosEtudiant = func::connectLDAP($login,$password);
+			
+			switch ($infosEtudiant->info){
+				case "login error" : $erreurLDAP="Les informations fournies ne permettent pas de vous identifier."; break;
+				case "no connexion" : $erreurLDAP="Impossible de se connecter au serveur d'identification pour le moment."; break;
+				case "no login" : $erreurLDAP="Les informations fournies ne permettent pas de vous identifier."; break;
+				default : $erreurLDAP=""; break;
+			}
+
+			if($erreurLDAP==""){
+				$_SESSION['nomSP'] = $infosEtudiant->nom;
+				$_SESSION['prenomSP'] = $infosEtudiant->prenom;
+				$_SESSION['mailSP'] = $infosEtudiant->email;
+				$_SESSION['typeSP'] = $infosEtudiant->type;
+			}
+		}
+
+		if($login=="" || $password==""){
+			$champVide = "Tous les champs marqués d'une * doivent être remplis.";
+		}
+
+		$sqlSession = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND spe.evenement_id =%s LIMIT 1", func::GetSQLValueString($_id, "int"));
+		$resSession = mysql_query($sqlSession) or die(mysql_error());
+		$rowSession = mysql_fetch_array($resSession);
+
+		if(isset($_SESSION['nomSP'])){
+			if(isset($sessions)){
+				$indice=0;
+				foreach($sessions as $uneSession){
+					$lesSessions[$indice]['inscriptionOK']="";
+					$lesSessions[$indice]['dejaInscrit']="";
+					$lesSessions[$indice]['completeDerniereMinute']="";
+					$lesSessions[$indice]['numero']="";
+					$lesSessions[$indice]['type_inscription']="";
+					$lesSessions[$indice]['endroit']="";
+					$lesSessions[$indice]['horaire']="";
+					$lesSessions[$indice]['nom']="";
+
+					$testVisio = false;
+					$sqlSessions = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND sps.session_id =%s", func::GetSQLValueString($uneSession, "int"));	
+					$resSessions = mysql_query($sqlSessions) or die(mysql_error());
+					$rowsession = mysql_fetch_array($resSessions);
+
+					$lesSessions[$indice]['session_nom'] = $rowsession['session_nom'];
+					$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowsession['session_debut_datetime'], $rowsession['session_fin_datetime']);
+
+					if($rowsession['session_statut_inscription']==1){
+						$estComplete = $session->test_session_complete($rowsession['session_id'], "session_places_internes_totales", "session_places_internes_prises");
+						if($estComplete){
+							$estComplete = $session->test_session_complete($rowsession['session_id'], "session_places_internes_totales_visio", "session_places_internes_prises_visio");
+							if(!$estComplete){
+								$affichageRecap = "Retransmission";
+								$type_inscription = "visio interne";
+								$testVisio = true;
+							}
+						}
+						else{
+							$affichageRecap = "Amphithéâtre";
+							$type_inscription = "amphi interne";
+						}
+					}
+					else{
+						$estComplete = $session->test_session_complete($rowsession['session_id'], "session_places_internes_totales_visio", "session_places_internes_prises_visio");
+						$affichageRecap = "Retransmission";
+						$type_inscription = "visio interne";
+					}
+					$lesSessions[$indice]['type_inscription']=$affichageRecap;
+
+
+					if($estComplete){
+						$lesSessions[$indice]['completeDerniereMinute'] = "La dernière place pour la conférence ".$rowsession['session_nom']." vient malheureusement d'être réservée.";
+					}
+					else{
+						$testDejaInscrit = $session->deja_inscrit($_SESSION['mailSP'],$rowsession['session_id']);
+						if(!$testDejaInscrit){
+							$dateInscription = time();
+							$dateTime = date('Y-m-d H:i:s');
+							
+							$avecCasque = 0;
+							foreach($casques as $casque){
+								if($casque==$rowsession['session_id']){
+									$avecCasque=1;
+								}
+							}
+
+							$sqlinsert ="INSERT INTO ".TB."inscrits VALUES ('', '".$rowsession['evenement_id']."', '".$rowsession['session_id']."', '".addslashes($_SESSION['nomSP'])."', '".addslashes($_SESSION['prenomSP'])."', '".addslashes($_SESSION['mailSP'])."', 'Sciences Po', '".$_SESSION['typeSP']."', '".$type_inscription."','".$avecCasque."','','','".$dateInscription."','".$dateTime."','')"; 
+							$resinsert = mysql_query($sqlinsert) or die(mysql_error());
+							$lastIdInsert = mysql_insert_id(); 
+
+							if($rowsession['session_statut_inscription']==1 && !$testVisio){				
+								$session->incremente_nb_inscrits($rowsession['session_id'], "session_places_internes_prises");
+								
+								if($rowsession['session_lieu']!=-1){							
+									$sqlLieu =sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id =%s", func::GetSQLValueString($rowsession['session_lieu'], "int"));
+									$resLieu = mysql_query($sqlLieu) or die(mysql_error());
+									$rowLieu = mysql_fetch_array($resLieu);
+									$endroit = $rowLieu['lieu_nom'];
+								}
+								else{
+									$endroit = $rowsession['session_adresse1'];
+								}
+								$endroitMessage = 0;
+							}
+							else{
+								$session->incremente_nb_inscrits($rowsession['session_id'], "session_places_internes_prises_visio");
+								$endroit = "Retransmission";
+								$endroitMessage = 1;
+							}
+
+							$lesSessions[$indice]['endroit']=$endroit;
+
+							$sqlcountinscrit = sprintf("SELECT COUNT(*) AS nb FROM ".TB."inscrits WHERE inscrit_session_id=%s", func::GetSQLValueString($rowsession['session_id'], "int"));
+							$sqlcountinscrits = mysql_query($sqlcountinscrit) or die(mysql_error());
+							$rescountinscrits = mysql_fetch_array($sqlcountinscrits);
+							
+							$uniqueId = func::uniqueID($rowsession['session_id'], $rescountinscrits['nb']);
+				            $lesSessions[$indice]['numero']=$uniqueId;
+
+							$sqlupdate = sprintf("UPDATE ".TB."inscrits SET inscrit_unique_id=%s WHERE inscrit_id =%s", 
+														func::GetSQLValueString($uniqueId, "text"),
+														func::GetSQLValueString($lastIdInsert, "int"));
+
+							mysql_query($sqlupdate) or die(mysql_error());
+							$dateBillet=date("Y-m-d", $rowsession['session_debut']);
+							$dateMail=date("d/m/Y", $rowsession['session_debut']);
+							$heureDebut = date("H:i", $rowsession['session_debut']);
+							$heureFin = date("H:i", $rowsession['session_fin']);
+							
+							if($heureFin=="23:59"){
+								$heureBillet="à ".$heureDebut;
+							}
+							else{
+								$heureBillet="de ".$heureDebut." à ".$heureFin;
+							}
+							
+							if($avecCasque==1){
+								$leCasque = true;
+							}
+							else{
+								$leCasque = false;
+							}
+							
+							$sqlBan = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
+							$resBan = mysql_query($sqlBan)or die(mysql_error());
+							$rowBan = mysql_fetch_array($resBan);
+							
+							if($rowBan['organisme_mentions']==""){
+								$mentions = "";
+							}
+							else{
+								$mentions = $rowBan['organisme_mentions'];
+							}
+							
+							//func::createBillet($uniqueId, $rowsession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowsession['evenement_organisateur'], $rowsession['session_adresse2'], utf8_encode($endroit), $leCasque, $mentions);
+							
+							$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";
+							$session_nom = $rowsession['session_nom'];
+						
+							func::envoiMail($_SESSION['nomSP'], $_SESSION['prenomSP'], $_SESSION['mailSP'], $session_nom, $dateMail, $cheminBillet, $endroitMessage);
+							
+							func::envoiAlerte($rowsession['session_id']);
+
+							if($rowsession['session_statut_inscription']==1 && !$testVisio){
+								$estCompleteBis = $session->test_session_complete($rowsession['session_id'], "session_places_internes_totales", "session_places_internes_prises");
+								if($estCompleteBis){
+									$estCompleteBis = $session->test_session_complete($rowsession['session_id'], "session_places_externes_totales", "session_places_externes_prises");
+									if($estCompleteBis){
+										$totale=true;
+										$session->bascule_inscription($rowsession['session_id'], $totale);
+									}
+									else{
+										$totale=false;
+										$session->bascule_inscription($rowsession['session_id'], $totale);
+									}
+								}
+							}
+							$lesSessions[$indice]['inscriptionOK']=true;
+						}
+						else{
+							$lesSessions[$indice]['dejaInscrit']="Vous êtes déjà inscrit pour cette session.";
+						}
+					}
+					$indice++;
+				}
+			}
+			else{
+				$erreurChamps="Il faut choisir au moins une session.";
+			}
+		}
+
+
+
+		//On récupère la totalité des sessions à afficher en cas d'erreur du formulaire
+		$toutesLesSessions = array();
+		$sqlSessions = sprintf("SELECT * FROM ".TB."sessions AS sps, ".TB."evenements AS spe WHERE sps.evenement_id=spe.evenement_id AND spe.evenement_id =%s", 
+							func::GetSQLValueString($_id, "int"));
+		$resSessions = mysql_query($sqlSessions) or die(mysql_error());
+		$indice = 0;
+		while($rowSession = mysql_fetch_array($resSessions)){ 
+			$sqllieux = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id =%s", 
+								func::GetSQLValueString($rowSession['session_lieu'], "int"));
+			$reslieux = mysql_query($sqllieux) or die(mysql_error());
+			$rowlieu = mysql_fetch_array($reslieux);
+
+			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
+			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
+			$differenceInterneTotale = $totalInterne - $totalInternePrises;
+			$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
+			$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
+
+			$toutesLesSessions[$indice]['identifiant'] = $rowSession['session_id'];
+			$toutesLesSessions[$indice]['nom'] = $rowSession['session_nom'];
+
+			if($rowSession['session_traduction']==1){
+				$toutesLesSessions[$indice]['casque'] = true;
+			}
+			else{
+				$toutesLesSessions[$indice]['casque'] = "";
+			}
+
+			$toutesLesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
+			$toutesLesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+
+			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
+				$toutesLesSessions[$indice]['placement'] = ""; 
+			}
+			else{
+				if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
+					$toutesLesSessions[$indice]['placement'] = true; 
+				}
+				else{
+					$toutesLesSessions[$indice]['placement'] = ""; 
+				}
+			}
+			$indice++;
+		}
+
+		$retour->titre_bloc 	= "Vous êtes bien inscrit à l'événement.";
+		$retour->evenement_id 	= $_id;
+		$retour->titre 	= $titre;
+		$retour->date 	= $date;
+		$retour->infos_inscription = "Vos informations d'inscription sont les suivantes :";
+		$retour->nom  = $_SESSION['nomSP'];
+		$retour->prenom  = $_SESSION['prenomSP'];
+		$retour->sessions 	= $lesSessions;
+		$retour->toutesLesSessions 	= $toutesLesSessions;
+		$retour->important = "<strong>IMPORTANT :</strong> ".count($lesSessions)." mail(s) contenant vos billets au format .pdf vont vous être envoyés à l'adresse ".$_SESSION['mailSP'].". <strong>Veuillez imprimer le billet et vous présenter à l'accueil à l'adresse spécifiée.</strong>";
+		$retour->erreurLDAP = $erreurLDAP;
+		$retour->erreurChamps = $erreurChamps;
+		$retour->champVide = $champVide;
+		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
+
+		session_unset();
 		return json_encode($retour);
 	}
 

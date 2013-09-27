@@ -6,8 +6,8 @@ include_once(REAL_LOCAL_PATH.'classe_fonctions.php');
 include_once('classe_organisme.php');
 include_once('classe_evenement.php');
 
-include('class.phpmailer.php');
-include('class.smtp.php');
+include_once('class.phpmailer.php');
+include_once('class.smtp.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -218,6 +218,27 @@ class Session {
 			return $rescountsessions['nb'];
 		}
 	}
+
+	/**
+	* get_horaires_session récupère les horaires d'une session
+	* @param $debut => debut de la session
+	* @param $fin => fin de la session
+	* @return $chaine => la chaine indiquant les horaires de la session
+	*/
+	function get_horaires_session($debut, $fin){
+
+		$debut  =   new DateTime($debut);
+		$fin  =   new DateTime($fin);
+
+		setlocale(LC_ALL, 'fr_FR');
+		$jourDebut = $debut->format('l');
+		$heureDebut = $debut->format('H:i');
+		$heureFin = $fin->format('H:i');
+
+		$chaine = $jourDebut.' de '.$heureDebut.' à '.$heureFin;
+
+		return $chaine;
+	}
 	
 	
 	/**
@@ -276,11 +297,11 @@ class Session {
 					$urlFront = $organisme->get_URL_front_from_group($evenement['evenement_groupe_id']);
 					if($evenement['evenement_externe']==1){
 						//$affichage = '<a href="'.$urlFront.'inscription/inscription_multiple.php?id='.$evenement['evenement_id'].'&amp;codeExterne='.$session['session_code_externe'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
-						$affichage = '<a href="#" class="sinscrire bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
+						$affichage = '<a href="#" class="sinscrire_multiple bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 					}
 					else{
 						//$affichage = '<a href="'.$urlFront.'inscription/inscription_multiple.php?id='.$evenement['evenement_id'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
-						$affichage = '<a href="#" class="sinscrire bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';					
+						$affichage = '<a href="#" class="sinscrire_multiple bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';					
 					}	
 				}
 				else{
@@ -771,7 +792,7 @@ class Session {
 	* @param $_id => identifiant de la session testée
 	* @return boolean => retourne true si la personne est déjà inscrite à cette session
 	*/
-	function deja_inscrit($mail, $session){ 
+	function deja_inscrit($mail, $_id){ 
 		$sql = sprintf("SELECT * FROM ".TB."inscrits WHERE inscrit_mail =%s AND inscrit_session_id=%s", 
 									func::GetSQLValueString($mail, "text"),
 									func::GetSQLValueString($_id, "int"));

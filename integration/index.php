@@ -33,6 +33,11 @@
 			<?php
 				include('detail.php');
 				include('bloc_inscription.php');
+				include('bloc_validation.php');
+				include('bloc_validation_externe.php');
+				include('bloc_inscription_multiple.php');
+				include('bloc_validation_multiple.php');
+				include('bloc_validation_externe_multiple.php');
 			?>
 		</section>
 	</body>
