@@ -628,7 +628,7 @@ function clickEvent(clickedElement){
 		});
 
 		$('a.sinscrire_multiple').click(function(e){
-			var code = "";
+			var code = "test";
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription_multiple.php",
@@ -956,6 +956,120 @@ function validFancyBox(){
 	        };
 
 	        validation = ich.validation_form_multiple(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#envoyer_externe_multiple').click(function(e){
+		e.preventDefault();
+
+		var inputs = document.getElementsByTagName("input");
+		var tabsessions = [];
+		var tabcasques = [];
+		for(var i=0,l=inputs.length;i<l;i++) {
+			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
+				tabsessions.push(inputs[i].value);
+			}
+			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
+				tabcasques.push(inputs[i].value);
+			}
+		}
+
+		$.ajax({
+	        url     :"ajax/make_inscription_externe_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            sessions : tabsessions,
+	            id_evenement : $('#id_evenement').val(),
+	            nom:$('#nom').val(),
+	            prenom:$('#prenom').val(),
+	            mail:$('#mail').val(),
+	            entreprise:$('#entreprise').val(),
+	            fonction:$('#fonction').val(),
+	            casques : tabcasques,
+	            titre:$('#titre').val(),
+	            date:$('#date').val(),
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				title: dataJSON.titre_bloc,
+				id:   dataJSON.evenement_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        infos_inscription: dataJSON.infos_inscription,
+		        nom: dataJSON.nom,
+		        prenom: dataJSON.prenom,
+		        sessions: dataJSON.sessions,
+		        toutesLesSessions: dataJSON.toutesLesSessions,
+		        important: dataJSON.important,
+		        erreurChamps: dataJSON.erreurChamps,
+		        mention : dataJSON.mention,
+	        };
+
+	        validation = ich.validation_externe_form_multiple(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#renvoyer_externe_multiple').click(function(e){
+		e.preventDefault();
+
+		var inputs = document.getElementsByTagName("input");
+		var tabsessions = [];
+		var tabcasques = [];
+		for(var i=0,l=inputs.length;i<l;i++) {
+			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
+				tabsessions.push(inputs[i].value);
+			}
+			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
+				tabcasques.push(inputs[i].value);
+			}
+		}
+
+		$.ajax({
+	        url     :"ajax/make_inscription_externe_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            sessions : tabsessions,
+	            id_evenement : $('#id_evenement').val(),
+	            nom:$('#nom').val(),
+	            prenom:$('#prenom').val(),
+	            mail:$('#mail').val(),
+	            entreprise:$('#entreprise').val(),
+	            fonction:$('#fonction').val(),
+	            casques : tabcasques,
+	            titre:$('#titre').val(),
+	            date:$('#date').val(),
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				title: dataJSON.titre_bloc,
+				id:   dataJSON.evenement_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        infos_inscription: dataJSON.infos_inscription,
+		        nom: dataJSON.nom,
+		        prenom: dataJSON.prenom,
+		        sessions: dataJSON.sessions,
+		        toutesLesSessions: dataJSON.toutesLesSessions,
+		        important: dataJSON.important,
+		        erreurChamps: dataJSON.erreurChamps,
+		        mention : dataJSON.mention,
+	        };
+
+	        validation = ich.validation_externe_form_multiple(validation_data);
 
 	        $.fancybox( validation , {
 	            title : 'validation de l‘inscription',

@@ -687,27 +687,11 @@ class Session {
 								$estCompleteBis = $this->test_session_complete($rowSession['session_id'], "session_places_externes_totales", "session_places_externes_prises");
 								if($estCompleteBis){
 									$totale=true;
-									basculeInscription($rowSession['session_id'], $totale);
+									$this->basculeInscription($rowSession['session_id'], $totale);
 								}
 								else{
 									$totale=false;
-									basculeInscription($rowSession['session_id'], $totale);
-								}
-							}
-						}
-					
-					
-						if($rowSession['session_statut_inscription']==1 && !$testVisio){
-							$estCompleteBis = $this->test_session_complete($rowSession['session_id'], "session_places_externes_totales", "session_places_externes_prises");
-							if($estCompleteBis){
-								$estCompleteBis = $this->test_session_complete($rowSession['session_id'], "session_places_internes_totales", "session_places_internes_prises");
-								if($estCompleteBis){
-									$totale=true;
-									$this->bascule_inscription($rowSession['session_id'], $totale);
-								}
-								else{
-									$totale=false;
-									$this->bascule_inscription($rowSession['session_id'], $totale);
+									$this->basculeInscription($rowSession['session_id'], $totale);
 								}
 							}
 						}
