@@ -549,19 +549,19 @@ span.francais, span.anglais{
 }
 
 span.francais{
-	background-position: -61px top;
+	background-position: -61px -16px;
 }
 
 span.anglais{
-
+	background-position: -61px -48px;
 }
 
 a span.francais{
-
+	background-position: -61px top;
 }
 
 a span.anglais{
-	background-position: -61px -16px;
+	background-position: -61px -32px;
 }
 
 #pre_header{
