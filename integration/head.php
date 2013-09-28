@@ -3,11 +3,13 @@
     include_once('../classe/classe_session.php');
     include_once('../classe/classe_rubrique.php');
     include_once('../classe/classe_organisme.php');
+    include_once('../classe/classe_keyword.php');
 
     $organisme = new organisme();
     $event = new evenement();
     $rubrique = new rubrique();
     $session = new session();
+    $keyword = new keyword();
 
     if($_GET['lang']=="en"){
         $lang="en";
@@ -37,6 +39,10 @@
             
     $tableauMois = array();
     $tableauMois = $event->get_events_months($evenements_organisme);
+
+    $keywords_organisme = $keyword->get_keywords_organism($rowOrganisme['organisme_id']);
+    $keywords_partages = $keyword->get_keywords_partages($rowOrganisme['organisme_id']);
+    $keywords_organisme = array_merge($keywords_organisme, $keywords_partages);
 ?>
 
 <html>

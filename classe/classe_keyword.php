@@ -94,7 +94,7 @@ class Keyword {
 
 		if(isset($_id)){
 			$tableauKeywords=array();
-			$sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."keywords AS spk, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND spe.evenement_keyword=spk.keyword_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() GROUP BY spe.evenement_keyword", 
+			$sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."groupes AS spg WHERE spe.evenement_id = sps.evenement_id AND spe.evenement_statut=3 AND spe.evenement_keyword=spk.keyword_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() GROUP BY spe.evenement_keyword", 
 									func::GetSQLValueString($_id, "int"));
 			
 			$res = mysql_query($sql)or die(mysql_error());
@@ -115,7 +115,7 @@ class Keyword {
 
 		if(isset($_id)){
 			$tableauKeywords=array();
-		    $sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."keywords AS spk, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id=sps.evenement_id AND spe.evenement_statut=3 AND session_fin_datetime >=NOW()  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spk.keyword_id", 
+		    $sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id = sps.evenement_id AND spe.evenement_keyword=spk.keyword_id AND spe.evenement_statut=3 AND session_fin_datetime >=NOW()  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spk.keyword_id", 
 									func::GetSQLValueString($_id, "int")
 									);
 

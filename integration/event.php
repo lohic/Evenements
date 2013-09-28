@@ -17,7 +17,7 @@
     $finEvenement = $event->get_fin_event($row['evenement_id']);
     $horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 ?>
-<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>">
+<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> mot_<?php echo $row['evenement_keyword'];?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>">
     <?php
         if($row['evenement_image']!=""){
     ?>

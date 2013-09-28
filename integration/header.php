@@ -100,19 +100,36 @@
         <?php       
             }
         ?>
-            
-            <div id="filtre_mot" class="small-hidden filtre_isotope">
-                <ul>
-                    <li class="titre_filtre bit_small">
-                        <span>Mots-clés</span>
-                        <ul id="filtering-nav-mot">
-                            <li class="" id="entree_mot_2"><a class="mot_2" href="#mot_2" id="entree_2">Sciences Po Paris</a></li>
-                            <li class="" id="entree_mot_5"><a class="mot_5" href="#mot_5" id="entree_5">Campus du Havre</a></li>
-                            <li class="" id="entree_mot_3"><a class="mot_3" href="#mot_3" id="entree_3">Autre mot-clé</a></li>
-                        </ul>
-                    </li>
-                </ul>   
-            </div>
+        
+        <?php
+            if(count($keywords_organisme)>0){
+                $sql = "SELECT * FROM ".TB."keywords WHERE keyword_id IN (".implode(',',$keywords_organisme).") ORDER BY keyword_nom";
+                $res = mysql_query($sql)or die(mysql_error());
+            }
+            else{
+                $res=-1;
+            }
+            if($res!=-1){
+        ?>
+                <div id="filtre_mot" class="small-hidden">
+                    <ul>
+                        <li class="titre_filtre bit_small">
+                            <span>Mots-clés</span>
+                            <ul id="filtering-nav-mot" class="filtre_isotope option-set" data-filter-group="mots">
+                        <?php       
+                                while($row = mysql_fetch_array($res)){
+                        ?>
+                                    <li class="" id="entree_mot_<?php echo $row['keyword_id'];?>"><a class="" href="#" data-filter-value=".mot_<?php echo $row['keyword_id'];?>"><?php echo $row['keyword_nom'];?></a></li>
+                        <?php
+                                }
+                        ?>
+                            </ul>
+                        </li>
+                    </ul>                   
+                </div>
+        <?php
+            }
+        ?>
         </section>
     </div>
 </header>
