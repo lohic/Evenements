@@ -647,11 +647,7 @@ class Evenement {
 			$reslieux = mysql_query($sqllieux) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieux);
 
-			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
-			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
-			$differenceInterneTotale = $totalInterne - $totalInternePrises;
-			$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
-			$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
+			
 
 			$lesSessions[$indice]['identifiant'] = $rowSession['session_id'];
 			$lesSessions[$indice]['nom'] = $rowSession['session_nom'];
@@ -666,16 +662,43 @@ class Evenement {
 			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
 			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
-			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
-				$lesSessions[$indice]['pascomplete'] = true;
-				$lesSessions[$indice]['placement'] = ""; 
-			}
-			else{
-				if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
+			if(!isset($code)){
+				$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
+				$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
+				$differenceInterneTotale = $totalInterne - $totalInternePrises;
+				$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
+				$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
+
+				if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
 					$lesSessions[$indice]['pascomplete'] = true;
-					$lesSessions[$indice]['placement'] = true; 
+					$lesSessions[$indice]['placement'] = ""; 
+				}
+				else{
+					if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
+						$lesSessions[$indice]['pascomplete'] = true;
+						$lesSessions[$indice]['placement'] = true; 
+					}
 				}
 			}
+			else{
+				$totalExterne = $rowSession['session_places_externes_totales']+$rowSession['session_places_externes_totales_visio'];
+				$totalExternePrises = $rowSession['session_places_externes_prises']+$rowSession['session_places_externes_prises_visio'];
+				$differenceExterneTotale = $totalExterne - $totalExternePrises;
+				$differenceExterneAmphi = $rowSession['session_places_externes_totales'] - $rowSession['session_places_externes_prises'];
+				$differenceExterneVisio = $rowSession['session_places_externes_totales_visio'] - $rowSession['session_places_externes_prises_visio'];
+
+				if($rowSession['session_statut_inscription']==1 && $differenceExterneAmphi!=0){
+					$lesSessions[$indice]['pascomplete'] = true;
+					$lesSessions[$indice]['placement'] = ""; 
+				}
+				else{
+					if($rowSession['session_statut_visio']==1 && $differenceExterneVisio!=0){
+						$lesSessions[$indice]['pascomplete'] = true;
+						$lesSessions[$indice]['placement'] = true; 
+					}
+				}
+			}
+			
 			$indice++;
 		}
 		

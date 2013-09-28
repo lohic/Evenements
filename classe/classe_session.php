@@ -742,6 +742,7 @@ class Session {
 		$retour->casque = $casque;
 		$retour->alerteExterne = $alerteExterne;
 		$retour->erreurChamps = $erreurChamps;
+		$retour->dejaInscrit = $dejaInscrit;
 		$retour->inscriptionOK = $inscriptionOK;
 		$retour->completeDerniereMinute = $completeDerniereMinute;
 

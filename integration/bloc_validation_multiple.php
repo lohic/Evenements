@@ -129,12 +129,17 @@
                             <h4 class="bit_big">{{session_nom}}</h4>
                             <p class="date bit_big">{{horaire}}</p>
                             <p class="lieu bit_big">{{endroit}}</p>
+
                             {{#dejaInscrit}}
-                                <p class="nom biggest">{{dejaInscrit}}</p>
+                                <div class="deja_inscrit">
+                                    <h3 class="little_bigger">{{dejaInscrit}}</h3>
+                                </div>
                             {{/dejaInscrit}}
 
                             {{#completeDerniereMinute}}
-                                <p class="nom biggest">{{completeDerniereMinute}}</p>
+                                <div class="plus_de_place">
+                                    <p class="bit_small">{{completeDerniereMinute}}</p>
+                                </div>
                             {{/completeDerniereMinute}}
 
                             {{#inscriptionOK}}

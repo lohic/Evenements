@@ -791,6 +791,7 @@ function validFancyBox(){
 		        alerteExterne: dataJSON.alerteExterne,
 		        erreurChamps: dataJSON.erreurChamps,
 		        inscriptionOK: dataJSON.inscriptionOK,
+		        dejaInscrit: dataJSON.dejaInscrit,
 		        completeDerniereMinute: dataJSON.completeDerniereMinute,
 	        };
 
@@ -839,6 +840,7 @@ function validFancyBox(){
 		        alerteExterne: dataJSON.alerteExterne,
 		        erreurChamps: dataJSON.erreurChamps,
 		        inscriptionOK: dataJSON.inscriptionOK,
+		        dejaInscrit: dataJSON.dejaInscrit,
 		        completeDerniereMinute: dataJSON.completeDerniereMinute,
 	        };
 

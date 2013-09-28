@@ -36,14 +36,20 @@
         </div>
         {{/erreurChamps}}
 
+        {{^erreurChamps}}
+            <div class="confirmation">
+                {{^dejaInscrit}}
+                    {{^completeDerniereMinute}}
+                        <h3 class="little_bigger">{{title}}</h3>
+                    {{/completeDerniereMinute}}
+                {{/dejaInscrit}}
+                <h4 class="bit_big">{{titre}}</h4>
+                <p class="date bit_big">{{date}}</p>
+                <p class="lieu bit_big">{{lieu}}</p>
+            </div>
+        {{/erreurChamps}}
+
         {{#inscriptionOK}}
-        <div class="confirmation">
-            <h3 class="little_bigger">{{title}}</h3>
-            <h4 class="bit_big">{{titre}}</h4>
-            <p class="date bit_big">{{date}}</p>
-            <p class="lieu bit_big">{{lieu}}</p>
-        </div>
-        
         <div class="informations_inscription">
             <p>{{infos_inscription}}</p>
             <p class="nom biggest">{{nom}} <span>{{prenom}}</span></p>
