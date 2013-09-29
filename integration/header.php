@@ -51,14 +51,16 @@
                 <div id="filtre_categorie" class="small-hidden">
                     <ul>
                         <li class="titre_filtre bit_small">
-                            <span>Catégories</span>
+                            <span class="le_titre_filtre">Catégories</span>
                             <ul id="filtering-nav-categorie" class="filtre_isotope option-set" data-filter-group="rubrique">
+                                <li class="" id="entre_cate_0">
+                                    <a class="nom_du_filtre" href="#" data-filter-value=""><span class="" style="background:#666;"></span>Toutes</a>
+                                </li>
                         <?php       
                                 while($row = mysql_fetch_array($res)){
                         ?>
                                     <li class="" id="entre_cate_<?php echo $row['rubrique_id'];?>">
-                                        <a class="carre" href="#" style="background:<?php echo $row['rubrique_couleur']; ?>;" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"></a>
-                                        <a class="" href="#" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"><?php echo utf8_encode($row['rubrique_titre']);?></a>
+                                        <a class="nom_du_filtre" href="#" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"><span class="" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo utf8_encode($row['rubrique_titre']);?></a>
                                     </li>
                         <?php
                                 }
@@ -77,18 +79,19 @@
                 <div id="filtre_date" class="small-hidden">
                     <ul>
                         <li class="titre_filtre bit_small">
-                            <span>Dates</span>
+                            <span class="le_titre_filtre">Dates</span>
                             <ul id="filtering-nav-date" class="filtre_isotope option-set" data-filter-group="month">
+                                <li class="" id="entree_mois_0"><a class="nom_du_filtre" href="#" data-filter-value="">Toutes</a></li>
         <?php
                                 foreach($tableauMois as $mois){
                                     if($lang=="fr"){
         ?>
-                                        <li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+                                        <li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="nom_du_filtre" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisFrancais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
         <?php
                                     }
                                     else{
         ?>
-                                        <li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
+                                        <li class="" id="entree_mois_<?php echo $mois['unique'];?>"><a class="nom_du_filtre" href="#" data-filter-value=".mois_<?php echo $mois['unique'];?>"><?php echo $nomMoisAnglais[$mois['mois']];?> <?php echo $mois['annee'];?></a></li>
         <?php
                                     }
                                 }
@@ -114,12 +117,13 @@
                 <div id="filtre_mot" class="small-hidden">
                     <ul>
                         <li class="titre_filtre bit_small">
-                            <span>Mots-clés</span>
+                            <span class="le_titre_filtre">Mots-clés</span>
                             <ul id="filtering-nav-mot" class="filtre_isotope option-set" data-filter-group="mots">
+                                <li class="" id="entree_mot_0"><a class="nom_du_filtre" href="#" data-filter-value="">Tous</a></li>
                         <?php       
                                 while($row = mysql_fetch_array($res)){
                         ?>
-                                    <li class="" id="entree_mot_<?php echo $row['keyword_id'];?>"><a class="" href="#" data-filter-value=".mot_<?php echo $row['keyword_id'];?>"><?php echo $row['keyword_nom'];?></a></li>
+                                    <li class="" id="entree_mot_<?php echo $row['keyword_id'];?>"><a class="nom_du_filtre" href="#" data-filter-value=".mot_<?php echo $row['keyword_id'];?>"><?php echo $row['keyword_nom'];?></a></li>
                         <?php
                                 }
                         ?>

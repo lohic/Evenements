@@ -315,10 +315,31 @@ $(document).ready(function(){
 	    }
 	});
 
+	$('.nom_du_filtre').click(function(e){
+		if($(this).text()=="Toutes" || $(this).text()=="Tous"){
+			if($(this).parent().parent().attr('id')=='filtering-nav-categorie'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Catégories');
+			}
+			if($(this).parent().parent().attr('id')=='filtering-nav-date'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Dates');
+			}
+			if($(this).parent().parent().attr('id')=='filtering-nav-mot'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Mots-clés');
+			}
+			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'uppercase');
+		}
+		else{
+			$(this).parent().parent().parent().find('span.le_titre_filtre').text($(this).text());
+			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
+		}
+	});  
+
 })
 
 
-$(function(){        
+$(function(){  
+
+	    
 	var $container = $('#liste_evenements'), filters = {};
 	$body = $('body'),
 	colW = 335,

@@ -793,7 +793,7 @@ p.avancee.ouvert{
     margin-bottom: 5px;
 }
 
-#filtre_categorie a.carre{
+#filtre_categorie a span{
 	display: inline-block;
     height: 10px;
     margin-right: 8px;
