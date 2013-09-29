@@ -18,7 +18,7 @@
                             {{#casque}}
                                 <p class="bit_small"><label for="casque_{{identifiant}}">Réserver un casque pour la traduction : </label><input name="inscrit_casque[]" type="checkbox" id="casque_{{identifiant}}" value="{{identifiant}}"/></p>
                             {{/casque}}
-                            <p class="bit_small horaire">{{horaire}} {{#placement}} {{placement}} {{/placement}}</p>
+                            <p class="bit_small horaire">{{horaire}} {{#placement}} (vous serez placé en salle de retransmission) {{/placement}}</p>
                             <p class="bit_small lieu">{{lieu}}</p>
                         </div>
                     {{/pascomplete}}
@@ -49,7 +49,7 @@
                             {{#casque}}
                                 <p class="bit_small"><label for="casque_{{identifiant}}">Réserver un casque pour la traduction : </label><input name="inscrit_casque[]" type="checkbox" id="casque_{{identifiant}}" value="{{identifiant}}"/></p>
                             {{/casque}}
-                            <p class="bit_small horaire">{{horaire}} {{#placement}} {{placement}} {{/placement}}</p>
+                            <p class="bit_small horaire">{{horaire}} {{#placement}} (vous serez placé en salle de retransmission) {{/placement}}</p>
                             <p class="bit_small lieu">{{lieu}}</p>
                         </div>
                     {{/pascomplete}}

@@ -120,7 +120,11 @@
             {{^champVide}}
                 {{^erreurChamps}}
                     <div class="confirmation">
-                        <h3 class="little_bigger">{{title}}</h3>
+                        {{^inscritPartout}}
+                            {{^tousDerniereMinute}}
+                                <h3 class="little_bigger">{{title}}</h3>
+                            {{/tousDerniereMinute}}
+                        {{/inscritPartout}}
                         <h4 class="bit_big">{{titre}}</h4>
                         <p class="date bit_big">{{date}}</p>
                     </div>
@@ -150,9 +154,13 @@
                             {{/inscriptionOK}}
                         </div>
                     {{/sessions}}
-                    <div class="important bit_small">
-                        <p>{{{important}}}</p>
-                    </div>
+                    {{^inscritPartout}}
+                        {{^tousDerniereMinute}}
+                            <div class="important bit_small">
+                                <p>{{{important}}}</p>
+                            </div>
+                        {{/tousDerniereMinute}}
+                    {{/inscritPartout}}
                 {{/erreurChamps}}
             {{/champVide}}
         {{/erreurLDAP}}

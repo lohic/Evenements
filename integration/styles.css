@@ -2202,6 +2202,34 @@ ol.styled > li:before {
 	    padding-top: 4px;
 	    text-transform: uppercase;
 	}
+
+	body .fancybox-opened .fancybox-skin {
+	    width: 320px !important;
+	}
+
+	#cartouche {
+	    width: 290px;
+	}
+
+	.formulaire_externe input#nom {
+	    width: 227px;
+	}
+
+	.formulaire_externe input#prenom, .formulaire_externe input#fonction {
+	    width: 209px;
+	}
+
+	.formulaire_externe input#mail {
+	    width: 231px;
+	}
+
+	.formulaire_externe input {
+	    width: 185px;
+	}
+
+	.fancybox-wrap{
+		width: 320px !important;
+	}
 }
 
 @media (max-width: 640px) {

@@ -12,14 +12,16 @@
             <h3 class="bit_big">Vous êtes externe à Sciences po</h3>
             <form>
                 {{#toutesLesSessions}}
-                    <div class="session">
-                        <p class="bit_big"><input type="checkbox" name="sessions[]" value="{{identifiant}}" id="session_{{identifiant}}"/><label for="session_{{identifiant}}" class="session">{{nom}}</label></p>
-                        {{#casque}}
-                            <p class="bit_small"><label for="casque_{{identifiant}}">Réserver un casque pour la traduction : </label><input name="inscrit_casque[]" type="checkbox" id="casque_{{identifiant}}" value="{{identifiant}}"/></p>
-                        {{/casque}}
-                        <p class="bit_small horaire">{{horaire}} {{#placement}} {{placement}} {{/placement}}</p>
-                        <p class="bit_small lieu">{{lieu}}</p>
-                    </div>
+                    {{#pascomplete}}
+                        <div class="session">
+                            <p class="bit_big"><input type="checkbox" name="sessions[]" value="{{identifiant}}" id="session_{{identifiant}}"/><label for="session_{{identifiant}}" class="session">{{nom}}</label></p>
+                            {{#casque}}
+                                <p class="bit_small"><label for="casque_{{identifiant}}">Réserver un casque pour la traduction : </label><input name="inscrit_casque[]" type="checkbox" id="casque_{{identifiant}}" value="{{identifiant}}"/></p>
+                            {{/casque}}
+                            <p class="bit_small horaire">{{horaire}} {{#placement}} {{placement}} {{/placement}}</p>
+                            <p class="bit_small lieu">{{lieu}}</p>
+                        </div>
+                    {{/pascomplete}}
                 {{/toutesLesSessions}}
                 <input type="hidden" id="id_evenement" name="id_evenement" value="{{id}}"/>
                 <input type="hidden" id="titre" name="titre" value="{{titre}}"/>
@@ -44,10 +46,13 @@
             {{^champVide}}
                 {{^erreurChamps}}
                     <div class="confirmation">
-                        <h3 class="little_bigger">{{title}}</h3>
+                        {{^inscritPartout}}
+                            {{^tousDerniereMinute}}
+                                <h3 class="little_bigger">{{title}}</h3>
+                            {{/tousDerniereMinute}}
+                        {{/inscritPartout}}
                         <h4 class="bit_big">{{titre}}</h4>
                         <p class="date bit_big">{{date}}</p>
-                        <p class="lieu bit_big">{{lieu}}</p>
                     </div>
                     {{#sessions}}
                         <div class="informations_inscription">
@@ -75,9 +80,13 @@
                             {{/inscriptionOK}}
                         </div>
                     {{/sessions}}
-                    <div class="important bit_small">
-                        <p>{{{important}}}</p>
-                    </div>
+                    {{^inscritPartout}}
+                        {{^tousDerniereMinute}}
+                            <div class="important bit_small">
+                                <p>{{{important}}}</p>
+                            </div>
+                        {{/tousDerniereMinute}}
+                    {{/inscritPartout}}
                 {{/erreurChamps}}
             {{/champVide}}
         {{/erreurLDAP}}

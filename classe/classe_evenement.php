@@ -662,7 +662,7 @@ class Evenement {
 			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
 			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
-			if(!isset($code)){
+			if($code==""){
 				$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
 				$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
 				$differenceInterneTotale = $totalInterne - $totalInternePrises;
@@ -775,6 +775,8 @@ class Evenement {
 		if(isset($_SESSION['nomSP'])){
 			if(isset($sessions)){
 				$indice=0;
+				$inscritPartout=true;
+				$tousDerniereMinute=true;
 				foreach($sessions as $uneSession){
 					$lesSessions[$indice]['inscriptionOK']="";
 					$lesSessions[$indice]['dejaInscrit']="";
@@ -820,8 +822,10 @@ class Evenement {
 						$lesSessions[$indice]['completeDerniereMinute'] = "La dernière place pour la conférence ".$rowsession['session_nom']." vient malheureusement d'être réservée.";
 					}
 					else{
+						$tousDerniereMinute = "";
 						$testDejaInscrit = $session->deja_inscrit($_SESSION['mailSP'],$rowsession['session_id']);
 						if(!$testDejaInscrit){
+							$inscritPartout="";
 							$dateInscription = time();
 							$dateTime = date('Y-m-d H:i:s');
 							
@@ -997,6 +1001,8 @@ class Evenement {
 		$retour->erreurLDAP = $erreurLDAP;
 		$retour->erreurChamps = $erreurChamps;
 		$retour->champVide = $champVide;
+		$retour->inscritPartout = $inscritPartout;
+		$retour->tousDerniereMinute = $tousDerniereMinute;
 		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
 
 		session_unset();
@@ -1037,7 +1043,8 @@ class Evenement {
 			if(isset($sessions)){
 				$indice=0;
 				$erreurChampsTest = func::testeChamps($nom, $prenom, $mail);
-
+				$inscritPartout = true;
+				$tousDerniereMinute = true;
 				if($erreurChampsTest){
 					foreach($sessions as $uneSession){
 						$lesSessions[$indice]['inscriptionOK']="";
@@ -1085,8 +1092,10 @@ class Evenement {
 							$lesSessions[$indice]['completeDerniereMinute'] = "La dernière place pour la conférence ".$rowsession['session_nom']." vient malheureusement d'être réservée.";
 						}
 						else{
+							$tousDerniereMinute = "";
 							$testDejaInscrit = $session->deja_inscrit($mail,$rowsession['session_id']);
 							if(!$testDejaInscrit){
+								$inscritPartout = "";
 								$dateInscription = time();
 								$dateTime = date('Y-m-d H:i:s');
 								
@@ -1262,6 +1271,8 @@ class Evenement {
 		$retour->toutesLesSessions 	= $toutesLesSessions;
 		$retour->important = "<strong>IMPORTANT :</strong> ".count($lesSessions)." mail(s) contenant vos billets au format .pdf vont vous être envoyés à l'adresse ".$mail.". <strong>Veuillez imprimer le billet et vous présenter à l'accueil à l'adresse spécifiée.</strong>";
 		$retour->erreurChamps = $erreurChamps;
+		$retour->inscritPartout = $inscritPartout;
+		$retour->tousDerniereMinute = $tousDerniereMinute;
 		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
 
 		session_unset();

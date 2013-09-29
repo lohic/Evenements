@@ -39,6 +39,103 @@ $(document).ready(function(){
 	    
 	});
 
+	$('a.sinscrire').click(function(e){
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
+		}
+
+		var code = "test";
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code,
+	            cache : new Date()
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id:   dataJSON.evenement_id,
+				session_id:   dataJSON.session_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        lieu: dataJSON.lieu,
+		        casque:   dataJSON.casque,
+		        interneOuvert: dataJSON.interneOuvert,
+		        interneComplet: dataJSON.interneComplet,
+		        externeOuvert:   dataJSON.externeOuvert,
+		        externeComplet: dataJSON.externeComplet,
+		        toutClos: dataJSON.toutClos,
+		        toutComplet:   dataJSON.toutComplet,
+		        alerteInterne: dataJSON.alerteInterne,
+		        alerteExterne: dataJSON.alerteExterne,
+		        code: dataJSON.codeExterne,
+		        mention : dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a.sinscrire_multiple').click(function(e){
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
+		}
+		var code = "";
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code,
+	            cache : new Date()
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id:   dataJSON.evenement_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        sessions: dataJSON.sessions,
+		        code: dataJSON.codeExterne,
+		        mention : dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form_multiple(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
 	$origImgW = $('.banniere').width();
 	$origImgH = $('.banniere').height();
 	$ratioImg = $('.banniere').width() / $('.banniere').height();
@@ -154,15 +251,31 @@ $(document).ready(function(){
 
 	var jPM = $.jPanelMenu({
 	    menu: '#menu_smartphone',
-	    trigger: '#lien_menu_smartphone',
+	    trigger: '#lien_menu_smartphone, #validation_smart',
 	    openPosition: '270px',
-	    afterOpen:function(){
-	    	$('#jPanelMenu-menu .checkbox_smart').each(function(){
+	});
+
+	var jRes = jRespond([
+	    {
+	        label: 'small',
+	        enter: 0,
+	        exit: 692
+	    },{
+	        label: 'large',
+	        enter: 692,
+	        exit: 10000
+	    }
+	]);
+
+	jRes.addFunc({
+	    breakpoint: 'small',
+	    enter: function() {
+	        jPM.on();
+	        $('#jPanelMenu-menu .checkbox_smart').each(function(){
 	    		var nouvel_identifiant = $(this).attr('id')+"_smart";
 	    		$(this).attr('id', nouvel_identifiant);
 	    		$(this).next().attr('for', nouvel_identifiant);
 	    	});
-
 	    	$('#jPanelMenu-menu label').click(function(e){
 	    		if($(this).hasClass('all')){
 	    			$(this).siblings('label').find('span').addClass('vide');
@@ -196,28 +309,6 @@ $(document).ready(function(){
 			    var $checkbox = $( jQEvent.target );
 			    manageCheckbox( $checkbox );
 			});
-	    }
-	});
-
-	var jRes = jRespond([
-	    {
-	        label: 'small',
-	        enter: 0,
-	        exit: 692
-	    },{
-	        label: 'large',
-	        enter: 692,
-	        exit: 10000
-	    }
-	]);
-
-	jRes.addFunc({
-	    breakpoint: 'small',
-	    enter: function() {
-	        jPM.on();
-			
-
-		    
 	    },
 	    exit: function() {
 	        jPM.off();
@@ -479,6 +570,103 @@ $(function(){
 		    
 		});
 
+		$('a.sinscrire').click(function(e){
+			$(this).parent().addClass('sinscrireEvent');
+			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+			if($('.sinscrireEvent').hasClass('en')){
+				var la_langue="en";
+			}
+			else{
+				var la_langue="fr";
+			}
+
+			var code = "test";
+			e.preventDefault();
+			$.ajax({
+		        url     :"ajax/get_event_infos_inscription.php",
+		        type    : "GET",
+		        dataType:'json',
+		        data    : {
+		            id_event : evenement_id,
+		            langue : la_langue,
+		            code : code,
+		            cache : new Date()
+		        }
+		    }).done(function (dataJSON) {
+		    	console.log(dataJSON.titre);
+				inscription_data = {
+					id:   dataJSON.evenement_id,
+					session_id:   dataJSON.session_id,
+		            titre:   dataJSON.titre,
+			        date: dataJSON.date,
+			        lieu: dataJSON.lieu,
+			        casque:   dataJSON.casque,
+			        interneOuvert: dataJSON.interneOuvert,
+			        interneComplet: dataJSON.interneComplet,
+			        externeOuvert:   dataJSON.externeOuvert,
+			        externeComplet: dataJSON.externeComplet,
+			        toutClos: dataJSON.toutClos,
+			        toutComplet:   dataJSON.toutComplet,
+			        alerteInterne: dataJSON.alerteInterne,
+			        alerteExterne: dataJSON.alerteExterne,
+			        code: dataJSON.codeExterne,
+			        mention : dataJSON.mention,
+		        };
+
+		        inscription = ich.inscription_form(inscription_data);
+
+		        $.fancybox( inscription , {
+		            title : 'Inscription',
+		        });
+
+		        validFancyBox();
+		    });
+		});
+
+		$('a.sinscrire_multiple').click(function(e){
+			$(this).parent().addClass('sinscrireEvent');
+			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+			if($('.sinscrireEvent').hasClass('en')){
+				var la_langue="en";
+			}
+			else{
+				var la_langue="fr";
+			}
+			var code = "";
+			e.preventDefault();
+			$.ajax({
+		        url     :"ajax/get_event_infos_inscription_multiple.php",
+		        type    : "GET",
+		        dataType:'json',
+		        data    : {
+		            id_event : evenement_id,
+		            langue : la_langue,
+		            code : code,
+		            cache : new Date()
+		        }
+		    }).done(function (dataJSON) {
+		    	console.log(dataJSON.titre);
+				inscription_data = {
+					id:   dataJSON.evenement_id,
+		            titre:   dataJSON.titre,
+			        date: dataJSON.date,
+			        sessions: dataJSON.sessions,
+			        code: dataJSON.codeExterne,
+			        mention : dataJSON.mention,
+		        };
+
+		        inscription = ich.inscription_form_multiple(inscription_data);
+
+		        $.fancybox( inscription , {
+		            title : 'Inscription',
+		        });
+
+		        validFancyBox();
+		    });
+		});
+
 		
 		return false;
 	});
@@ -628,7 +816,7 @@ function clickEvent(clickedElement){
 		});
 
 		$('a.sinscrire_multiple').click(function(e){
-			var code = "test";
+			var code = "";
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription_multiple.php",
@@ -664,7 +852,7 @@ function clickEvent(clickedElement){
 }
 
 function validFancyBox(){
-	$('a#envoyer').click(function(e){
+	$('a#envoyer, a#renvoyer').click(function(e){
 		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/make_inscription.php",
@@ -710,53 +898,7 @@ function validFancyBox(){
 	    });
 	});
 
-	$('a#renvoyer').click(function(e){
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/make_inscription.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_session : $('#id_session').val(),
-	            login:$('#login').val(),
-	            password:$('#password').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            lieu:$('#lieu').val(),
-	            casque:$('#inscrit_casque').val()
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				session_id:   dataJSON.session_id,
-				title: dataJSON.titre_bloc,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom:   dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        type: dataJSON.type_inscription,
-		        numero:   dataJSON.numero,
-		        important: dataJSON.important,
-		        casque:   dataJSON.casque,
-		        alerteInterne: dataJSON.alerteInterne,
-		        erreurLDAP: dataJSON.erreurLDAP,
-		        inscriptionOK: dataJSON.inscriptionOK,
-		        champVide: dataJSON.champVide,
-		        completeDerniereMinute: dataJSON.completeDerniereMinute,
-	        };
-
-	        validation = ich.validation_form(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_externe').click(function(e){
+	$('a#envoyer_externe, a#renvoyer_externe').click(function(e){
 		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/make_inscription_externe.php",
@@ -805,57 +947,7 @@ function validFancyBox(){
 	    });
 	});
 
-	$('a#renvoyer_externe').click(function(e){
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/make_inscription_externe.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_session : $('#id_session').val(),
-	            nom:$('#nom').val(),
-	            prenom:$('#prenom').val(),
-	            mail:$('#mail').val(),
-	            entreprise:$('#entreprise').val(),
-	            fonction:$('#fonction').val(),
-	            casque:$('#inscrit_casque').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            lieu:$('#lieu').val()
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				session_id:   dataJSON.session_id,
-				title: dataJSON.titre_bloc,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom:   dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        type: dataJSON.type_inscription,
-		        numero:   dataJSON.numero,
-		        important: dataJSON.important,
-		        casque:   dataJSON.casque,
-		        alerteExterne: dataJSON.alerteExterne,
-		        erreurChamps: dataJSON.erreurChamps,
-		        inscriptionOK: dataJSON.inscriptionOK,
-		        dejaInscrit: dataJSON.dejaInscrit,
-		        completeDerniereMinute: dataJSON.completeDerniereMinute,
-	        };
-
-	        validation = ich.validation_externe_form(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-
-	$('a#envoyer_multiple').click(function(e){
+	$('a#envoyer_multiple, a#renvoyer_multiple').click(function(e){
 		e.preventDefault();
 
 		var inputs = document.getElementsByTagName("input");
@@ -898,6 +990,8 @@ function validFancyBox(){
 		        erreurLDAP: dataJSON.erreurLDAP,
 		        champVide: dataJSON.champVide,
 		        erreurChamps: dataJSON.erreurChamps,
+		        inscritPartout: dataJSON.inscritPartout,
+				tousDerniereMinute: dataJSON.tousDerniereMinute,
 		        mention : dataJSON.mention,
 	        };
 
@@ -911,63 +1005,7 @@ function validFancyBox(){
 	    });
 	});
 
-	$('a#renvoyer_multiple').click(function(e){
-		e.preventDefault();
-
-		var inputs = document.getElementsByTagName("input");
-		var tabsessions = [];
-		var tabcasques = [];
-		for(var i=0,l=inputs.length;i<l;i++) {
-			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
-				tabsessions.push(inputs[i].value);
-			}
-			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
-				tabcasques.push(inputs[i].value);
-			}
-		}
-
-		$.ajax({
-	        url     :"ajax/make_inscription_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            sessions : tabsessions,
-	            id_evenement : $('#id_evenement').val(),
-	            login:$('#login').val(),
-	            password:$('#password').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            casques : tabcasques
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				title:   dataJSON.titre_bloc,
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom: dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        sessions: dataJSON.sessions,
-		        toutesLesSessions: dataJSON.toutesLesSessions,
-		        important: dataJSON.important,
-		        erreurLDAP: dataJSON.erreurLDAP,
-		        champVide: dataJSON.champVide,
-		        erreurChamps: dataJSON.erreurChamps,
-		        mention : dataJSON.mention,
-	        };
-
-	        validation = ich.validation_form_multiple(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_externe_multiple').click(function(e){
+	$('a#envoyer_externe_multiple, a#renvoyer_externe_multiple').click(function(e){
 		e.preventDefault();
 
 		var inputs = document.getElementsByTagName("input");
@@ -1011,63 +1049,8 @@ function validFancyBox(){
 		        toutesLesSessions: dataJSON.toutesLesSessions,
 		        important: dataJSON.important,
 		        erreurChamps: dataJSON.erreurChamps,
-		        mention : dataJSON.mention,
-	        };
-
-	        validation = ich.validation_externe_form_multiple(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#renvoyer_externe_multiple').click(function(e){
-		e.preventDefault();
-
-		var inputs = document.getElementsByTagName("input");
-		var tabsessions = [];
-		var tabcasques = [];
-		for(var i=0,l=inputs.length;i<l;i++) {
-			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
-				tabsessions.push(inputs[i].value);
-			}
-			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
-				tabcasques.push(inputs[i].value);
-			}
-		}
-
-		$.ajax({
-	        url     :"ajax/make_inscription_externe_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            sessions : tabsessions,
-	            id_evenement : $('#id_evenement').val(),
-	            nom:$('#nom').val(),
-	            prenom:$('#prenom').val(),
-	            mail:$('#mail').val(),
-	            entreprise:$('#entreprise').val(),
-	            fonction:$('#fonction').val(),
-	            casques : tabcasques,
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				title: dataJSON.titre_bloc,
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom: dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        sessions: dataJSON.sessions,
-		        toutesLesSessions: dataJSON.toutesLesSessions,
-		        important: dataJSON.important,
-		        erreurChamps: dataJSON.erreurChamps,
+		        inscritPartout: dataJSON.inscritPartout,
+				tousDerniereMinute: dataJSON.tousDerniereMinute,
 		        mention : dataJSON.mention,
 	        };
 
