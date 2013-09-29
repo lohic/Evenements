@@ -19,14 +19,14 @@
 ?>
 <div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> mot_<?php echo $row['evenement_keyword'];?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>">
     <?php
-        /*if($row['evenement_image']!=""){
+        if($row['evenement_image']!=""){
     ?>
             <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event" id="image_lien_<?php echo $row['evenement_id'];?>" style="float:left;">
-                <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>?cache=<?php echo time(); ?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
+                <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
             </a>
             <img src="<?php echo CHEMIN_TRIANGLES; ?>triangle_<?php echo $lacouleur[1]; ?>.png" alt="triangle" class="triangle"/>
     <?php
-        }*/
+        }
     ?>
     <h1 style="background-color:<?php echo $rubrique_couleur;?>" class="titre">
         <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
