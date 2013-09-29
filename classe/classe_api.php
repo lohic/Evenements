@@ -63,13 +63,13 @@ class Api {
 		
 		//$this->core->user->logout();
 
-		if(isset($_GET['event']) && empty($_GET['event'])){
-			$this->event_list();
+		if(isset($_GET['event'])  && !empty($_GET['event']) ){
+			$this->event_detail();
 
 		}
 		else
-		if(isset($_GET['event'])  && !empty($_GET['event']) ){
-			$this->event_detail();
+		if(isset($_GET['event']) && empty($_GET['event'])){
+			$this->event_list();
 
 		}
 		else
@@ -97,7 +97,7 @@ class Api {
 	function check_request(){
 		$isRequestVar = false;
 		foreach($_REQUEST as $key=>$value){
-			if($key != '__utma' && $key != '__utmz' && $key != '__atuvc' && $key != 'PHPSESSID'){
+			if($key == 'event' || $key == 'session' || $key == 'login'){
 				$isRequestVar = true;
 
 				break;
@@ -258,6 +258,7 @@ class Api {
 	 * @return [type] [description]
 	 */
 	function event_detail(){
+
 		$add	= (isset($_GET['lang']) && $_GET['lang'] == 'en') ? '_en' : '';
 	
 		// informations de l'évenement
