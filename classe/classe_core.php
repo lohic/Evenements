@@ -1,9 +1,8 @@
 <?php
 
-include_once('../vars/config.php');
-include_once('classe_connexion.php');
-include_once('classe_spuser.php');
-include_once('classe_fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_spuser.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 //include_once('fonctions.php');
 //include_once('classe_user.php');
 //include_once('connexion_vars.php');
@@ -11,10 +10,10 @@ include_once('classe_fonctions.php');
 class Core {
 
 	var $isAdmin		= false;
-	var $isSuperAdmin	= false;
 	var $evenement_db	= NULL;
 	var $news_db		= NULL;
 	var $plasma_db		= NULL;
+	
 	var $user;
 	var $user_info		= NULL;
 	var $groups_id		= NULL;
@@ -33,12 +32,12 @@ class Core {
 		
 		
 
-		$this->plasma_db = new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
+		$this->evenement_db = new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
 		//$this->news_db		= new connexion($news_cInfo['server'],$news_cInfo['user'],$news_cInfo['password'],$news_cInfo['db']);
 
 
 		//$this->user 		= new user($this->news_db);
-		$this->user 		= new spuser($this->plasma_db);
+		$this->user 		= new spuser($this->evenement_db);
 
 
 		$this->user_info	= $this->user->get_user_info();
@@ -57,15 +56,11 @@ class Core {
 	
 		if($this->user_info){
 			$this->isAdmin		= $this->user_info->isAdmin;
-			//$this->isSuperAdmin	= $this->user_info->isSuperAdmin;
 			$this->userLevel	= $this->user_info->userLevel;
 		}else{
 			$this->isAdmin		= false;
-			//$this->isSuperAdmin	= false;
 			$this->userLevel	= false;
 		}
 	}
 
 }
-
-?>
