@@ -222,7 +222,7 @@ if($heure_fin=="23:59"){
 		<?php
 			if($row3['session_code_externe']!=""){
 		?>
-			<a href="http://www.sciencespo.fr/evenements/inscription/inscription.php?code=<?php echo $row3['session_code_externe'];?>&amp;id=<?php echo $row3['session_id'];?>">http://www.sciencespo.fr/evenements/inscription/inscription.php?code=<?php echo $row3['session_code_externe'];?>&amp;id=<?php echo $row3['session_id'];?></a>
+			<a href="http://www.sciencespo.fr/evenements/inscription_externe.php?code=<?php echo $row3['session_code_externe'];?>&amp;session=<?php echo $row3['session_id'];?>&amp;evenement=<?php echo $row3['evenement_id'];?>">http://www.sciencespo.fr/evenements/inscription_externe.php?code=<?php echo $row3['session_code_externe'];?>&amp;session=<?php echo $row3['session_id'];?>&amp;evenement=<?php echo $row3['evenement_id'];?></a>
 		<?php		
 			}
 			else{

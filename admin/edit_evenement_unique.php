@@ -783,7 +783,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 					<?php
 						if($row2['session_code_externe']!=""){
 					?>
-						<a href="<?php echo $rowGetOrganisme['organisme_url_front'];?>inscription/inscription.php?code=<?php echo $row2['session_code_externe'];?>&amp;id=<?php echo $row2['session_id'];?>" class="lien_inscription" ><?php echo $rowGetOrganisme['organisme_url_front'];?>inscription/inscription.php?code=<?php echo $row2['session_code_externe'];?>&amp;id=<?php echo $row2['session_id'];?></a>
+						<a href="<?php echo $rowGetOrganisme['organisme_url_front'];?>inscription_externe.php?code=<?php echo $row2['session_code_externe'];?>&amp;session=<?php echo $row2['session_id'];?>&amp;evenement=<?php echo $row['evenement_id'];?>" class="lien_inscription" ><?php echo $rowGetOrganisme['organisme_url_front'];?>inscription_externe.php?code=<?php echo $row2['session_code_externe'];?>&amp;session=<?php echo $row2['session_id'];?>&amp;evenement=<?php echo $row['evenement_id'];?></a>
 					<?php		
 						}
 					?>
