@@ -264,10 +264,12 @@ class Session {
 				if($totalPlacesInternes > $totalPrisesInternes || ($totalPlacesExternes > $totalPrisesExternes && $evenement['evenement_externe']==1)){  
 					$urlFront = $organisme->get_URL_front_from_group($evenement['evenement_groupe_id']);
 					if($totalPlacesExternes > $totalPrisesExternes && $evenement['evenement_externe']==1){
+						//$affichage = '<a href="'.$urlFront.'inscription/inscription.php?id='.$session['session_id'].'&amp;codeExterne='.$session['session_code_externe'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 						$affichage = '<a href="#" class="sinscrire bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 
 					}
 					else{
+						//$affichage = '<a href="'.$urlFront.'inscription/inscription.php?id='.$session['session_id'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 						$affichage = '<a href="#" class="sinscrire bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 					}
 				}
@@ -294,9 +296,11 @@ class Session {
 				if($estcomplet==false){
 					$urlFront = $organisme->get_URL_front_from_group($evenement['evenement_groupe_id']);
 					if($evenement['evenement_externe']==1){
+						//$affichage = '<a href="'.$urlFront.'inscription/inscription_multiple.php?id='.$evenement['evenement_id'].'&amp;codeExterne='.$session['session_code_externe'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 						$affichage = '<a href="#" class="sinscrire_multiple bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 					}
 					else{
+						//$affichage = '<a href="'.$urlFront.'inscription/inscription_multiple.php?id='.$evenement['evenement_id'].'" class="sinscrire bit_big" target="_blank"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';
 						$affichage = '<a href="#" class="sinscrire_multiple bit_big"><span style="background-color:'.$couleur.'"></span>'.$sinscrire.'</a>';					
 					}	
 				}
