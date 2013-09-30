@@ -119,21 +119,21 @@ class Billet {
 		            )
 		        ),
 		        'secondaryFields' => array(
-		            array(
+		            /*array(
 		                'key'   => 'lieu',
 		                'label' => 'Où',
 		                'value' => $this->lieu
-		            ),
+		            ),*/
 		            array(
 		                'key'   => 'date',
 		                'label' => 'Date',
-		                'value' => $this->date
-		            ),
+		                'value' => 'Le '.$this->date.' à '.$this->horaire
+		            )/*,
 		            array(
 		                'key'   => 'horaire',
 		                'label' => 'Horaire',
 		                'value' => $this->horaire
-		            )
+		            )*/
 		        ),
 		        'auxiliaryFields' => array(
 		            array(
@@ -142,15 +142,15 @@ class Billet {
 		                'value' => $this->lieu
 		            ),
 		            array(
-		                'key'   => 'date2',
-		                'label' => 'Date',
-		                'value' => $this->date
-		            ),
+		                'key'   => 'acces',
+		                'label' => 'Accès',
+		                'value' => $this->acces
+		            )/*,
 		            array(
 		                'key'   => 'horaire2',
 		                'label' => 'Horaire',
 		                'value' => $this->horaire
-		            )
+		            )*/
 		        ),
 		        'backFields' => array(
 		            array(
@@ -166,7 +166,7 @@ class Billet {
 		            array(
 		                'key'   => 'date',
 		                'label' => 'Quand',
-		                'value' => $this->date .' '. $this->horaire
+		                'value' => 'Le '.$this->date .' à '. $this->horaire
 		            ),
 		            array(
 		                'key'   => 'lieu',
@@ -181,7 +181,7 @@ class Billet {
 		            array(
 		            	'key'	=> 'unique_id',
 		            	'label' => 'Numéro d‘inscrit',
-		            	'value' => $this->unique_id
+		            	'value' => $this->presentUniqueID()
 		            )
 		        )
 		    )
@@ -190,11 +190,12 @@ class Billet {
 		    'barcode'         => array(
 		        'format'          => 'PKBarcodeFormatQR',
 		        'message'         => $this->unique_id,
-		        //'altText'		  => $this->unique_id,
+		        'altText'		  => $this->presentUniqueID(),
 		        'messageEncoding' => 'iso-8859-1'
 		    ),
 		    //'backgroundColor' => 'rgb(203,02,26)',
-		    'backgroundColor' => '#cb021a',
+		    'backgroundColor' => 'rgb(255,255,255)',
+		    //'backgroundColor' => '#cb021a',
 		    //'foregroundColor' => 'rgb(100, 10, 110)'
 		    //'logoText'        => 'Sciences Po'
 		);
