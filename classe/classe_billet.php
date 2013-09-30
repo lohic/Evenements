@@ -26,7 +26,10 @@ class Billet {
 	/**
 	 * [billet description]
 	 * @param  [type] $_unique_id [description]
-	 * @return [type]             [description]
+	 * @return none             l'objet contient le code du billet passbook, le code du billet html et le lien vers le billet pdf
+	 * $this->PDFurl
+	 * $this->passbookFile
+	 * $this->HTMLticket
 	 */
 	function billet($_unique_id = NULL){
 
@@ -75,12 +78,9 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-		$retour = new stdClass();
-		$retour->PDFurl 		= $this->generate_pdf(false);
-		$retour->passbookFile 	= $this->generate_passcode(false);
-		$retour->HTMLticket 	= $this->generate_mail();
-
-		return $retour;
+		$this->PDFurl 			= $this->generate_pdf(false);
+		$this->passbookFile 	= $this->generate_passcode(false);
+		$this->HTMLticket 		= $this->generate_mail();
 	}
 
 
