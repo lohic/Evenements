@@ -61,8 +61,7 @@ class Api {
 		$this->json->isAuthenticated = $this->isAuthenticated;
 		$this->check_request();
 		
-		//$this->core->user->logout();
-
+		
 		if(isset($_GET['event'])  && !empty($_GET['event']) ){
 			$this->event_detail();
 
@@ -97,7 +96,7 @@ class Api {
 	function check_request(){
 		$isRequestVar = false;
 		foreach($_REQUEST as $key=>$value){
-			if($key == 'event' || $key == 'session' || $key == 'login'){
+			if($key == 'event' || $key == 'session' || $key == 'login' || $key == 'logout'){
 				$isRequestVar = true;
 
 				break;
