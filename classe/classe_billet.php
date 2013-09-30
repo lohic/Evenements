@@ -79,8 +79,8 @@ class Billet {
 		}
 
 		$this->PDFurl 			= $this->generate_pdf(false);
-		$this->passbookFile 	= $this->generate_passcode(false);
 		$this->HTMLticket 		= $this->generate_mail();
+		$this->passbookFile 	= $this->generate_passcode(false);
 	}
 
 
@@ -209,7 +209,6 @@ class Billet {
 		$pass->addFile( $this->localBilletFolder .'images/logo.png');
 
 		// Create and output the PKPass
-		
 		if(!$show){
 			return $pass->create(false);
 		}else if(!$pass->create(true)) {
