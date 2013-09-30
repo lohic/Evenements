@@ -129,7 +129,7 @@
     <tr>
       <td></td>
       <td></td>
-      <td></td>
+      <td bgcolor="#FFFF00"></td>
       <td colspan="2"><a href="<?php echo $this->url_image;?>" target="_blank"><img src="<?php echo $this->imageBillet;?>" /></a></td>
       <td></td>
     </tr>
