@@ -3,8 +3,8 @@
 // configuration /////////////////////////////////////
 $host = 'localhost';
 $user = 'root';
-$password = 'root';
-$database = 'evenements';
+$password = 'z6po';
+$database = 'sciences_po_evenements_new_db';
 
 // make the connection //////////////////////////////
 $link = mysql_connect($host, $user, $password) or die("ERROR: ".mysql_error());
