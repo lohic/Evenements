@@ -69,16 +69,21 @@ class Billet {
 			$this->lieu			= "27 Rue Saint-Guillaume\n75007 Paris";
 			$this->organisateur = "Sciences Po Paris";
 
-			$this->imageBillet  = "http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1980/grande-image.jpg?cache=1380555674";
+			$this->imageBillet  = $this->absoluteBilletFolder.'images/pdf/billet_boutique.jpg';
 			$this->url_image	= "http://www.sciencespo.fr/evenements/#/?lang=fr&id=1980"; 
 
 			$this->big_PDF		= true;
 		}
 
-		//echo $this->generate_pdf(true);
-		$this->generate_passcode();
-		echo $this->generate_mail();
+		$retour = new stdClass();
+		$retour->PDFurl 		= $this->generate_pdf(false);
+		$retour->passbookFile 	= $this->generate_passcode(false);
+		$retour->HTMLticket 	= $this->generate_mail();
+
+		return $retour;
 	}
+
+
 
 	/**
 	 * [generate_passcode description]
@@ -96,9 +101,9 @@ class Billet {
 		    'description'        => 'Demo pass',
 		    'formatVersion'      => 1,
 		    'organizationName'   => 'Flight Express',
-		    'passTypeIdentifier' => 'pass.net.formidable-studio.scanevent', // 4. Set to yours
+		    'passTypeIdentifier' => 'pass.net.formidable-studio.scanevent',
 		    'serialNumber'       => $this->unique_id,
-		    'teamIdentifier'     => 'GWDABM458G'           // 4. Set to yours
+		    'teamIdentifier'     => 'GWDABM458G'
 		);
 		$associatedAppKeys    = array();
 		$relevanceKeys        = array();
@@ -119,21 +124,11 @@ class Billet {
 		            )
 		        ),
 		        'secondaryFields' => array(
-		            /*array(
-		                'key'   => 'lieu',
-		                'label' => 'Où',
-		                'value' => $this->lieu
-		            ),*/
 		            array(
 		                'key'   => 'date',
 		                'label' => 'Date',
 		                'value' => 'Le '.$this->date.' à '.$this->horaire
-		            )/*,
-		            array(
-		                'key'   => 'horaire',
-		                'label' => 'Horaire',
-		                'value' => $this->horaire
-		            )*/
+		            )
 		        ),
 		        'auxiliaryFields' => array(
 		            array(
@@ -145,12 +140,7 @@ class Billet {
 		                'key'   => 'acces',
 		                'label' => 'Accès',
 		                'value' => $this->acces
-		            )/*,
-		            array(
-		                'key'   => 'horaire2',
-		                'label' => 'Horaire',
-		                'value' => $this->horaire
-		            )*/
+		            )
 		        ),
 		        'backFields' => array(
 		            array(
@@ -218,10 +208,16 @@ class Billet {
 		$pass->addFile( $this->localBilletFolder .'images/icon@2x.png');
 		$pass->addFile( $this->localBilletFolder .'images/logo.png');
 
-		if(!$pass->create(true)) { // Create and output the PKPass
+		// Create and output the PKPass
+		
+		if(!$show){
+			return $pass->create(false);
+		}else if(!$pass->create(true)) {
 		    echo 'Error: '.$pass->getError();
 		}
 	}
+
+
 
 	/**
 	 * [generate_html description]
@@ -241,6 +237,8 @@ class Billet {
 
 		return $billet;
 	}
+
+
 
 	/**
 	 * Génère un QRcode au format PNG, on peut le récupérer comme une chaîne base64 ou comme une balise IMG contenant cette chaîne
@@ -292,7 +290,7 @@ class Billet {
 		 */
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-		// set document information
+		// ENTETE DU PDF
 		$pdf->SetCreator('Sciences Po - Formidable Studio');
 		$pdf->SetAuthor('Sciences Po - Formidable Studio');
 		$pdf->SetTitle('Billet '.$this->session_name.' N° '.$this->presentUniqueID());
@@ -300,41 +298,17 @@ class Billet {
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 
-		// set default monospaced font
+		// REGLAGES DE LA PAGE
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-		// set auto page breaks
+		$pdf->SetMargins(PDF_MARGIN_LEFT, 16, PDF_MARGIN_RIGHT);
 		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-
-		// set font
-		$pdf->SetFont('helvetica', '', 11);
-
-		// add a page
+		// REGLAGES DE LA POLICE
 		$pdf->AddPage();
-
 		$pdf->SetFont('helvetica', '', 10);
 
-		// set style for barcode
-		$style = array(
-		    'border' => 2,
-		    'vpadding' => 'auto',
-		    'hpadding' => 'auto',
-		    'fgcolor' => array(0,0,0),
-		    'bgcolor' => array(255,255,255),
-		    'module_width' => 1, // width of a single module in points
-		    'module_height' => 1, // height of a single module in points
-		    'position'=>'S'
-		);
-
-		// QRCODE,L : QR-CODE Low error correction
-		//$pdf->write2DBarcode('youpi super ça fonctionne', 'QRCODE,L', 20, 30, 50, 50, $style, 'N');
-		//$pdf->Text(20, 25, 'QRCODE L / youpi super ça fonctionne');
-
+		// GENERATION DES CODES BARRES
 		$QRcode = $this->base64QRcode(true);
 
 		$style = array(
@@ -346,18 +320,20 @@ class Billet {
 			'fontsize'		=> 8,
 			'stretchtext'	=> 4
 		);
-	
+		$barcode1D = '<tcpdf method="write1DBarcode" params="'.$pdf->serializeTCPDFtagParameters(array($this->unique_id, 'C128B', '', '', 90, 20, 0.4, $style, 'N')).'" />';
 
-		$barcode1D = '<tcpdf method="write1DBarcode" params="'.$pdf->serializeTCPDFtagParameters(array($this->unique_id, 'C128B', '', '', 90, 30, 0.4, $style, 'N')).'" />';
-
+		// ON INCLU LE TEMPLATE AVEC SON CONTENU
 		ob_start();
 			include_once($template_billet);
 			$tbl = ob_get_contents();
 		ob_end_clean();
 
-
+		// ON ECRIT LE HTML DANS LE PDF
 		$pdf->writeHTML($tbl, true, false, false, false, 'left');
 
+		// ON PROTEGE LE FICHIER POUR EVITER LES MODIFICATIONS
+		$permissions = array('modify', 'annot-forms', 'fill-forms', 'extract', 'assemble');
+		$pdf->SetProtection($permissions);
 
 		// EXPORTE LE BILLET OU L'AFFICHE suivant la variable $show passée en paramètre de la fonction
 		if($show){
@@ -368,13 +344,17 @@ class Billet {
 		}
 	}
 
+
+
 	/**
-	 * [presentUniqueID description]
-	 * @return [type] [description]
+	 * Normalise la présentation de l'id Unique (1 1234 1234 1234)
+	 * @return string 	l'id unique avec des espacements pour la lecture
 	 */
 	function presentUniqueID(){
 		return strrev(implode(' ',str_split(strrev($this->unique_id), 4)));
 	}
+
+
 
 	/**
 	 * Description
@@ -387,5 +367,32 @@ class Billet {
 		}
 		return $chemin;
 	}
+
+
+
+	/**
+	 * Description
+	 * @param type $chaine 
+	 * @return type
+	 */
+	function uc_strtoupper_fr($chaine){
+		$chaine = strtoupper($chaine);
+		$chaine = strtr($chaine, "äâàáåãéèëêòóôõöøìíîïùúûüýñçþÿæœðø","ÄÂÀÁÅÃÉÈËÊÒÓÔÕÖØÌÍÎÏÙÚÛÜÝÑÇÞÝÆŒÐØ");
+		return $chaine;
+	}
+
+
+
+	/**
+	 * [dateFormat description]
+	 * @param  [type] $date [description]
+	 * @return [type]       [description]
+	 */
+	function dateFormat($date){
+		date_default_timezone_set("Europe/Paris");
+		setlocale(LC_TIME, 'fr_FR');
+		return utf8_encode(strftime('%d %B %Y',strtotime($date)));
+	}
+
 
 }
