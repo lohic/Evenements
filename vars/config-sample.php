@@ -27,6 +27,7 @@ define ('SLIDE_TEMPLATE_FOLDER','slides_templates/');
 define ('ACTU_MEDIA_FOLDER',	'actu_medias/');
 define ('SLIDESHOW_FOLDER',		'slideshow/');
 define ('IMG_SLIDES',			'slides_images/');
+define ('BILLETS_FOLDER',		'billet/');
 
 define ('TB',					'sp_');
 

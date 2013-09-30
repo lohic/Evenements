@@ -1,44 +1,154 @@
-<html>
-	<head>
-		<title>Sciences Po événement | <?php echo $this->session_name ?></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="viewport" content="width=device-width, scale=1.0">
-	</head>
+  <table cellspacing="0" cellpadding="1" border="1" bgcolor="#CC0000">
+    <tr>
+      <td width="25" height="25"></td>
+      <td width="100"></td>
+      <td width="190"></td>
+      <td width="100"></td>
+      <td width="190"></td>
+      <td width="25"></td>
+    </tr>
 
-	<body>
-		<table width="300px;" style="margin:auto;background:#DDD;font-family:helvetica,sans;font-size:14px;" cellspacing="20">
-			<tr>
-				<td>Sciences Po</td>
-			</tr>
-			<tr>
-				<td><h1 style="font-size:22px;text-transform:uppercase;margin:0;"><?php echo $this->session_name ?></h1></td>
-			</tr>
-			<tr>
-				<td>
-					<h3 style="font-size:18px;font-weight:normal;margin:0;">Le <?php echo $this->date?> à <?php echo $this->horaire ?></h3>
-					<p style="margin:0;"><?php echo $this->lieu ?></p>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<p style="margin:0;">Organisateur : <?php echo $this->organisateur ?></p>
-				</td>
-			</tr>
-			<tr>
-				<td><p><?php echo $this->prenom .' <strong style="text-transform:uppercase;">'.  $this->nom .'</strong>'; ?></p></td>
-			</tr>
-			<tr>
-				<td><p><?php echo $this->acces ?></p></td>
-			</tr>
-			<tr>
-				<td><p><?php echo $this->ecouteurs? 'Écouteurs réservés' : ''; ?></p></td>
-			</tr>
-			<tr>
-				<td style="text-align:center"><?php echo $QRcode?></td>
-			</tr>
-			<tr>
-				<td style="text-align:center"><strong><?php echo $this->presentUniqueID() ?></strong></td>
-			</tr>
-		</table>
-	</body>
-</html>
+    <tr>
+      <td></td>
+      <td colspan="2">Logo Grand</td>
+      <td colspan="2"><?php echo $this->ecouteurs? 'ecouteurs réservés' : 'pas d\'écouteurs'; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td height="25"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td colspan="4"><h1><?php echo $this->session_name;?></h1></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td colspan="4"><?php echo 'Le '.$this->date.' à '.$this->horaire; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td colspan="2">&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Nom :</td>
+      <td><?php echo $this->nom; ?></td>
+      <td colspan="2" rowspan="4" align="center" valign="top"><p><?php echo $this->acces; ?></p>        <?php echo $QRcode; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>Pr&eacute;nom :</td>
+      <td><?php echo $this->prenom; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>N&deg; :</td>
+      <td><?php echo $this->presentUniqueID(); ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>Statut :</td>
+      <td><?php echo $this->statut; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>Organisateur :</td>
+      <td><?php echo $this->organisateur;?></td>
+      <td colspan="2" rowspan="5" align="center"><?php echo $barcode1D; ?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>Adresse :</td>
+      <td><?php echo $this->lieu;?></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td height="25"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td height="100"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td colspan="2"><a href="<?php echo $this->url_image;?>" target="_blank"><img src="<?php echo $this->imageBillet;?>" /></a></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>

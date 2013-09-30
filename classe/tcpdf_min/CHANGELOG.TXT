@@ -1,3 +1,19 @@
+6.0.036 (2013-09-29)
+	- Methods for registration bars and crop marks were extended to support registration color (see example n. 56).
+	- New default spot colors were added to tcpdf_colors.php, including the 'All' and 'None' special registration colors.
+
+6.0.035 (2013-09-25)
+	- TCPDF_PARSER class was improved.
+
+6.0.034 (2013-09-24)
+	- Bug #839 "Error in xref parsing in mixed newline chars" was fixed.
+
+6.0.033 (2013-09-23)
+	- Bug fix related to PNG image transparency using GD library.
+
+6.0.032 (2013-09-23)
+	- Bug #838 "Fatal error when imagick cannot handle the image, even though GD is available and can" was fixed.
+
 6.0.031 (2013-09-18)
 	- Bug #836 "Optional EOL marker before endstream" was fixed.
 	- Some additional controls were added to avoid "division by zero" error with badly formatted input.

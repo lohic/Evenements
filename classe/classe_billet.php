@@ -50,26 +50,34 @@ class Billet {
 			$this->horaire		= "20:30";
 			$this->lang			= "FR";
 
+			// attention sert pour le chemin du billet
+			$temp_date 			= explode('/',$this->date);
+			$this->jour			= $temp_date[0];
+			$this->mois			= $temp_date[1];
+			$this->annee		= $temp_date[2];
+
 			$this->nom 			= 'Horellou jh hk kh k ljhkh lk hlkh hlkjhkhhkjhlkhlkhkjh';
 			$this->prenom 		= 'Loïc';
 			$this->statut		= 'interne';
 
-			$this->acces		= 'retransmission';
+			$this->acces		= 'retransmission'; // Retransmission ou le nom de la salle
 			$this->ecouteurs	= true;
 
 			$this->image		= '';
 			$this->url_image	= '';
 
 			$this->lieu			= "27 Rue Saint-Guillaume\n75007 Paris";
-
 			$this->organisateur = "Sciences Po Paris";
+
+			$this->imageBillet  = "http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1980/grande-image.jpg?cache=1380555674";
+			$this->url_image	= "http://www.sciencespo.fr/evenements/#/?lang=fr&id=1980"; 
 
 			$this->big_PDF		= true;
 		}
 
-		//$this->generate_pdf();
+		echo $this->generate_pdf(false);
 		//$this->generate_passcode();
-		echo $this->generate_mail();
+		//echo $this->generate_mail();
 	}
 
 	/**
@@ -204,9 +212,7 @@ class Billet {
 
 		$pass->setJSON(json_encode($passData));
 
-
 		// Add files to the PKPass package
-		//$pass->addFile(REAL_LOCAL_PATH.'template_front/default/images/billet-icon.png');
 		$pass->addFile( $this->localBilletFolder .'images/icon.png');
 		$pass->addFile( $this->localBilletFolder .'images/icon@2x.png');
 		$pass->addFile( $this->localBilletFolder .'images/logo.png');
@@ -228,7 +234,6 @@ class Billet {
 		ob_start();
 
 			include_once($this->localBilletFolder .'billet_mail.php');
-
 			$billet = ob_get_contents();
 
 		ob_end_clean();
@@ -260,68 +265,50 @@ class Billet {
 		return !$wrapImg ? $imageString : '<img src="data:image/png;base64,'. $imageString .'"/>';
 	}
 
-	/**
-	 * [large_html_pdf description]
-	 * @return [type] [description]
-	 */
-	function large_html_pdf(){
-
-	}
-
-	/**
-	 * [small_html_pdf description]
-	 * @return [type] [description]
-	 */
-	function small_html_pdf(){
-
-	}
 
 	/**
 	 * [generate_pdf description]
 	 * @return [type] [description]
 	 */
-	function generate_pdf(){
+	function generate_pdf($show = false){
 
-		// create new PDF document
+		$template_billet = $this->localBilletFolder.'billet_pdf_small.php';
+
+		if($this->big_PDF == true && is_file($this->localBilletFolder.'billet_pdf_big.php') ){
+			$template_billet = $this->localBilletFolder.'billet_pdf_big.php';
+		}
+
+		// on précise le chemin d'export du billet en fonction de la date yyyy/mm/jj/ de la session
+		$date_dir = $this->annee.'/'.$this->mois.'/'.$this->jour.'/';
+		$localOutputFolder = REAL_LOCAL_PATH.BILLETS_FOLDER.$date_dir;
+		$absoluteOutputFolder = ABSOLUTE_URL.BILLETS_FOLDER.$date_dir;
+		
+		$uploadDir = $this->createPath($localOutputFolder);
+
+
+		/**
+		 * GENERATION DU PDF
+		 */
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 		// set document information
-		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('Nicola Asuni');
-		$pdf->SetTitle('TCPDF Example 050');
-		$pdf->SetSubject('TCPDF Tutorial');
-		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-
-		// set default header data
-		$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 050', PDF_HEADER_STRING);
-
-		// set header and footer fonts
-		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		$pdf->SetCreator('Sciences Po - Formidable Studio');
+		$pdf->SetAuthor('Sciences Po - Formidable Studio');
+		$pdf->SetTitle('Billet '.$this->session_name.' N° '.$this->presentUniqueID());
+		$pdf->SetSubject('N° '.$this->presentUniqueID());
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
 
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
 		// set margins
 		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
 		// set auto page breaks
 		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
 		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-		// set some language-dependent strings (optional)
-		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-		    require_once(dirname(__FILE__).'/lang/eng.php');
-		    $pdf->setLanguageArray($l);
-		}
-
-		// ---------------------------------------------------------
-
-		// NOTE: 2D barcode algorithms must be implemented on 2dbarcode.php class file.
 
 		// set font
 		$pdf->SetFont('helvetica', '', 11);
@@ -329,36 +316,7 @@ class Billet {
 		// add a page
 		$pdf->AddPage();
 
-		// print a message
-		$txt = "You can also export 2D barcodes in other formats (PNG, SVG, HTML). Check the examples inside the barcode directory.\n";
-		$pdf->MultiCell(70, 50, $txt, 0, 'J', false, 1, 125, 30, true, 0, false, true, 0, 'T', false);
-
-
 		$pdf->SetFont('helvetica', '', 10);
-
-		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-		// set style for barcode
-		/*$style = array(
-		    'border' => true,
-		    'vpadding' => 'auto',
-		    'hpadding' => 'auto',
-		    'fgcolor' => array(0,0,0),
-		    'bgcolor' => false, //array(255,255,255)
-		    'module_width' => 1, // width of a single module in points
-		    'module_height' => 1 // height of a single module in points
-		);*/
-
-		// write RAW 2D Barcode
-
-		//$code = '111011101110111,010010001000010,010011001110010,010010000010010,010011101110010';
-		//$pdf->write2DBarcode($code, 'RAW', 80, 30, 30, 20, $style, 'N');
-
-		// write RAW2 2D Barcode
-		//$code = '[111011101110111][010010001000010][010011001110010][010010000010010][010011101110010]';
-		//$pdf->write2DBarcode($code, 'RAW2', 80, 60, 30, 20, $style, 'N');
-
-		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		// set style for barcode
 		$style = array(
@@ -366,104 +324,47 @@ class Billet {
 		    'vpadding' => 'auto',
 		    'hpadding' => 'auto',
 		    'fgcolor' => array(0,0,0),
-		    'bgcolor' => false, //array(255,255,255)
+		    'bgcolor' => array(255,255,255),
 		    'module_width' => 1, // width of a single module in points
-		    'module_height' => 1 // height of a single module in points
+		    'module_height' => 1, // height of a single module in points
+		    'position'=>'S'
 		);
 
 		// QRCODE,L : QR-CODE Low error correction
-		$pdf->write2DBarcode('youpi super ça fonctionne', 'QRCODE,L', 20, 30, 50, 50, $style, 'N');
-		$pdf->Text(20, 25, 'QRCODE L / youpi super ça fonctionne');
+		//$pdf->write2DBarcode('youpi super ça fonctionne', 'QRCODE,L', 20, 30, 50, 50, $style, 'N');
+		//$pdf->Text(20, 25, 'QRCODE L / youpi super ça fonctionne');
 
-		// QRCODE,M : QR-CODE Medium error correction
-		//$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,M', 20, 90, 50, 50, $style, 'N');
-		//$pdf->Text(20, 85, 'QRCODE M');
+		$QRcode = $this->base64QRcode(true);
 
-		// QRCODE,Q : QR-CODE Better error correction
-		//$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,Q', 20, 150, 50, 50, $style, 'N');
-		//$pdf->Text(20, 145, 'QRCODE Q');
+		$style = array(
+			'hpadding'		=> 'auto',
+			'vpadding'		=> 5,
+			'text'			=> true,
+			'label'			=> $this->unique_id,
+		    'bgcolor' 		=> array(255,255,255),
+			'fontsize'		=> 8,
+			'stretchtext'	=> 4
+		);
+	
 
-		// QRCODE,H : QR-CODE Best error correction
-		//$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 20, 210, 50, 50, $style, 'N');
-		//$pdf->Text(20, 205, 'QRCODE H');
+		$barcode1D = '<tcpdf method="write1DBarcode" params="'.$pdf->serializeTCPDFtagParameters(array($this->unique_id, 'C128B', '', '', 90, 30, 0.4, $style, 'N')).'" />';
 
-		// -------------------------------------------------------------------
-		// PDF417 (ISO/IEC 15438:2006)
+		ob_start();
+			include_once($template_billet);
+			$tbl = ob_get_contents();
+		ob_end_clean();
 
-		/*
 
-		 The $type parameter can be simple 'PDF417' or 'PDF417' followed by a
-		 number of comma-separated options:
+		$pdf->writeHTML($tbl, true, false, false, false, 'left');
 
-		 'PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6'
 
-		 Possible options are:
-
-		     a  = aspect ratio (width/height);
-		     e  = error correction level (0-8);
-
-		     Macro Control Block options:
-
-		     t  = total number of macro segments;
-		     s  = macro segment index (0-99998);
-		     f  = file ID;
-		     o0 = File Name (text);
-		     o1 = Segment Count (numeric);
-		     o2 = Time Stamp (numeric);
-		     o3 = Sender (text);
-		     o4 = Addressee (text);
-		     o5 = File Size (numeric);
-		     o6 = Checksum (numeric).
-
-		 Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional.
-		 To use a comma character ',' on text options, replace it with the character 255: "\xff".
-
-		*/
-
-		//$pdf->write2DBarcode('www.tcpdf.org', 'PDF417', 80, 90, 0, 30, $style, 'N');
-		//$pdf->Text(80, 85, 'PDF417 (ISO/IEC 15438:2006)');
-
-		// -------------------------------------------------------------------
-		// DATAMATRIX (ISO/IEC 16022:2006)
-
-		//$pdf->write2DBarcode('http://www.tcpdf.org', 'DATAMATRIX', 80, 150, 50, 50, $style, 'N');
-		//$pdf->Text(80, 145, 'DATAMATRIX (ISO/IEC 16022:2006)');
-
-		// -------------------------------------------------------------------
-
-		// new style
-		/*$style = array(
-		    'border' => 2,
-		    'padding' => 'auto',
-		    'fgcolor' => array(0,0,255),
-		    'bgcolor' => array(255,255,64)
-		);*/
-
-		// QRCODE,H : QR-CODE Best error correction
-		//$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 80, 210, 50, 50, $style, 'N');
-		//$pdf->Text(80, 205, 'QRCODE H - COLORED');
-
-		// new style
-		/*$style = array(
-		    'border' => false,
-		    'padding' => 0,
-		    'fgcolor' => array(128,0,0),
-		    'bgcolor' => false
-		);*/
-
-		// QRCODE,H : QR-CODE Best error correction
-		//$pdf->write2DBarcode('www.tcpdf.org', 'QRCODE,H', 140, 210, 50, 50, $style, 'N');
-		//$pdf->Text(140, 205, 'QRCODE H - NO PADDING');
-
-		// ---------------------------------------------------------
-
-		//Close and output PDF document
-		$pdf->Output('example_050.pdf', 'I');
-
-		//============================================================+
-		// END OF FILE
-		//============================================================+
-
+		// EXPORTE LE BILLET OU L'AFFICHE suivant la variable $show passée en paramètre de la fonction
+		if($show){
+			$pdf->Output('billet_'.$this->unique_id.'.pdf', 'I');
+		}else{
+			$pdf->Output($localOutputFolder.'billet_'.$this->unique_id.'.pdf', 'F');
+			return $absoluteOutputFolder.'billet_'.$this->unique_id.'.pdf';
+		}
 	}
 
 	/**
@@ -473,4 +374,17 @@ class Billet {
 	function presentUniqueID(){
 		return strrev(implode(' ',str_split(strrev($this->unique_id), 4)));
 	}
+
+	/**
+	 * Description
+	 * @param type $chemin 
+	 * @return type
+	 */
+	function createPath($chemin){	
+		if(!is_dir($chemin)){
+			mkdir($chemin, 0777, true);
+		}
+		return $chemin;
+	}
+
 }
