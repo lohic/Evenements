@@ -1,5 +1,13 @@
 // ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
-
+$.urlParam = function(name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
 $(document).ready(function(){			
 	var sauv = 0;
 	var $container = $('#liste_evenements'), filters = {};
@@ -346,13 +354,10 @@ $(document).ready(function(){
 			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
 		}
 	});  
-
 })
 
 
 $(function(){  
-
-	    
 	var $container = $('#liste_evenements'), filters = {};
 	$body = $('body'),
 	colW = 335,
@@ -451,6 +456,8 @@ $(function(){
 
 			getNextLast($('.selectedEvent'));
 			$('.isotope-hidden').removeClass('first last');
+
+			initIsotopeOuvert();
 	    }
 	});
 
@@ -739,6 +746,42 @@ $(function(){
 	}).smartresize();
 });
 
+function initIsotopeOuvert(){
+	var sauv=0;
+	if(decodeURIComponent($.urlParam('id')) != "null"){	
+		var nextLastRowEventTest;
+		var prevFirstRowEventTest;
+		
+		var monBloc = $('#bloc_'+decodeURIComponent($.urlParam('id')));
+
+		//On remet les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
+		$('.selectedEvent > a').css('display','block');
+		$('.selectedEvent > img').css('display','inline-block');
+		$('.selectedEvent > p').css('display','block');
+		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > span').css('display','block');
+		$('.selectedEvent').height(sauv);
+		sauv = monBloc.height();
+		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+		$('.event').removeClass('selectedEvent');
+		
+
+		nextLastRowEventTest = getNextLast(monBloc);
+		prevFirstRowEventTest = getPrevFirst(monBloc);
+		var hauteurMaxTest=prevFirstRowEventTest.height();
+
+		getHauteurMax(prevFirstRowEventTest, hauteurMaxTest, monBloc);
+
+		monBloc.addClass('selectedEvent');
+		
+		//clickEvent(monBloc);
+		$('.selectedEvent > a').css('display','none');
+		$('.selectedEvent > img').css('display','none');
+		$('.selectedEvent > p').css('display','none');
+		$('.selectedEvent > div').css('display','none');
+		$('.selectedEvent > span').css('display','none');
+	}
+}
 
 function clickEvent(clickedElement){
 	var nextLastRowEvent;
