@@ -40,6 +40,7 @@ $(document).ready(function(){
 	});
 
 	$('a.sinscrire').click(function(e){
+		$('.isotope-item').removeClass('sinscrireEvent');
 		$(this).parent().addClass('sinscrireEvent');
 		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
 
@@ -50,7 +51,12 @@ $(document).ready(function(){
 			var la_langue="fr";
 		}
 
-		var code = "test";
+		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
+
 		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/get_event_infos_inscription.php",
@@ -59,8 +65,7 @@ $(document).ready(function(){
 	        data    : {
 	            id_event : evenement_id,
 	            langue : la_langue,
-	            code : code,
-	            cache : new Date()
+	            code : code
 	        }
 	    }).done(function (dataJSON) {
 	    	console.log(dataJSON.titre);
@@ -94,6 +99,7 @@ $(document).ready(function(){
 	});
 
 	$('a.sinscrire_multiple').click(function(e){
+		$('.isotope-item').removeClass('sinscrireEvent');
 		$(this).parent().addClass('sinscrireEvent');
 		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
 
@@ -103,7 +109,12 @@ $(document).ready(function(){
 		else{
 			var la_langue="fr";
 		}
+
 		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
 		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/get_event_infos_inscription_multiple.php",
@@ -112,8 +123,7 @@ $(document).ready(function(){
 	        data    : {
 	            id_event : evenement_id,
 	            langue : la_langue,
-	            code : code,
-	            cache : new Date()
+	            code : code
 	        }
 	    }).done(function (dataJSON) {
 	    	console.log(dataJSON.titre);
@@ -123,6 +133,9 @@ $(document).ready(function(){
 		        date: dataJSON.date,
 		        sessions: dataJSON.sessions,
 		        code: dataJSON.codeExterne,
+		        interneOuvert: dataJSON.interneOuvert,
+		        externeOuvert: dataJSON.externeOuvert,
+		        toutComplet: dataJSON.toutComplet,
 		        mention : dataJSON.mention,
 	        };
 
@@ -592,6 +605,7 @@ $(function(){
 		});
 
 		$('a.sinscrire').click(function(e){
+			$('.isotope-item').removeClass('sinscrireEvent');
 			$(this).parent().addClass('sinscrireEvent');
 			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
 
@@ -602,7 +616,11 @@ $(function(){
 				var la_langue="fr";
 			}
 
-			var code = "test";
+			var code = "";
+
+			if($(this).attr('id')=="avec_code"){
+				code="oui";
+			}
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription.php",
@@ -611,8 +629,7 @@ $(function(){
 		        data    : {
 		            id_event : evenement_id,
 		            langue : la_langue,
-		            code : code,
-		            cache : new Date()
+		            code : code
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
@@ -646,6 +663,7 @@ $(function(){
 		});
 
 		$('a.sinscrire_multiple').click(function(e){
+			$('.isotope-item').removeClass('sinscrireEvent');
 			$(this).parent().addClass('sinscrireEvent');
 			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
 
@@ -656,6 +674,10 @@ $(function(){
 				var la_langue="fr";
 			}
 			var code = "";
+
+			if($(this).attr('id')=="avec_code"){
+				code="oui";
+			}
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription_multiple.php",
@@ -664,8 +686,7 @@ $(function(){
 		        data    : {
 		            id_event : evenement_id,
 		            langue : la_langue,
-		            code : code,
-		            cache : new Date()
+		            code : code
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
@@ -676,6 +697,9 @@ $(function(){
 			        sessions: dataJSON.sessions,
 			        code: dataJSON.codeExterne,
 			        mention : dataJSON.mention,
+			        interneOuvert: dataJSON.interneOuvert,
+			        externeOuvert: dataJSON.externeOuvert,
+			        toutComplet: dataJSON.toutComplet,
 		        };
 
 		        inscription = ich.inscription_form_multiple(inscription_data);
@@ -793,7 +817,11 @@ function clickEvent(clickedElement){
 		});
 
 		$('a.sinscrire').click(function(e){
-			var code = "test";
+			var code = "";
+
+			if($(this).attr('id')=="avec_code"){
+				code="oui";
+			}
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription.php",
@@ -802,8 +830,7 @@ function clickEvent(clickedElement){
 		        data    : {
 		            id_event : evenement_id,
 		            langue : la_langue,
-		            code : code,
-		            cache : new Date()
+		            code : code
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
@@ -838,6 +865,10 @@ function clickEvent(clickedElement){
 
 		$('a.sinscrire_multiple').click(function(e){
 			var code = "";
+
+			if($(this).attr('id')=="avec_code"){
+				code="oui";
+			}
 			e.preventDefault();
 			$.ajax({
 		        url     :"ajax/get_event_infos_inscription_multiple.php",
@@ -846,8 +877,7 @@ function clickEvent(clickedElement){
 		        data    : {
 		            id_event : evenement_id,
 		            langue : la_langue,
-		            code : code,
-		            cache : new Date()
+		            code : code
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
@@ -858,6 +888,9 @@ function clickEvent(clickedElement){
 			        sessions: dataJSON.sessions,
 			        code: dataJSON.codeExterne,
 			        mention : dataJSON.mention,
+			        interneOuvert: dataJSON.interneOuvert,
+		        	externeOuvert: dataJSON.externeOuvert,
+		        	toutComplet: dataJSON.toutComplet,
 		        };
 
 		        inscription = ich.inscription_form_multiple(inscription_data);
@@ -926,16 +959,16 @@ function validFancyBox(){
 	        type    : "GET",
 	        dataType:'json',
 	        data    : {
-	            id_session : $('#id_session').val(),
+	            id_session : $('#id_session_externe').val(),
 	            nom:$('#nom').val(),
 	            prenom:$('#prenom').val(),
 	            mail:$('#mail').val(),
 	            entreprise:$('#entreprise').val(),
 	            fonction:$('#fonction').val(),
 	            casque:$('#inscrit_casque').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            lieu:$('#lieu').val()
+	            titre:$('#titre_externe').val(),
+	            date:$('#date_externe').val(),
+	            lieu:$('#lieu_externe').val()
 	        }
 	    }).done(function (dataJSON) {
 			validation_data = {
@@ -1033,10 +1066,10 @@ function validFancyBox(){
 		var tabsessions = [];
 		var tabcasques = [];
 		for(var i=0,l=inputs.length;i<l;i++) {
-			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
+			if(inputs[i].name == "sessions_externe[]" && inputs[i].checked == true) {
 				tabsessions.push(inputs[i].value);
 			}
-			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
+			if(inputs[i].name == "inscrit_casque_externe[]" && inputs[i].checked == true) {
 				tabcasques.push(inputs[i].value);
 			}
 		}
@@ -1047,15 +1080,15 @@ function validFancyBox(){
 	        dataType:'json',
 	        data    : {
 	            sessions : tabsessions,
-	            id_evenement : $('#id_evenement').val(),
+	            id_evenement : $('#id_evenement_externe').val(),
 	            nom:$('#nom').val(),
 	            prenom:$('#prenom').val(),
 	            mail:$('#mail').val(),
 	            entreprise:$('#entreprise').val(),
 	            fonction:$('#fonction').val(),
 	            casques : tabcasques,
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
+	            titre:$('#titre_externe').val(),
+	            date:$('#date_externe').val(),
 	        }
 	    }).done(function (dataJSON) {
 			validation_data = {

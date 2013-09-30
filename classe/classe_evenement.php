@@ -483,6 +483,7 @@ class Evenement {
 	* @return JSON => l'objet JSON contiendra les infos de l'événement
 	*/
 	function get_event_infos_inscription($_id, $lang, $code){
+
 		$this->evenement_db->connect_db();
 		$retour = new stdClass();
 
@@ -548,8 +549,8 @@ class Evenement {
 		
 		//Cas où il reste des places internes
 		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale!=0){
-			//Si les inscriptions sont encore ouvertes et si on est bien en inscription interne (pas de code)
-			if((($differenceInterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceInterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceInterneVisio!=0)) && $code==NULL){
+			//Si les inscriptions sont encore ouvertes
+			if((($differenceInterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceInterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceInterneVisio!=0))){
 				$interneOuvert = true;
 				if($row['session_traduction']==1){
 					$casque=true;
@@ -558,7 +559,7 @@ class Evenement {
 		}
 
 		// cas où il y avait possibilité de s'inscrire en interne mais où toutes les places internes sont prises
-		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale==0 && $code==NULL){
+		if(($row['session_places_internes_totales']!=0 || $row['session_places_internes_totales_visio']!=0) && $differenceInterneTotale==0){
 			$interneComplet = true;
 		}
 
@@ -566,7 +567,7 @@ class Evenement {
 		//Cas où il reste des places externes
 		if(($row['session_places_externes_totales']!=0 || $row['session_places_externes_totales_visio']!=0) && $differenceExterneTotale!=0){
 			//Si les inscriptions sont encore ouvertes et si on est bien en inscription externe (avec le code)
-			if((($differenceExterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceExterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceExterneVisio!=0)) && ($row['session_code_externe']!="" && ($code!=NULL && ($code==$row['session_code_externe'])||$code!=NULL))){
+			if((($differenceExterneAmphi!=0 && $row['session_statut_inscription']==1) || ($differenceExterneAmphi==0 && $row['session_statut_visio']==1) || ($row['session_statut_visio']==1 && $differenceExterneVisio!=0)) && ($code!=NULL)){
 				$externeOuvert = true;
 				if($row['session_traduction']==1){
 					$casque=true;
@@ -611,6 +612,7 @@ class Evenement {
 		$retour->alerteExterne  = $alerteExterne;
 
 		$retour->codeExterne  = $code;
+
 		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
 		return json_encode($retour);
 	}
@@ -641,17 +643,23 @@ class Evenement {
 							func::GetSQLValueString($_id, "int"));
 		$resSessions = mysql_query($sqlSessions) or die(mysql_error());
 		$indice = 0;
+
+		$interneOuvert = "";
+		$externeOuvert = "";
+
+		$toutComplet = "";
+
+
 		while($rowSession = mysql_fetch_array($resSessions)){ 
 			$sqllieux = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id =%s", 
 								func::GetSQLValueString($rowSession['session_lieu'], "int"));
 			$reslieux = mysql_query($sqllieux) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieux);
 
-			
-
 			$lesSessions[$indice]['identifiant'] = $rowSession['session_id'];
 			$lesSessions[$indice]['nom'] = $rowSession['session_nom'];
 			$lesSessions[$indice]['pascomplete'] = "";
+			$lesSessions[$indice]['pascompleteexterne'] = "";
 			if($rowSession['session_traduction']==1){
 				$lesSessions[$indice]['casque'] = true;
 			}
@@ -662,46 +670,51 @@ class Evenement {
 			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
 			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
-			if($code==""){
-				$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
-				$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
-				$differenceInterneTotale = $totalInterne - $totalInternePrises;
-				$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
-				$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
+			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
+			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
+			$differenceInterneTotale = $totalInterne - $totalInternePrises;
+			$differenceInterneAmphi = $rowSession['session_places_internes_totales'] - $rowSession['session_places_internes_prises'];
+			$differenceInterneVisio = $rowSession['session_places_internes_totales_visio'] - $rowSession['session_places_internes_prises_visio'];
 
-				if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
-					$lesSessions[$indice]['pascomplete'] = true;
-					$lesSessions[$indice]['placement'] = ""; 
-				}
-				else{
-					if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
-						$lesSessions[$indice]['pascomplete'] = true;
-						$lesSessions[$indice]['placement'] = true; 
-					}
-				}
+			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
+				$lesSessions[$indice]['pascomplete'] = true;
+				$lesSessions[$indice]['placement'] = ""; 
+				$interneOuvert = true;
 			}
 			else{
-				$totalExterne = $rowSession['session_places_externes_totales']+$rowSession['session_places_externes_totales_visio'];
-				$totalExternePrises = $rowSession['session_places_externes_prises']+$rowSession['session_places_externes_prises_visio'];
-				$differenceExterneTotale = $totalExterne - $totalExternePrises;
-				$differenceExterneAmphi = $rowSession['session_places_externes_totales'] - $rowSession['session_places_externes_prises'];
-				$differenceExterneVisio = $rowSession['session_places_externes_totales_visio'] - $rowSession['session_places_externes_prises_visio'];
-
-				if($rowSession['session_statut_inscription']==1 && $differenceExterneAmphi!=0){
+				if($rowSession['session_statut_visio']==1 && $differenceInterneVisio!=0){
 					$lesSessions[$indice]['pascomplete'] = true;
-					$lesSessions[$indice]['placement'] = ""; 
-				}
-				else{
-					if($rowSession['session_statut_visio']==1 && $differenceExterneVisio!=0){
-						$lesSessions[$indice]['pascomplete'] = true;
-						$lesSessions[$indice]['placement'] = true; 
-					}
+					$lesSessions[$indice]['placement'] = true;
+					$interneOuvert = true; 
 				}
 			}
-			
+
+
+			$totalExterne = $rowSession['session_places_externes_totales']+$rowSession['session_places_externes_totales_visio'];
+			$totalExternePrises = $rowSession['session_places_externes_prises']+$rowSession['session_places_externes_prises_visio'];
+			$differenceExterneTotale = $totalExterne - $totalExternePrises;
+			$differenceExterneAmphi = $rowSession['session_places_externes_totales'] - $rowSession['session_places_externes_prises'];
+			$differenceExterneVisio = $rowSession['session_places_externes_totales_visio'] - $rowSession['session_places_externes_prises_visio'];
+
+			if($rowSession['session_statut_inscription']==1 && $differenceExterneAmphi!=0){
+				$lesSessions[$indice]['pascompleteexterne'] = true;
+				$lesSessions[$indice]['placementexterne'] = ""; 
+				$externeOuvert = true;
+			}
+			else{
+				if($rowSession['session_statut_visio']==1 && $differenceExterneVisio!=0){
+					$lesSessions[$indice]['pascompleteexterne'] = true;
+					$lesSessions[$indice]['placementexterne'] = true; 
+					$externeOuvert = true;
+				}
+			}			
 			$indice++;
 		}
-		
+
+		if($interneOuvert=="" && $externeOuvert==""){
+			$toutComplet = '<div class="plus_de_place"><p class="bit_small">Désolé Il n\'y a plus de places pour cet événement.</p></div>';
+		}
+
 		$finEvenement = $this->get_fin_event($_id);
 		$horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
 
@@ -716,6 +729,9 @@ class Evenement {
 		$retour->date 	= $horaires;
 		$retour->sessions 	= $lesSessions;
 		$retour->codeExterne  = $code;
+		$retour->interneOuvert  = $interneOuvert;
+		$retour->externeOuvert  = $externeOuvert;
+		$retour->toutComplet  = $toutComplet;
 		$retour->mention = "Mention CNIL : Les informations qui vous concernent sont destinées exclusivement à Sciences Po. Vous disposez d'un droit d'accès, de modification, de rectification et de suppression des données qui vous concernent (art. 34 de la loi « Informatique et Libertés »). Pour l'exercer, adressez-vous à Sciences Po Pôle Evénements - 27 rue Saint Guillaume - 75007 Paris";
 		return json_encode($retour);
 	}
