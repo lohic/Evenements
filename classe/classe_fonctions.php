@@ -1,7 +1,7 @@
 <?php
 include_once('../inscription/makeTicket.php');
-require_once('tcpdf/config/lang/eng.php');
-require_once('tcpdf/tcpdf.php');
+include_once('tcpdf_min/config/lang/eng.php');
+include_once('tcpdf_min/tcpdf.php');
 class Func {
 	/*
 	@ GESTION DES FONCTIONS
