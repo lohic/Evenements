@@ -4,7 +4,7 @@
         
         <div class="description_evenement">
             <h3 class="bigger">{{titre}}</h3>
-            <p class="date very_bigger">{{date}}</p>
+            {{#date}}<p class="date very_bigger">{{date}}</p>{{/date}}
             {{#lieu}}<p class="lieu very_bigger">{{lieu}}</p>{{/lieu}}
         </div>
 
@@ -41,6 +41,8 @@
             <p class="bit_small">Il n’y a plus de place «externe» à cet événement</p>
         </div>
         {{/externeComplet}}
+
+        {{#codeErreur}}{{{codeErreur}}}{{/codeErreur}}
 
         <div class="mentions small">
             <p>{{mention}}</p>
