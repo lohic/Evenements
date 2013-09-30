@@ -75,9 +75,9 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-		echo $this->generate_pdf(false);
-		//$this->generate_passcode();
-		//echo $this->generate_mail();
+		//echo $this->generate_pdf(true);
+		$this->generate_passcode();
+		echo $this->generate_mail();
 	}
 
 	/**
