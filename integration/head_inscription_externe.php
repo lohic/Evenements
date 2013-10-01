@@ -1,9 +1,10 @@
 <?php
-    include_once('../classe/classe_evenement.php');
-    include_once('../classe/classe_session.php');
-    include_once('../classe/classe_rubrique.php');
-    include_once('../classe/classe_organisme.php');
-    include_once('../classe/classe_keyword.php');
+    include_once('../vars/config.php');
+    include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');
+    include_once(REAL_LOCAL_PATH.'classe/classe_session.php');
+    include_once(REAL_LOCAL_PATH.'classe/classe_rubrique.php');
+    include_once(REAL_LOCAL_PATH.'classe/classe_organisme.php');
+    include_once(REAL_LOCAL_PATH.'classe/classe_keyword.php');
 
     $organisme = new organisme();
     $event = new evenement();

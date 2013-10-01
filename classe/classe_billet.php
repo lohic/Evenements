@@ -1,6 +1,5 @@
 <?php
-
-include_once('../vars/config.php');
+//include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 // TCPDF pour pdf - http://www.tcpdf.org
@@ -29,7 +28,6 @@ class Billet {
 	 * @return [type]             [description]
 	 */
 	function billet($_unique_id = NULL){
-
 		if(!empty($_unique_id)){
 
 			$template = 'default';
@@ -75,7 +73,7 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-		echo $this->generate_pdf(false);
+		//echo $this->generate_pdf(false);
 		//$this->generate_passcode();
 		//echo $this->generate_mail();
 	}
@@ -388,3 +386,4 @@ class Billet {
 	}
 
 }
+?>

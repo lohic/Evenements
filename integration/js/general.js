@@ -12,7 +12,7 @@ $(document).ready(function(){
 	var sauv = 0;
 	var $container = $('#liste_evenements'), filters = {};
 	
-	$('.event>h1>a').click(function(e){
+	$('.event>h1>a, .event > p > a.suite').click(function(e){
 		e.preventDefault();
 		
 		var nextLastRowEvent;
@@ -24,6 +24,7 @@ $(document).ready(function(){
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
 		$('.selectedEvent > span').css('display','block');
+		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height(sauv);
 		sauv = $(this).parent().parent().height();
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
@@ -36,13 +37,16 @@ $(document).ready(function(){
 
 		$(this).parent().parent().addClass('selectedEvent');
 		
+		var classe = $(this).attr('class').split(' ')[1];
+		var couleur = classe.split('_')[1];
+		couleur = couleur.split('#')[1];
 		clickEvent($('.selectedEvent'));
 		$('.selectedEvent > a').css('display','none');
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
-		$('.selectedEvent > span').css('display','none');
-		
+		$('.selectedEvent > span').css('display','none');	
+		$('.selectedEvent').css('background','url("../admin/triangle_inverse_'+couleur+'.png") no-repeat scroll 15px bottom');
 	    // on evite le comportement normal du click
 	    
 	});
@@ -457,7 +461,7 @@ $(function(){
 			getNextLast($('.selectedEvent'));
 			$('.isotope-hidden').removeClass('first last');
 
-			initIsotopeOuvert();
+			//initIsotopeOuvert();
 	    }
 	});
 
@@ -468,6 +472,7 @@ $(function(){
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
 		$('.selectedEvent > span').css('display','block');
+		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height($('.selectedEvent').height()-15);
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 
@@ -578,7 +583,7 @@ $(function(){
 		return false;
 
 		var sauv = 0;
-		$('.event>h1>a').click(function(e){
+		$('.event>h1>a, .event > p > a.suite').click(function(e){
 			e.preventDefault();
 			var nextLastRowEvent;
 			var prevFirstRowEvent;
@@ -601,12 +606,16 @@ $(function(){
 
 			$(this).parent().parent().addClass('selectedEvent');
 			
+			var classe = $(this).attr('class').split(' ')[1];
+			var couleur = classe.split('_')[1];
+			couleur = couleur.split('#')[1];
 			clickEvent($('.selectedEvent'));
 			$('.selectedEvent > a').css('display','none');
 			$('.selectedEvent > img').css('display','none');
 			$('.selectedEvent > p').css('display','none');
 			$('.selectedEvent > div').css('display','none');
-			$('.selectedEvent > span').css('display','none');
+			$('.selectedEvent > span').css('display','none');	
+			$('.selectedEvent').css('background','url("../admin/triangle_inverse_'+couleur+'.png") no-repeat scroll 15px bottom');
 		    // on evite le comportement normal du click
 		    
 		});
@@ -850,6 +859,7 @@ function clickEvent(clickedElement){
 			$('.selectedEvent > p').css('display','block');
 			$('.selectedEvent > div').css('display','block');
 			$('.selectedEvent > span').css('display','block');
+			$('.selectedEvent').css('background','#fff');
 			$('.selectedEvent').height($('.selectedEvent').height()-15);
 			$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 			$('#liste_evenements').isotope( 'remove', $('.resume') );
@@ -1234,6 +1244,7 @@ $(window).resize(function() {
 	$('.selectedEvent > p').css('display','block');
 	$('.selectedEvent > div').css('display','block');
 	$('.selectedEvent > span').css('display','block');
+	$('.selectedEvent').css('background','#fff');
 	$('.selectedEvent').height($('.selectedEvent').height()-15);
 	$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 });

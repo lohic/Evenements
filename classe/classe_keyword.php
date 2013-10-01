@@ -1,8 +1,8 @@
 <?php
 
-include_once('../vars/config.php');
-include_once('classe_connexion.php');
-include_once('classe_fonctions.php');
+//include_once('../vars/config.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -89,7 +89,7 @@ class Keyword {
 	* get_keywords_organism récupération des rubriques des événements à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_keywords_organism($_id=1,$debut){
+	function get_keywords_organism($_id=1){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
@@ -110,7 +110,7 @@ class Keyword {
 	* get_keywords_partages récupération des rubriques des événements partagés à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_keywords_partages($_id=1,$debut){
+	function get_keywords_partages($_id=1){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){

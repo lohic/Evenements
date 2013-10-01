@@ -107,7 +107,7 @@
         <?php
             if(count($keywords_organisme)>0){
                 $sql = "SELECT * FROM ".TB."keywords WHERE keyword_id IN (".implode(',',$keywords_organisme).") ORDER BY keyword_nom";
-                $res = mysql_query($sql)or die(mysql_error());
+                $res = mysql_query($sql) or die(mysql_error());
             }
             else{
                 $res=-1;

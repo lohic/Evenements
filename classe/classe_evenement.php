@@ -1,13 +1,13 @@
 <?php
 
-include_once('../vars/config.php');
-include_once('classe_connexion.php');
-include_once('classe_fonctions.php');
-include_once('classe_session.php');
-//include_once('fonctions.php');
-//include_once('connexion_vars.php');
-include_once('class.phpmailer.php');
-include_once('class.smtp.php');
+//include_once('../vars/config.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_session.php');
+include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
+include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 
 class Evenement {
 	
@@ -362,6 +362,7 @@ class Evenement {
 	* @return JSON => l'objet JSON contiendra les infos de l'événement
 	*/
 	function get_event_infos($_id, $lang){
+		$langues_evenement = array("Français"=>"33", "Anglais"=>"44", "Chinois"=>"86", "Allemand"=>"49", "Danois"=>"45", "Espagnol"=>"34", "Italien"=>"39", "Japonais"=>"83", "Polonais"=>"48", "Russe"=>"7", "Tchèque"=>"420");
 		$this->evenement_db->connect_db();
 		$retour = new stdClass();
 

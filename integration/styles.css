@@ -2230,6 +2230,15 @@ ol.styled > li:before {
 	.fancybox-wrap{
 		width: 320px !important;
 	}
+
+	.event {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	#liste_evenements{
+		width: 320px !important;
+	}
 }
 
 @media (max-width: 640px) {
