@@ -5,6 +5,9 @@ include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_core-new.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_spuser.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
+//include_once('fonctions.php');
+//include_once('classe_user.php');
+//include_once('connexion_vars.php');
 
 
 //var attendues
@@ -55,10 +58,17 @@ class Api {
 			$this->isAuthenticated = false;
 		}
 
+		//$this->isAuthenticated = true;
+
 		$this->json->isAuthenticated = $this->isAuthenticated;
 		$this->check_request();
 		
-		
+		//$this->core->user->logout();
+
+		if(!empty($_GET['session']) ){
+			$this->session_detail();
+
+		}else
 		if(isset($_GET['event'])  && !empty($_GET['event']) ){
 			$this->event_detail();
 
@@ -68,11 +78,7 @@ class Api {
 			$this->event_list();
 
 		}
-		else
-		if(!empty($_GET['session']) ){
-			$this->session_detail();
-
-		}
+		
 
 		// on vérifie si une variable a été passée en paramètre
 		// si oui on sort le JSON
@@ -144,6 +150,9 @@ class Api {
 		$add	= (isset($_GET['lang']) && $_GET['lang'] == 'en') ? '_en' : '';
 
 		$sql_session_info			= sprintf("	SELECT S.session_id AS id,
+												S.evenement_id AS event_id,
+												E.evenement_date AS event_date,
+												G.groupe_organisme_id AS organisme_id,
 												S.session_nom".$add." AS titre,		
 												S.session_debut AS date1,	
 												S.session_fin AS date2,	
@@ -170,6 +179,10 @@ class Api {
 													ON S.session_lieu = L.lieu_id
 												LEFT JOIN sp_codes_batiments AS B
 													ON S.session_code_batiment = B.code_batiment_id
+												LEFT JOIN sp_evenements AS E
+													ON S.evenement_id = E.evenement_id
+												LEFT JOIN sp_groupes AS G
+													ON E.evenement_groupe_id = G.groupe_id
 											WHERE S.session_id = %s",func::GetSQLValueString($_GET['session'],'int'));
 
 		$sql_session_info_query	= mysql_query($sql_session_info) or die(mysql_error());
@@ -187,6 +200,12 @@ class Api {
 		$this->json->session->nom_adresse 			= $session_info['nom_adresse'];
 		$this->json->session->adresse 				= $session_info['adresse'];
 		$this->json->session->code_batiment_nom 	= $session_info['code_batiment_nom'];
+
+		// important pour plasma
+		$this->json->session->mois					= date("m",$session_info['event_date']);
+		$this->json->session->annee					= date("Y",$session_info['event_date']);
+		$this->json->session->organisme_id			= $session_info['organisme_id'];
+		$this->json->session->event_id 				= $session_info['event_id'];
 
 		if($this->isAuthenticated){
 
@@ -242,7 +261,7 @@ class Api {
 					$this->json->last_scan = $inscrits_info['date_scan'];
 				}
 
-
+				//$this->json->liste_inscrits[] = $inscritJson;
 				$this->json->liste_inscrits[$inscrits_info['id']] = $inscritJson;
 			}
 		}
