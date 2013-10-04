@@ -1,4 +1,5 @@
 <?php
+include_once('../vars/config.php');
 session_start();
 // security
 include('cookie.php');

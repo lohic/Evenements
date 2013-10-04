@@ -1,4 +1,5 @@
 <?php
+include_once('../vars/config.php');
 // connection to data base
 include('connect.php');
 session_start();

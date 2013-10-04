@@ -1,11 +1,11 @@
 <?php 
 session_start(); 
-
+include_once('../vars/config.php');
 // security
 //include('cookie.php');
 
 // connection to data base
-include('connect.php');
+//include('connect.php');
 
 // functions library
 include('functions.php');
