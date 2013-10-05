@@ -15,6 +15,8 @@ include_once('../vars/statics_vars.php');
 
 include_once('../classe/classe_core_event.php');
 include_once('../classe/classe_keyword.php');
+include_once('../classe/classe_lieu.php');
+include_once('../classe/classe_batiment.php');
 include_once('../classe/fonctions.php');
 
 $core = new core();
@@ -30,22 +32,22 @@ if( isset($_GET['deleterubrique']) ){
 	mysql_query($sql) or die(mysql_error());
 }
 
-if( isset($_GET['deletebatiment']) ){
-	// delete batiment
-	$sql="DELETE FROM sp_codes_batiments WHERE code_batiment_id = '".$_GET['deletebatiment']."'";
-	mysql_query($sql) or die(mysql_error());
+if( isset($_GET['code_batiment_id']) ){
+	// delete mot clé
+	$batiment = new batiment();
+	$batiment->updater($_GET,$_GET['code_batiment_id']);
 }
 
-if( isset($_GET['deletelieu']) ){
-	// delete lieu 
-	$sql="DELETE FROM sp_lieux WHERE lieu_id = '".$_GET['deletelieu']."'";
-	mysql_query($sql) or die(mysql_error());
+if( isset($_GET['lieu_id']) ){
+	// delete mot clé
+	$lieu = new lieu();
+	$lieu->updater($_GET,$_GET['lieu_id']);
 }
 
 if( isset($_GET['keyword_id']) ){
 	// delete mot clé
 	$keyword = new keyword();
-	$keyword->updater($_GET['update'],$_GET['keyword_id']);
+	$keyword->updater($_GET,$_GET['keyword_id']);
 }
 
 if( isset($_POST['rubrique_id'])){
@@ -71,8 +73,8 @@ if( isset($_POST['rubrique_id'])){
 
 		$codecouleur = explode("#", $_POST["rubrique_couleur"]);
 		
-		triangle($codecouleur[1]);
-		
+		//triangle($codecouleur[1]);
+		//triangle_inverse($codecouleur[1]);
 		// reedirect
 		header("Location:rubriques.php?r=".rand());
 	}
@@ -90,8 +92,8 @@ if( isset($_POST['rubrique_id'])){
 
 		$codecouleur = explode("#", $_POST["rubrique_couleur"]);
 		
-		triangle($codecouleur[1]);
-		
+		//triangle($codecouleur[1]);
+		//triangle_inverse($codecouleur[1]);		
 		
 		// reedirect
 		header("Location:rubriques.php?menu_actif=rubriques");
@@ -111,51 +113,28 @@ if(isset($_POST['keyword_id'])){
 	}	
 }
 
-
-if( isset($_POST['lieu_id'])){
-	if($_POST['type_saisie']=="modification"){
-		// query
-		$sql ="UPDATE sp_lieux SET
-					lieu_nom = '".addslashes(utf8_decode($_POST["lieu_nom"]))."',
-					lieu_editeur_id = '".$_SESSION['id']."',
-					lieu_editeur_ip =  '".$_SERVER["REMOTE_ADDR"]."'
-				WHERE lieu_id = '".$_POST['lieu_id']."'";
-		mysql_query($sql) or die(mysql_error());
-
-		// reedirect
+if(isset($_POST['lieu_id'])){
+	$lieu = new lieu();
+	if($_POST['update']=="update"){	
+		$lieu->updater($_POST, $_POST['lieu_id']);
 		header("Location:rubriques.php?menu_actif=rubriques");
 	}
 	else{
-		// query
-		$sqlinsert ="INSERT INTO sp_lieux VALUES ('', '".addslashes(utf8_decode($_POST["lieu_nom"]))."', '', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."')";
-		mysql_query($sqlinsert) or die(mysql_error());
-		// reedirect
+		$lieu->updater($_POST);
 		header("Location:rubriques.php?menu_actif=rubriques");
-	}		
+	}	
 }
 
-
-if( isset($_POST['code_batiment_id'])){
-	if($_POST['type_saisie']=="modification"){
-		// query
-		$sql ="UPDATE sp_codes_batiments SET
-					code_batiment_nom = '".addslashes(utf8_decode($_POST["code_batiment_nom"]))."',
-					code_batiment_adresse = '".addslashes(utf8_decode($_POST["code_batiment_adresse"]))."',
-					code_batiment_editeur_id = '".$_SESSION['id']."',
-				    code_batiment_editeur_ip =  '".$_SERVER["REMOTE_ADDR"]."'
-				WHERE code_batiment_id = '".$_POST['code_batiment_id']."'";
-		mysql_query($sql) or die(mysql_error());
-
-		// reedirect
+if(isset($_POST['code_batiment_id'])){
+	$batiment = new batiment();
+	if($_POST['update']=="update"){	
+		$batiment->updater($_POST, $_POST['code_batiment_id']);
 		header("Location:rubriques.php?menu_actif=rubriques");
 	}
 	else{
-		// query
-		$sqlinsert ="INSERT INTO sp_codes_batiments VALUES ('', '".addslashes(utf8_decode($_POST["code_batiment_nom"]))."', '".addslashes(utf8_decode($_POST["code_batiment_adresse"]))."', '', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."')";
-		mysql_query($sqlinsert) or die(mysql_error());
-		// reedirect
+		$batiment->updater($_POST);
 		header("Location:rubriques.php?menu_actif=rubriques");
-	}		
+	}	
 }
 
 $sqlGetOrganisme ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
@@ -186,6 +165,27 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
     </div>
     <div id="content">
 		<?php  
+			if($core->isAdmin && $core->userLevel==1){
+				$sqlRubriques = "SELECT * FROM sp_rubriques";
+				$sqlKeywords = "SELECT * FROM sp_keywords";
+				$sqlBatiments = "SELECT * FROM sp_codes_batiments";
+				$sqlLieux = "SELECT * FROM sp_lieux";
+			}
+			else{
+				if($core->isAdmin && $core->userLevel<=3){
+					$idGroups= array();
+					foreach($core->user_info->groups as $cle => $valeur) 
+					{
+						$idGroups[]=$cle;
+					}
+					$idGroups = implode(',',$idGroups); 
+					$sqlRubriques = "SELECT * FROM sp_rubriques WHERE rubrique_groupe_id IN ($idGroups)"; 
+					$sqlKeywords = "SELECT * FROM sp_keywords as spk, sp_groupes as spg, sp_organismes as spo WHERE keyword_organisme_id=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
+					$sqlBatiments = "SELECT * FROM sp_codes_batiments, sp_groupes, sp_organismes WHERE code_batiment_organisme=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
+					$sqlLieux = "SELECT * FROM sp_lieux, sp_groupes, sp_organismes WHERE lieu_organisme=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
+				}
+			}
+
 			if($core->isAdmin && $core->userLevel<=3){ 
 		?>
 	    		<h3>Liste des rubriques</h3>
@@ -196,23 +196,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 				</div>
 				<p>&nbsp;</p>
 			 	<?php
-                    
-					if($core->isAdmin && $core->userLevel==1){
-						$sql = "SELECT * FROM sp_rubriques";
-					}
-					else{
-						if($core->isAdmin && $core->userLevel<=3){
-							$idGroups= array();
-							foreach($core->user_info->groups as $cle => $valeur) 
-							{
-								$idGroups[]=$cle;
-							}
-							$idGroups = implode(',',$idGroups); 
-							$sql = "SELECT * FROM sp_rubriques WHERE rubrique_groupe_id IN ($idGroups)"; 
-						}
-					}
-
-			 		$res = mysql_query($sql)or die(mysql_error());
+			 		$res = mysql_query($sqlRubriques)or die(mysql_error());
 					$iteration = 1;
 
 					while($row = mysql_fetch_array($res)){
@@ -227,7 +211,6 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 					<?php
 						}
 						$iteration++;
-
 					?>
 								<div class="infos_large" id="titre_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo utf8_encode($row['rubrique_titre']);?></p></div>
 								<div style="display:none" id="titre_en_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo utf8_encode($row['rubrique_titre_en']);?></p></div>
@@ -265,9 +248,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			
 			<p>&nbsp;</p>
 		 	<?php
-	
-		 		$sql = "SELECT * FROM sp_keywords";
-		 		$res = mysql_query($sql)or die(mysql_error());
+		 		$res = mysql_query($sqlKeywords)or die(mysql_error());
 				$iteration = 1;
 	
 				while($row = mysql_fetch_array($res)){
@@ -282,14 +263,13 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 				<?php
 					}
 					$iteration++;
-			
 				?>
 							<div class="infos_large" id="keyword_nom_<?php echo $row['keyword_id'];?>"><p><?php echo $row['keyword_nom'];?></p></div>
 							<div class="liens modif">
 								<?php
 									if($core->isAdmin && $core->userLevel<=3){
 								?>
-										<a href="#" id="lien_keyword_<?php echo $row['keyword_id'];?>" class="lien_keyword" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;keyword_id<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce mot-clé? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
+										<a href="#" id="lien_keyword_<?php echo $row['keyword_id'];?>" class="lien_keyword" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce mot-clé? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
 								<?php
 									}
 								?>
@@ -320,8 +300,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			
 			<p>&nbsp;</p>
 		 	<?php
-		 		$sql = "SELECT * FROM sp_codes_batiments";
-		 		$res = mysql_query($sql)or die(mysql_error());
+		 		$res = mysql_query($sqlBatiments)or die(mysql_error());
 				$iteration = 1;
 	
 				while($row = mysql_fetch_array($res)){
@@ -336,7 +315,6 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 				<?php
 					}
 					$iteration++;
-			
 				?>
 							<div class="infos_large"><p id="code_batiment_nom_<?php echo $row['code_batiment_id'];?>" style="margin-right:25px;"><?php echo utf8_encode($row['code_batiment_nom']);?></p><p style="font-size:1em; padding-top:10px;"><?php echo utf8_encode($row['code_batiment_adresse']);?></p></div>
 							<div class="infos_large" id="code_batiment_adresse_<?php echo $row['code_batiment_id'];?>" style="display:none;"><p><?php echo utf8_encode($row['code_batiment_adresse']);?></p></div>
@@ -344,7 +322,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 							<?php
 								if($core->isAdmin && $core->userLevel<=1){
 							?>
-									<a href="#" id="lien_code_batiment_<?php echo $row['code_batiment_id'];?>" class="lien_code_batiment" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?id=<?php echo $row['code_batiment_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?deletebatiment=<?php echo $row['code_batiment_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce code bâtiment? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
+									<a href="#" id="lien_code_batiment_<?php echo $row['code_batiment_id'];?>" class="lien_code_batiment" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?update=delete&amp;code_batiment_id=<?php echo $row['code_batiment_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;code_batiment_id=<?php echo $row['code_batiment_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce code bâtiment? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
 							<?php
 								}
 							?>							
@@ -377,8 +355,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			
 			<p>&nbsp;</p>
 		 	<?php
-		 		$sql = "SELECT * FROM sp_lieux";
-		 		$res = mysql_query($sql)or die(mysql_error());
+		 		$res = mysql_query($sqlLieux)or die(mysql_error());
 				$iteration = 1;
 	
 				while($row = mysql_fetch_array($res)){
@@ -393,14 +370,13 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 				<?php
 					}
 					$iteration++;
-			
 				?>
 							<div class="infos_large" id="lieu_nom_<?php echo $row['lieu_id'];?>"><p><?php echo utf8_encode($row['lieu_nom']);?></p></div>
 							<div class="liens modif">
 								<?php
 									if($core->isAdmin && $core->userLevel<=1){
 								?>
-										<a href="#" id="lien_lieu_<?php echo $row['lieu_id'];?>" class="lien_lieu" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?id=<?php echo $row['lieu_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?deletelieu=<?php echo $row['lieu_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce lieu? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
+										<a href="#" id="lien_lieu_<?php echo $row['lieu_id'];?>" class="lien_lieu" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?update=delete&amp;lieu_id=<?php echo $row['lieu_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;lieu_id=<?php echo $row['lieu_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce lieu? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
 								<?php
 									}
 								?>
@@ -497,7 +473,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			var adresse_batiment = "code_batiment_adresse_"+tableau_id[3];
 			
 			if($('#bloc_modif_batiment_'+tableau_id[3]).css("display")!="block"){
-				$.post("modifBatimentAJAX.php", { nom_batiment: document.getElementById(nom_batiment).innerHTML, adresse_batiment: document.getElementById(adresse_batiment).innerHTML, id: tableau_id[3], type:"modification" },
+				$.post("modifBatimentAJAX.php", { nom_batiment: document.getElementById(nom_batiment).innerHTML, adresse_batiment: document.getElementById(adresse_batiment).innerHTML, id: tableau_id[3], update:"update" },
 				function(data){
 					document.getElementById(identifiant).innerHTML=data;
 					$('#bloc_modif_batiment_'+tableau_id[3]).slideToggle();
@@ -522,7 +498,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			var identifiant = "bloc_creation_batiment";
 			document.getElementById('bloc_creation_batiment').style.display="block";
 						
-			$.post("modifBatimentAJAX.php", { nom_batiment: "", adresse_batiment: "", id: "", type:"creation" },
+			$.post("modifBatimentAJAX.php", { nom_batiment: "", adresse_batiment: "", id: "", update:"create" },
 			function(data){
 				document.getElementById(identifiant).innerHTML=data;
 			});
@@ -548,7 +524,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			var nom_lieu = "lieu_nom_"+tableau_id[2];
 			
 			if($('#bloc_modif_lieu_'+tableau_id[2]).css("display")!="block"){
-				$.post("modifLieuAJAX.php", { nom_lieu: document.getElementById(nom_lieu).innerHTML, id: tableau_id[2], type:"modification" },
+				$.post("modifLieuAJAX.php", { nom_lieu: document.getElementById(nom_lieu).innerHTML, id: tableau_id[2], update:"update" },
 				function(data){
 					document.getElementById(identifiant).innerHTML=data;
 					$('#bloc_modif_lieu_'+tableau_id[2]).slideToggle();
@@ -573,7 +549,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			var identifiant = "bloc_creation_lieu";
 			document.getElementById('bloc_creation_lieu').style.display="block";
 						
-			$.post("modifLieuAJAX.php", { nom_lieu: "", id: "", type:"creation" },
+			$.post("modifLieuAJAX.php", { nom_lieu: "", id: "", update:"create" },
 			function(data){
 				document.getElementById(identifiant).innerHTML=data;
 			});

@@ -1,12 +1,11 @@
 <?php
-
 //include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_session.php');
 include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
 include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
+//include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
 include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 
 class Evenement {
@@ -58,8 +57,6 @@ class Evenement {
 		// on garde en mémoire le fait que la mise à jour a bien eu lieu
 		self::$updated = true;
 	}
-
-
 	
 	/**
 	* create_event creation ou modification d'un evenement
@@ -265,10 +262,10 @@ class Evenement {
 
 		for($i = 0 ; $i < $borne ; $i++){
 			if($i != ($borne-1)){
-				echo $resume[$i]." ";
+				echo stripslashes($resume[$i])." ";
 			}
 			else{
-				echo $resume[$i]."... &nbsp;";
+				echo stripslashes($resume[$i])."... &nbsp;";
 			}
 		}
 
@@ -447,7 +444,7 @@ class Evenement {
 			$retour->coorganisateur 	= $row['evenement_coorganisateur_en'];
 			$retour->lien 	= $rowsession1['session_lien_en'];
 			$retour->texte_lien 	= $rowsession1['session_texte_lien_en'];
-			$retour->texte 	= $row['evenement_texte_en'];
+			$retour->texte 	= stripslashes($row['evenement_texte_en']);
 			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre_en']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
 		}
 		else{
@@ -457,7 +454,7 @@ class Evenement {
 			$retour->coorganisateur 	= $row['evenement_coorganisateur'];
 			$retour->lien 	= $rowsession1['session_lien'];
 			$retour->texte_lien 	= $rowsession1['session_texte_lien'];
-			$retour->texte 	= $row['evenement_texte'];
+			$retour->texte 	= stripslashes($row['evenement_texte']);
 			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
 		}
 
@@ -1508,4 +1505,5 @@ class Evenement {
 	}
 
 }
+
 	

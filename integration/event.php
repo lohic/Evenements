@@ -22,19 +22,18 @@
         if($row['evenement_image']!=""){
     ?>
             <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
-            <img src="<?php echo CHEMIN_TRIANGLES; ?>triangle_<?php echo $lacouleur[1]; ?>.png" alt="triangle" class="triangle"/>
+            <div class="triangle" style="border-bottom-color:<?php echo $rubrique_couleur;?>;"></div>
     <?php
         }
     ?>
     <h1 style="background-color:<?php echo $rubrique_couleur;?>" class="titre">
         <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event couleur_<?php echo $rubrique_couleur;?>" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
     </h1>                               
-
+    <div class="triangle_inverse" style="border-top-color:<?php echo $rubrique_couleur;?>;"></div>
     <p class="date h5-like"><?php echo $horaires;?></p>
     <p>
         <?php $resumeFacebook = $event->affiche_resume($row, $lang);?>
-        <a href="#" rel="" class="suite couleur_<?php echo $rubrique_couleur;?>" style="background-color:<?php echo $rubrique_couleur; ?>" id="lien_suite_<?php echo $row['evenement_id'];?>">
-            <img src="http://www.sciencespo.fr/evenements/images/lien_suite.png" alt=""/>
+        <a href="#" rel="" title="lire la suite" class="suite couleur_<?php echo $rubrique_couleur;?>" style="border-left-color:<?php echo $rubrique_couleur;?>;" id="lien_suite_<?php echo $row['evenement_id'];?>">
         </a>
     </p>
     

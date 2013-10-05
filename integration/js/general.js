@@ -23,6 +23,7 @@ $(document).ready(function(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
 		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height(sauv);
@@ -40,13 +41,14 @@ $(document).ready(function(){
 		var classe = $(this).attr('class').split(' ')[1];
 		var couleur = classe.split('_')[1];
 		couleur = couleur.split('#')[1];
-		clickEvent($('.selectedEvent'));
+		clickEvent($('.selectedEvent'), sauv);
+		$('.selectedEvent').css('background','none');
 		$('.selectedEvent > a').css('display','none');
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
 		$('.selectedEvent > span').css('display','none');	
-		$('.selectedEvent').css('background','url("../admin/triangle_inverse_'+couleur+'.png") no-repeat scroll 15px bottom');
+		$('.selectedEvent > div.triangle_inverse').css('display','block');
 	    // on evite le comportement normal du click
 	    
 	});
@@ -471,6 +473,7 @@ $(function(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
 		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height($('.selectedEvent').height()-15);
@@ -589,10 +592,12 @@ $(function(){
 			var prevFirstRowEvent;
 			console.log('click on event');
 			//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
+			
 			$('.selectedEvent > a').css('display','block');
 			$('.selectedEvent > img').css('display','inline-block');
 			$('.selectedEvent > p').css('display','block');
 			$('.selectedEvent > div').css('display','block');
+			$('.selectedEvent > div.triangle_inverse').css('display','none');
 			$('.selectedEvent > span').css('display','block');
 			$('.selectedEvent').height(sauv);
 			sauv = $(this).parent().parent().height();
@@ -609,15 +614,15 @@ $(function(){
 			var classe = $(this).attr('class').split(' ')[1];
 			var couleur = classe.split('_')[1];
 			couleur = couleur.split('#')[1];
-			clickEvent($('.selectedEvent'));
+			clickEvent($('.selectedEvent'), sauv);
+			$('.selectedEvent').css('background','none');
 			$('.selectedEvent > a').css('display','none');
 			$('.selectedEvent > img').css('display','none');
 			$('.selectedEvent > p').css('display','none');
 			$('.selectedEvent > div').css('display','none');
 			$('.selectedEvent > span').css('display','none');	
-			$('.selectedEvent').css('background','url("../admin/triangle_inverse_'+couleur+'.png") no-repeat scroll 15px bottom');
+			$('.selectedEvent > div.triangle_inverse').css('display','block');
 		    // on evite le comportement normal du click
-		    
 		});
 
 		$('a.sinscrire').click(function(e){
@@ -768,6 +773,7 @@ function initIsotopeOuvert(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
 		$('.selectedEvent').height(sauv);
 		sauv = monBloc.height();
@@ -788,11 +794,12 @@ function initIsotopeOuvert(){
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
+		$('.selectedEvent > div.triangle_inverse').css('display','block');
 		$('.selectedEvent > span').css('display','none');
 	}
 }
 
-function clickEvent(clickedElement){
+function clickEvent(clickedElement, sauv){
 	var nextLastRowEvent;
 	var prevFirstRowEvent;
 	// on eneleve les classe selected et selectedEvent
@@ -858,9 +865,13 @@ function clickEvent(clickedElement){
 			$('.selectedEvent > img').css('display','inline-block');
 			$('.selectedEvent > p').css('display','block');
 			$('.selectedEvent > div').css('display','block');
+			$('.selectedEvent > div.triangle_inverse').css('display','none');
 			$('.selectedEvent > span').css('display','block');
 			$('.selectedEvent').css('background','#fff');
-			$('.selectedEvent').height($('.selectedEvent').height()-15);
+
+			$('.selectedEvent').height(sauv);
+			//$('.selectedEvent').height($('.selectedEvent').height()-15);
+
 			$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 			$('#liste_evenements').isotope( 'remove', $('.resume') );
 			console.log('> suppr resume');
@@ -1243,6 +1254,7 @@ $(window).resize(function() {
 	$('.selectedEvent > img').css('display','inline-block');
 	$('.selectedEvent > p').css('display','block');
 	$('.selectedEvent > div').css('display','block');
+	$('.selectedEvent > div.triangle_inverse').css('display','none');
 	$('.selectedEvent > span').css('display','block');
 	$('.selectedEvent').css('background','#fff');
 	$('.selectedEvent').height($('.selectedEvent').height()-15);

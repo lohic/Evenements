@@ -813,22 +813,27 @@ img.banniere{
     width: 320px;
 }		
 
-.first {
-	/*outline: 5px solid red;
-	background: purple;
-	margin-left:0px;*/
-}
-.last {
-	/*outline: 5px solid green;
-	background: green;
-	margin-right: 0;*/
-}
-
-img.triangle {
+div.triangle {
     height: 15px;
     margin-left: 15px;
     margin-top: -15px;
     width: 30px;
+    border:15px solid transparent;
+    border-top:none;
+    position: relative;
+    z-index:1000;
+}
+
+div.triangle_inverse {
+	display:none;
+    height: 15px;
+    margin-left: 15px;
+    margin-top: 0px;
+    width: 30px;
+    border:15px solid transparent;
+    border-bottom:none;
+    position: relative;
+    z-index:1000;
 }
 
 .event h1.titre a {
@@ -885,8 +890,9 @@ img.triangle {
 
 .event a.suite{
 	display: inline-block;
-    height: 8px;
-    width: 4px;
+    height: 0px;
+    width: 0px;
+    border:4px solid transparent;
 }
 
 .event div.reseaux{
@@ -1389,13 +1395,18 @@ body .fancybox-title-float-wrap .child {
 }
 
 .selectedEvent{
-	background: url("img/triangle_inverse.png") no-repeat 15px bottom transparent;
+	background: none;
 }
 
 .selectedEvent > h1{
 	position: absolute;
 	bottom:15px;
 	width: 320px;
+}
+
+.selectedEvent > div.triangle_inverse{
+	position: absolute;
+	bottom:0px;
 }
 
 .resume{

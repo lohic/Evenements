@@ -33,7 +33,6 @@ class Keyword {
 
 	function updater($_array_val,$_id){
 		// ici on place toutes les fonctions qui servent à mettre à jour ou à créer des objets	
-		
 		if(isset($_array_val['update']) && ($_array_val['update'] == 'update' || $_array_val['update'] == 'create')){
 			$this->create_keyword($_array_val,$_id);
 		}

@@ -8,7 +8,7 @@ include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');
 
 include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
 include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
+//include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
