@@ -16,8 +16,10 @@
     $moisId = $event->get_event_unique_month($row['evenement_id']);
     $finEvenement = $event->get_fin_event($row['evenement_id']);
     $horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
+
+    $lesmots = $event->get_mots($row['evenement_id']);
 ?>
-<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> mot_<?php echo $row['evenement_keyword'];?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>" id="bloc_<?php echo $row['evenement_id'];?>">
+<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lesmots;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>" id="bloc_<?php echo $row['evenement_id'];?>">
     <?php
         if($row['evenement_image']!=""){
     ?>

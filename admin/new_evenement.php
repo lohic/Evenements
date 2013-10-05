@@ -51,7 +51,6 @@ if( isset($_POST['evenement_titre']) ){
 				'".addslashes($_POST["evenement_coorganisateur"])."',
 				'".addslashes($_POST["evenement_coorganisateur_en"])."',
 				'".addslashes($_POST["evenement_rubrique"])."',
-				'".addslashes($_POST["evenement_keyword"])."',
 				'".addslashes($_POST["evenement_titre"])."',
 				'".addslashes($_POST["evenement_titre_en"])."',
 				'".mysql_real_escape_string(html_entity_decode( $_POST["evenement_resume"], ENT_NOQUOTES, 'UTF-8' ))."',
@@ -74,8 +73,15 @@ if( isset($_POST['evenement_titre']) ){
 		mysql_query($sql) or die(mysql_error());
 		$lastIdInsert = mysql_insert_id(); 
         
+        //créations des liaisons avec les groupes partagés
 		for ($i = 0; $i < count($_POST['groupes']); $i++) {
 			$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$lastIdInsert."', '".$_POST['groupes'][$i]."')";
+			mysql_query($sqlinsert) or die(mysql_error());
+		}
+
+		//créations des liaisons avec les mots-clés choisis
+		for ($i = 0; $i < count($_POST['keywords']); $i++) {
+			$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$lastIdInsert."', '".$_POST['keywords'][$i]."')";
 			mysql_query($sqlinsert) or die(mysql_error());
 		}
 
@@ -286,23 +292,19 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 					</select>
 				</p>
 
-				<p>
-					<label for="evenement_keyword" class="inline">Mot-clé :</label>
-					<select name="evenement_keyword" id="evenement_keyword">
-						<option value="-1" selected="selected">Choisir</option>
-					<?php
+				<p class="legend">Mots-clés :</p>
+				<p> 
+					<?php 
 						$sqlKeywords ="SELECT * FROM sp_keywords WHERE keyword_organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY keyword_nom ASC";
-						$sqlKeywords = mysql_query($sqlKeywords) or die(mysql_error());  
-							
+						$sqlKeywords = mysql_query($sqlKeywords) or die(mysql_error());        
 						while($rowKeyword = mysql_fetch_array($sqlKeywords)){ 
 					?>
-							<option value="<?php echo $rowKeyword['keyword_id'];?>" <?php if($_POST['evenement_keyword']==$rowKeyword['keyword_id']){echo "selected=\"selected\"";} ?>><?php echo $rowKeyword['keyword_nom'];?></option>
-						<?php
+							<input type="checkbox" name="keywords[]" value="<?php echo $rowKeyword['keyword_id'];?>" id="keyword_<?php echo $rowKeyword['keyword_id'];?>"/><label for="keyword_<?php echo $rowKeyword['keyword_id'];?>" class="checkbox" ><?php echo $rowKeyword['keyword_nom'];?></label>
+					<?php
 						}
-					?> 
-					</select>
+					?>
 				</p>
-				
+
 				<p>
 					<label for="evenement_facebook" class="inline">Publier sur Facebook :</label>
 					<select name="evenement_facebook" id="evenement_facebook">

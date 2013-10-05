@@ -351,6 +351,22 @@ class Evenement {
 		return $row['moisUnique'];
 	}
 
+	/**
+	* get_mots récupère les mots-clés liés à un événement
+	* @param $_id => id de l'événement
+	* @return chaine => la chaine de caractère à afficher en classe du bloc événement
+	*/
+	function get_mots($_id=1){
+		$this->evenement_db->connect_db();
+		$sqlmots = sprintf("SELECT * FROM ".TB."rel_evenement_keyword WHERE evenement_id=%s", func::GetSQLValueString($_id, "int"));
+		$resmots= mysql_query($sqlmots) or die(mysql_error());
+		$str = "";
+		while($row = mysql_fetch_array($resmots)){
+			$str.='mot_'.$row['keyword_id'].' ';
+		}
+		return $str;
+	}
+
 
 	/**
 	* get_event_infos récupére les infos pour le détail d'un événement
