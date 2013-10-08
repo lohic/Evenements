@@ -407,7 +407,7 @@ class Evenement {
 			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($rowsession1['session_lieu'], "int"));
 			$reslieu = mysql_query($sqllieu) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieu);
-			$lieu = utf8_encode($rowlieu['lieu_nom']);
+			$lieu = $rowlieu['lieu_nom'];
 		}
 		else{
 			$lieu = $rowsession1['session_adresse1'];
@@ -417,7 +417,7 @@ class Evenement {
 			$sqlcode = sprintf("SELECT * FROM ".TB."codes_batiments WHERE code_batiment_id=%s", func::GetSQLValueString($rowsession1['session_code_batiment'], "int"));
 			$rescode = mysql_query($sqlcode) or die(mysql_error());
 			$rowcode = mysql_fetch_array($rescode);
-			$batiment = utf8_encode($rowcode['code_batiment_nom']);
+			$batiment = $rowcode['code_batiment_nom'];
 		}
 		else{
 			$batiment = $rowsession1['session_adresse2'];
@@ -514,7 +514,7 @@ class Evenement {
 			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($row['session_lieu'], "int"));
 			$reslieu = mysql_query($sqllieu) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieu);
-			$lieu = utf8_encode($rowlieu['lieu_nom']);
+			$lieu = $rowlieu['lieu_nom'];
 		}
 		else{
 			$lieu = $row['session_adresse1'];
@@ -659,7 +659,7 @@ class Evenement {
 				$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($row['session_lieu'], "int"));
 				$reslieu = mysql_query($sqllieu) or die(mysql_error());
 				$rowlieu = mysql_fetch_array($reslieu);
-				$lieu = utf8_encode($rowlieu['lieu_nom']);
+				$lieu = $rowlieu['lieu_nom'];
 			}
 			else{
 				$lieu = $row['session_adresse1'];
@@ -780,7 +780,7 @@ class Evenement {
 			}
 
 			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+			$lesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
 
 			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
 			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
@@ -898,7 +898,7 @@ class Evenement {
 				}
 
 				$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-				$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+				$lesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
 
 				$totalExterne = $rowSession['session_places_externes_totales']+$rowSession['session_places_externes_totales_visio'];
 				$totalExternePrises = $rowSession['session_places_externes_prises']+$rowSession['session_places_externes_prises_visio'];
@@ -1192,7 +1192,7 @@ class Evenement {
 			}
 
 			$toutesLesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$toutesLesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+			$toutesLesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
 
 			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
 				$toutesLesSessions[$indice]['pascomplete'] = true;
@@ -1464,7 +1464,7 @@ class Evenement {
 			}
 
 			$toutesLesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$toutesLesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
+			$toutesLesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
 
 			if($rowSession['session_statut_inscription']==1 && $differenceExterneAmphi!=0){
 				$toutesLesSessions[$indice]['pascomplete'] = true;

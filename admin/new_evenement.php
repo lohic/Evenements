@@ -407,7 +407,7 @@ else{
 						echo '<option value="-1">aucun</option>';
 						while($rowlieu = mysql_fetch_array($reslieux)){
 					?>
-							<option value="<?php echo $rowlieu['lieu_id'];?>" <?php if($_POST['session_lieu']==$rowlieu['lieu_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowlieu['lieu_nom']);?></option>
+							<option value="<?php echo $rowlieu['lieu_id'];?>" <?php if($_POST['session_lieu']==$rowlieu['lieu_id']){echo "selected=\"selected\"";} ?>><?php echo $rowlieu['lieu_nom'];?></option>
 					<?php
 						}
 					?>	
@@ -421,7 +421,7 @@ else{
 						echo '<option value="-1" selected="selected">aucun</option>';
 						while($rowcode = mysql_fetch_array($rescodes)){
 					?>
-							<option value="<?php echo $rowcode['code_batiment_id'];?>" <?php if($_POST['session_code_batiment']==$rowcode['code_batiment_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowcode['code_batiment_nom'])." => ".utf8_encode($rowcode['code_batiment_adresse']);?></option>
+							<option value="<?php echo $rowcode['code_batiment_id'];?>" <?php if($_POST['session_code_batiment']==$rowcode['code_batiment_id']){echo "selected=\"selected\"";} ?>><?php echo $rowcode['code_batiment_nom']." => ".$rowcode['code_batiment_adresse'];?></option>
 					<?php
 						}
 					?>

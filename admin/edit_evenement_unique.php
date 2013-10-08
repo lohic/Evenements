@@ -705,7 +705,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 								echo "selected=\"selected\"";
 								$estsalle =true;
 							}
-							echo '>'.utf8_encode($rowlieu['lieu_nom']).'</option>';
+							echo '>'.$rowlieu['lieu_nom'].'</option>';
 						}
 					   
 						if($estsalle){
@@ -729,7 +729,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 								echo "selected=\"selected\"";
 								$estbatiment = true;
 							}
-							echo '>'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode(stripslashes($rowcode['code_batiment_adresse'])).'</option>';
+							echo '>'.$rowcode['code_batiment_nom'].' => '.stripslashes($rowcode['code_batiment_adresse']).'</option>';
 							
 						}
 					    
@@ -900,7 +900,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 						<select name="session_lieu_creation" id="session_lieu_creation"  style="width:250px;">
 						<?php
 							while($rowlieu = mysql_fetch_array($reslieux2)){
-								echo '<option value="'.$rowlieu['lieu_id'].'">'.utf8_encode($rowlieu['lieu_nom']).'</option>';
+								echo '<option value="'.$rowlieu['lieu_id'].'">'.$rowlieu['lieu_nom'].'</option>';
 							}
 						?>
 							<option value="-1" selected="selected">aucun</option>
@@ -912,7 +912,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 						<select name="session_code_batiment_creation" id="session_code_batiment_creation"  style="width:300px;">
 						<?php
 							while($rowcode = mysql_fetch_array($rescodes2)){
-								echo '<option value="'.$rowcode['code_batiment_id'].'">'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode(stripslashes($rowcode['code_batiment_adresse'])).'</option>';
+								echo '<option value="'.$rowcode['code_batiment_id'].'">'.$rowcode['code_batiment_nom'].' => '.stripslashes($rowcode['code_batiment_adresse']).'</option>';
 							}
 						    
 						?>

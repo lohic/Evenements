@@ -690,7 +690,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 						<select name="session_code_batiment_creation" id="session_code_batiment_creation"  style="width:300px;">
 						<?php
 							while($rowcode = mysql_fetch_array($rescodes)){
-								echo '<option value="'.$rowcode['code_batiment_id'].'">'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode($rowcode['code_batiment_adresse']).'</option>';
+								echo '<option value="'.$rowcode['code_batiment_id'].'">'.$rowcode['code_batiment_nom'].' => '.$rowcode['code_batiment_adresse'].'</option>';
 							}
 						   
 							echo '<option value="-1" selected="selected">aucun</option>';

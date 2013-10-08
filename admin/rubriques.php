@@ -308,8 +308,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 					}
 					$iteration++;
 				?>
-							<div class="infos_large"><p id="code_batiment_nom_<?php echo $row['code_batiment_id'];?>" style="margin-right:25px;"><?php echo utf8_encode($row['code_batiment_nom']);?></p><p style="font-size:1em; padding-top:10px;"><?php echo utf8_encode($row['code_batiment_adresse']);?></p></div>
-							<div class="infos_large" id="code_batiment_adresse_<?php echo $row['code_batiment_id'];?>" style="display:none;"><p><?php echo utf8_encode($row['code_batiment_adresse']);?></p></div>
+							<div class="infos_large"><p id="code_batiment_nom_<?php echo $row['code_batiment_id'];?>" style="margin-right:25px;"><?php echo $row['code_batiment_nom'];?></p><p style="font-size:1em; padding-top:10px;"><?php echo $row['code_batiment_adresse'];?></p></div>
+							<div class="infos_large" id="code_batiment_adresse_<?php echo $row['code_batiment_id'];?>" style="display:none;"><p><?php echo $row['code_batiment_adresse'];?></p></div>
 							<div class="liens modif">
 							<?php
 								if($core->isAdmin && $core->userLevel<=1){
@@ -363,7 +363,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 					}
 					$iteration++;
 				?>
-							<div class="infos_large" id="lieu_nom_<?php echo $row['lieu_id'];?>"><p><?php echo utf8_encode($row['lieu_nom']);?></p></div>
+							<div class="infos_large" id="lieu_nom_<?php echo $row['lieu_id'];?>"><p><?php echo $row['lieu_nom'];?></p></div>
 							<div class="liens modif">
 								<?php
 									if($core->isAdmin && $core->userLevel<=1){

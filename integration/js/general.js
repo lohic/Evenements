@@ -49,15 +49,16 @@ $(document).ready(function(){
 		$('.selectedEvent > div').css('display','none');
 		$('.selectedEvent > span').css('display','none');	
 		$('.selectedEvent > div.triangle_inverse').css('display','block');
-	    // on evite le comportement normal du click
-	    
+
+		$('.isotope-item').removeClass('sinscrireEvent');
+	    // on evite le comportement normal du click   
 	});
 
 	$('a.sinscrire').click(function(e){
+		e.preventDefault();
 		$('.isotope-item').removeClass('sinscrireEvent');
 		$(this).parent().addClass('sinscrireEvent');
 		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
 		if($('.sinscrireEvent').hasClass('en')){
 			var la_langue="en";
 		}
@@ -71,7 +72,6 @@ $(document).ready(function(){
 			code="oui";
 		}
 
-		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/get_event_infos_inscription.php",
 	        type    : "GET",
@@ -880,7 +880,7 @@ function clickEvent(clickedElement, sauv){
 			e.preventDefault();
 		});
 
-		$('a.sinscrire').click(function(e){
+		$('.resumeContent a.sinscrire').click(function(e){
 			var code = "";
 
 			if($(this).attr('id')=="avec_code"){
@@ -927,7 +927,7 @@ function clickEvent(clickedElement, sauv){
 		    });
 		});
 
-		$('a.sinscrire_multiple').click(function(e){
+		$('.resumeContent a.sinscrire_multiple').click(function(e){
 			var code = "";
 
 			if($(this).attr('id')=="avec_code"){

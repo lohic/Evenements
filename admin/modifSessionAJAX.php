@@ -100,7 +100,7 @@ else{
 						echo "selected=\"selected\"";
 						$estsalle =true;
 					}
-					echo '>'.utf8_encode(stripslashes($rowlieu['lieu_nom'])).'</option>';
+					echo '>'.stripslashes($rowlieu['lieu_nom']).'</option>';
 				}
 				if($estsalle){
 					echo '<option value="-1">aucun</option>';
@@ -122,7 +122,7 @@ else{
 						echo "selected=\"selected\"";
 						$estbatiment = true;
 					}
-					echo '>'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode(stripslashes($rowcode['code_batiment_adresse'])).'</option>';
+					echo '>'.$rowcode['code_batiment_nom'].' => '.stripslashes($rowcode['code_batiment_adresse']).'</option>';
 					
 				}
 			
