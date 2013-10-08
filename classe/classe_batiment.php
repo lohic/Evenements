@@ -61,19 +61,36 @@ class Batiment {
 											func::GetSQLValueString($_SERVER["REMOTE_ADDR"], "text"),
 											func::GetSQLValueString($_SESSION['id'], "int"),
 											func::GetSQLValueString($_id,"int"));
-																										
-			$update_query	= mysql_query($updateSQL) or die(mysql_error());			
+			$update_query	= mysql_query($updateSQL) or die(mysql_error());	
+
+			//suppression des liaisons avec les organismes
+			$sql="DELETE FROM sp_rel_batiment_organisme WHERE batiment_id = '".$_id."'";
+			mysql_query($sql) or die(mysql_error());
+
+			//création des nouvelles liaisons avec les organismes
+			for ($i = 0; $i < count($_array_val['organismes']); $i++) {
+				$sqlinsert	= sprintf("INSERT INTO sp_rel_batiment_organisme (batiment_id, organisme_id) VALUES (%s, %s)",
+											func::GetSQLValueString($_id, "int"),
+											func::GetSQLValueString($_array_val['organismes'][$i], "int"));
+				mysql_query($sqlinsert) or die(mysql_error());
+			}	
+
 		}else{
 			//CREATION
-			$insertSQL 		= sprintf("INSERT INTO ".TB."codes_batiments (code_batiment_nom, code_batiment_adresse, code_batiment_organisme, code_batiment_editeur_ip, code_batiment_editeur_id) VALUES (%s, %s, %s, %s, %s)",
+			$insertSQL 		= sprintf("INSERT INTO ".TB."codes_batiments (code_batiment_nom, code_batiment_adresse, code_batiment_editeur_ip, code_batiment_editeur_id) VALUES (%s, %s, %s, %s)",
 											func::GetSQLValueString($_array_val['code_batiment_nom'], "text"),
 											func::GetSQLValueString($_array_val["code_batiment_adresse"], "text"),
-											func::GetSQLValueString($_array_val['organisme_id'], "int"),
 											func::GetSQLValueString($_SERVER["REMOTE_ADDR"], "text"),
 											func::GetSQLValueString($_SESSION['id'], "int"));
 			$insert_query	= mysql_query($insertSQL) or die(mysql_error());
-			
 			$_id = mysql_insert_id();
+
+			for ($i = 0; $i < count($_array_val['organismes']); $i++) {
+				$sqlinsert	= sprintf("INSERT INTO sp_rel_batiment_organisme (batiment_id, organisme_id) VALUES (%s, %s)",
+											func::GetSQLValueString($_id, "int"),
+											func::GetSQLValueString($_array_val['organismes'][$i], "int"));
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 			return $_id;
 		}	
 	}
@@ -88,6 +105,10 @@ class Batiment {
 		if(isset($_id)){
 			$deleteBatimentSQL ="DELETE FROM ".TB."codes_batiments WHERE code_batiment_id = '".$_id."'";
 			$delete_batiment_query = mysql_query($deleteBatimentSQL) or die(mysql_error());
+
+			//suppression des liaisons avec les organismes
+			$sql="DELETE FROM sp_rel_batiment_organisme WHERE batiment_id = '".$_id."'";
+			mysql_query($sql) or die(mysql_error());
 		}
 	}
 }

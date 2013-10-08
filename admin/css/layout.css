@@ -1021,6 +1021,11 @@ div.clear{
 	margin-top:25px;
 } 
 
+.bloc_modif h4.clear_both{
+	clear: both;
+	padding-top: 15px;
+}
+
 #select_group{
 	float:right; 
 	margin-top:7px;

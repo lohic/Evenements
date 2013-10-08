@@ -54,8 +54,9 @@ class Keyword {
 		$this->evenement_db->connect_db();
 		if(isset($_id)){
 			//MODIFICATION
-			$updateSQL 		= sprintf("UPDATE ".TB."keywords SET keyword_nom=%s WHERE keyword_id=%s",
+			$updateSQL 		= sprintf("UPDATE ".TB."keywords SET keyword_nom=%s, keyword_organisme_id=%s WHERE keyword_id=%s",
 											func::GetSQLValueString($_array_val['keyword_nom'], "text"),
+											func::GetSQLValueString($_array_val['organisme_id'],"int"),
 											func::GetSQLValueString($_id,"int"));
 																										
 			$update_query	= mysql_query($updateSQL) or die(mysql_error());			

@@ -59,19 +59,34 @@ class Lieu {
 											func::GetSQLValueString($_array_val['lieu_nom'], "text"),
 											func::GetSQLValueString($_SERVER["REMOTE_ADDR"], "text"),
 											func::GetSQLValueString($_SESSION['id'], "int"),
-											func::GetSQLValueString($_id,"int"));
-																										
-			$update_query	= mysql_query($updateSQL) or die(mysql_error());			
+											func::GetSQLValueString($_id,"int"));																						
+			$update_query	= mysql_query($updateSQL) or die(mysql_error());	
+
+			//suppression des liaisons avec les organismes
+			$sql="DELETE FROM sp_rel_lieu_organisme WHERE lieu_id = '".$_id."'";
+			mysql_query($sql) or die(mysql_error());
+
+			//création des nouvelles liaisons avec les organismes
+			for ($i = 0; $i < count($_array_val['organismes']); $i++) {
+				$sqlinsert	= sprintf("INSERT INTO sp_rel_lieu_organisme (lieu_id, organisme_id) VALUES (%s, %s)",
+											func::GetSQLValueString($_id, "int"),
+											func::GetSQLValueString($_array_val['organismes'][$i], "int"));
+				mysql_query($sqlinsert) or die(mysql_error());
+			}			
 		}else{
 			//CREATION
-			$insertSQL 		= sprintf("INSERT INTO ".TB."lieux (lieu_nom, lieu_organisme, lieu_editeur_ip, lieu_editeur_id) VALUES (%s, %s, %s, %s)",
+			$insertSQL 		= sprintf("INSERT INTO ".TB."lieux (lieu_nom, lieu_editeur_ip, lieu_editeur_id) VALUES (%s, %s, %s)",
 											func::GetSQLValueString($_array_val['lieu_nom'], "text"),
-											func::GetSQLValueString($_array_val['organisme_id'], "int"),
 											func::GetSQLValueString($_SERVER["REMOTE_ADDR"], "text"),
 											func::GetSQLValueString($_SESSION['id'], "int"));
 			$insert_query	= mysql_query($insertSQL) or die(mysql_error());
-			
 			$_id = mysql_insert_id();
+			for ($i = 0; $i < count($_array_val['organismes']); $i++) {
+				$sqlinsert	= sprintf("INSERT INTO sp_rel_lieu_organisme (lieu_id, organisme_id) VALUES (%s, %s)",
+											func::GetSQLValueString($_id, "int"),
+											func::GetSQLValueString($_array_val['organismes'][$i], "int"));
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 			return $_id;
 		}	
 	}
@@ -86,6 +101,9 @@ class Lieu {
 		if(isset($_id)){
 			$deleteLieuSQL ="DELETE FROM ".TB."lieux WHERE lieu_id = '".$_id."'";
 			$delete_lieu_query = mysql_query($deleteLieuSQL) or die(mysql_error());
+
+			$sql="DELETE FROM sp_rel_lieu_organisme WHERE lieu_id = '".$_id."'";
+			mysql_query($sql) or die(mysql_error());
 		}
 	}
 }

@@ -181,8 +181,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 					$idGroups = implode(',',$idGroups); 
 					$sqlRubriques = "SELECT * FROM sp_rubriques WHERE rubrique_groupe_id IN ($idGroups)"; 
 					$sqlKeywords = "SELECT * FROM sp_keywords as spk, sp_groupes as spg, sp_organismes as spo WHERE keyword_organisme_id=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
-					$sqlBatiments = "SELECT * FROM sp_codes_batiments, sp_groupes, sp_organismes WHERE code_batiment_organisme=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
-					$sqlLieux = "SELECT * FROM sp_lieux, sp_groupes, sp_organismes WHERE lieu_organisme=organisme_id AND organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
+					$sqlBatiments = "SELECT * FROM sp_codes_batiments as spc, sp_groupes, sp_organismes as spo, sp_rel_batiment_organisme as sprb WHERE batiment_id=code_batiment_id AND sprb.organisme_id=spo.organisme_id AND spo.organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
+					$sqlLieux = "SELECT * FROM sp_lieux as spl, sp_groupes, sp_organismes as spo, sp_rel_lieu_organisme as sprl WHERE spl.lieu_id=sprl.lieu_id AND sprl.organisme_id=spo.organisme_id AND spo.organisme_id=groupe_organisme_id AND groupe_id IN ($idGroups)"; 
 				}
 			}
 
@@ -234,55 +234,47 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 		?>
 	
 		<div style="position:relative; margin-top:30px; float:left;">
-			<h3>Liste des mots-clés</h3>
-			<?php
-				if($core->isAdmin && $core->userLevel<=3){
-			?>
-					<p><a href="#" class="buttonenregistrer" id="creer_keyword">Nouveau Mot clé</a></p>
-					<div id="bloc_creation_keyword" class="bloc_modif">
+		<?php
+			if($core->isAdmin && $core->userLevel<=3){ 
+		?>
+				<h3>Liste des mots-clés</h3>
+		
+				<p><a href="#" class="buttonenregistrer" id="creer_keyword">Nouveau Mot clé</a></p>
+				<div id="bloc_creation_keyword" class="bloc_modif">
 
-					</div>	
-			<?php
-				}
-			?>
-			
-			<p>&nbsp;</p>
-		 	<?php
+				</div>	
+				
+				<p>&nbsp;</p>
+		<?php
 		 		$res = mysql_query($sqlKeywords)or die(mysql_error());
 				$iteration = 1;
 	
 				while($row = mysql_fetch_array($res)){
 					if($iteration%2==1){
-				?>
+		?>
 						<div class="listItemRubrique1">
-				<?php
+		<?php
 					}
 					else{
-				?>
+		?>
 						<div class="listItemRubrique2">
-				<?php
+		<?php
 					}
 					$iteration++;
-				?>
+		?>
 							<div class="infos_large" id="keyword_nom_<?php echo $row['keyword_id'];?>"><p><?php echo $row['keyword_nom'];?></p></div>
 							<div class="liens modif">
-								<?php
-									if($core->isAdmin && $core->userLevel<=3){
-								?>
-										<a href="#" id="lien_keyword_<?php echo $row['keyword_id'];?>" class="lien_keyword" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce mot-clé? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
-								<?php
-									}
-								?>
-																
+								<a href="#" id="lien_keyword_<?php echo $row['keyword_id'];?>" class="lien_keyword" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?update=delete&amp;keyword_id=<?php echo $row['keyword_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer ce mot-clé? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>	
 							</div>
 						
 							<div id="bloc_modif_keyword_<?php echo $row['keyword_id'];?>" class="bloc_modif">
 
 							</div>
 						</div>
-				<?php
+		<?php
 				}
-			?>
+			}
+		?>
 		</div>		
 		
 		<div style="position:relative; margin-top:30px; float:left;">
