@@ -17,16 +17,16 @@ if($_GET['lang']=='en'){
 	$lang_link = 'fr';	
 }
 
-if(isset($_GET['rubrique']) && $_GET['rubrique']!=''){
+if(isset($_GET['cat']) && $_GET['cat']!=''){
 	if(isset($_GET['mot']) && $_GET['mot']!=''){
 		$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."rel_evenement_keyword AS spre, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND rubrique_id=%s AND keyword_id=%s AND spre.evenement_id=spe.evenement_id AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s AND spg.groupe_id=spr.rubrique_groupe_id ORDER BY evenement_date", 
-								func::GetSQLValueString($_GET['rubrique'], "int"),
+								func::GetSQLValueString($_GET['cat'], "int"),
 								func::GetSQLValueString($_GET['mot'], "int"),
 								func::GetSQLValueString($infosOrganisme['organisme_id'], "int"));
 	}
 	else{
 		$sql = sprintf("SELECT * FROM ".TB."evenements AS spe, ".TB."rubriques AS spr, ".TB."groupes AS spg WHERE spe.evenement_statut=3 AND rubrique_id=%s AND spe.evenement_rubrique=spr.rubrique_id AND spg.groupe_organisme_id=%s AND spg.groupe_id=spr.rubrique_groupe_id ORDER BY evenement_date", 
-								func::GetSQLValueString($_GET['rubrique'], "int"),
+								func::GetSQLValueString($_GET['cat'], "int"),
 								func::GetSQLValueString($infosOrganisme['organisme_id'], "int"));
 	}
 }
