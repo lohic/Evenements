@@ -1040,6 +1040,10 @@ a.sinscrire span, a.sinscrire_multiple span{
 	margin-top: 0px;
 }
 
+.event .resumeContent div.medias{
+	padding-top: 10px;
+}
+
 .event .resumeContent p.langue > span{
 	background-position: left -40px;
 }

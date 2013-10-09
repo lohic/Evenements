@@ -33,6 +33,10 @@ $row3 = mysql_fetch_array($res3);
 				
 			</select>  
 		</p>
+		<p>
+			<label for="flux_rss" class="inline">Flux RSS :</label>
+			<a href="<?php echo ABSOLUTE_URL;?>integration/rss_events.php?rubrique=<?php echo $_POST['id'];?>" class="rss" target="_blank"><?php echo ABSOLUTE_URL;?>integration/rss_events.php?rubrique=<?php echo $_POST['id'];?></a>
+		</p>
 		
 		<div class="clear"></div>
 		<h4>Partager avec les Groupes :</h4>

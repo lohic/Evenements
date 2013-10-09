@@ -846,6 +846,7 @@ function clickEvent(clickedElement, sauv){
 	        twitter: dataJSON.twitter,
 	        ical: dataJSON.ical,
 	        sinscrire: dataJSON.sinscrire,
+	        medias: dataJSON.medias,
 	    };
 	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
 		var $newItems = ich.event_info(event_data);

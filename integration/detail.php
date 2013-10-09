@@ -18,6 +18,12 @@
                         {{#inscription}}<p class="inscription"><span style="background-color:{{couleur}}"></span>{{{inscription}}}</p>{{/inscription}}
                         {{#organisateur}}<p class="organisateur"><span style="background-color:{{couleur}}"></span>{{organisateur}}<br/>{{coorganisateur}}</p>{{/organisateur}}
                         {{#infos}}<p class="infos"><span style="background-color:{{couleur}}"></span><a href="{{infos}}" target="_blank">{{infos_texte}}</a></p>{{/infos}}
+                    
+                        {{#medias}}
+                            <div class="medias">
+                                {{{fichier}}
+                            </div>
+                        {{/medias}}
                     </div>
                 </div>  
 

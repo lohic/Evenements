@@ -39,6 +39,10 @@ else{
 			?>	
 			</select>
 		</p>
+		<p>
+			<label for="flux_rss" class="inline">Flux RSS :</label>
+			<a href="<?php echo ABSOLUTE_URL;?>integration/rss_events.php?mot=<?php echo $_POST['id'];?>" class="rss" target="_blank"><?php echo ABSOLUTE_URL;?>integration/rss_events.php?mot=<?php echo $_POST['id'];?></a>
+		</p>
 	</div>
 	<div class="bas_modif">
 		<input type="submit" name="button" id="button" value="enregistrer" class="buttonenregistrer decale" />

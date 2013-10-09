@@ -451,7 +451,21 @@ class Evenement {
 		$session = new session();
 
 		$rowSession = $session->get_session($row['evenement_id']);
-        $sinscrireTexte = $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $row['rubrique_couleur']); 
+        $sinscrireTexte = $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $row['rubrique_couleur']);
+
+        $lesMedias = array();
+        $indice=0;
+
+		$sqlMedias = sprintf("SELECT * FROM ".TB."medias WHERE evenement_id=%s", func::GetSQLValueString($row['evenement_id'], "int"));
+		$resMedias = mysql_query($sqlMedias) or die(mysql_error());
+		if($resMedias){
+			while($rowMedia = mysql_fetch_array($resMedias)){
+	        	if($rowMedia['media_extension']==".jpg" || $rowMedia['media_extension']==".jpeg" || $rowMedia['media_extension']==".png" || $rowMedia['media_extension']==".gif"){
+					$lesMedias[$indice]['fichier'] = '<img src="'.CHEMIN_DOCUMENTS.'evenement_'.$row['evenement_id'].'/'.$rowMedia['media_fichier'].'?cache='.time().'" alt="" width="88"/>';
+					$indice++;
+				}
+			}
+		}
 
 		if($lang=="en"){
 			$retour->titre 	= $row['evenement_titre_en'];
@@ -487,6 +501,7 @@ class Evenement {
 		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		$retour->sinscrire = $sinscrireTexte;
+		$retour->medias 	= $lesMedias;
 		return json_encode($retour);
 	}
 
