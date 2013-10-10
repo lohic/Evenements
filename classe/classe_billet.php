@@ -389,6 +389,4 @@ class Billet {
 		setlocale(LC_TIME, 'fr_FR');
 		return utf8_encode(strftime('%d %B %Y',strtotime($date)));
 	}
-
 }
-?>
