@@ -5,6 +5,10 @@ connexion_vars.php
 
 config.php
 
+
+billet/*
+!billet/index.php
+
 *.sublime-project
 *.sublime-workspace
 
