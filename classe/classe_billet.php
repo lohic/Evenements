@@ -1,6 +1,5 @@
 <?php
-
-include_once('../vars/config.php');
+//include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 // TCPDF pour pdf - http://www.tcpdf.org
@@ -32,7 +31,6 @@ class Billet {
 	 * $this->HTMLticket
 	 */
 	function billet($_unique_id = NULL){
-
 		if(!empty($_unique_id)){
 
 			$template = 'default';
@@ -77,6 +75,7 @@ class Billet {
 
 			$this->big_PDF		= true;
 		}
+
 
 		$this->PDFurl 			= $this->generate_pdf(false);
 		$this->HTMLticket 		= $this->generate_mail();
@@ -367,8 +366,6 @@ class Billet {
 		return $chemin;
 	}
 
-
-
 	/**
 	 * Description
 	 * @param type $chaine 
@@ -392,6 +389,4 @@ class Billet {
 		setlocale(LC_TIME, 'fr_FR');
 		return utf8_encode(strftime('%d %B %Y',strtotime($date)));
 	}
-
-
 }

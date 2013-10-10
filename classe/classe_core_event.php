@@ -1,10 +1,10 @@
 <?php
 
-include_once('classe_connexion.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 //include_once('classe_user.php');
-include_once('classe_spuser_event.php');
-include_once('fonctions.php');
-include_once('connexion_vars.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_spuser_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/connexion_vars.php');
 
 class Core {
 	var $isAdmin		= false;

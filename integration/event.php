@@ -16,27 +16,26 @@
     $moisId = $event->get_event_unique_month($row['evenement_id']);
     $finEvenement = $event->get_fin_event($row['evenement_id']);
     $horaires=func::getHorairesEvent($row['evenement_datetime'],$finEvenement,$lang);
+
+    $lesmots = $event->get_mots($row['evenement_id']);
 ?>
-<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> mot_<?php echo $row['evenement_keyword'];?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>" id="bloc_<?php echo $row['evenement_id'];?>">
+<div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lesmots;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>" id="bloc_<?php echo $row['evenement_id'];?>">
     <?php
         if($row['evenement_image']!=""){
     ?>
-            <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event" id="image_lien_<?php echo $row['evenement_id'];?>" style="float:left;">
-                <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
-            </a>
-            <img src="<?php echo CHEMIN_TRIANGLES; ?>triangle_<?php echo $lacouleur[1]; ?>.png" alt="triangle" class="triangle"/>
+            <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
+            <div class="triangle" style="border-bottom-color:<?php echo $rubrique_couleur;?>;"></div>
     <?php
         }
     ?>
     <h1 style="background-color:<?php echo $rubrique_couleur;?>" class="titre">
-        <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
+        <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event couleur_<?php echo $rubrique_couleur;?>" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
     </h1>                               
-
+    <div class="triangle_inverse" style="border-top-color:<?php echo $rubrique_couleur;?>;"></div>
     <p class="date h5-like"><?php echo $horaires;?></p>
     <p>
         <?php $resumeFacebook = $event->affiche_resume($row, $lang);?>
-        <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="suite" style="background-color:<?php echo $rubrique_couleur; ?>" id="lien_suite_<?php echo $row['evenement_id'];?>">
-            <img src="http://www.sciencespo.fr/evenements/images/lien_suite.png" alt=""/>
+        <a href="#" rel="" title="lire la suite" class="suite couleur_<?php echo $rubrique_couleur;?>" style="border-left-color:<?php echo $rubrique_couleur;?>;" id="lien_suite_<?php echo $row['evenement_id'];?>">
         </a>
     </p>
     

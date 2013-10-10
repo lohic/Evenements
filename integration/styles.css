@@ -813,22 +813,27 @@ img.banniere{
     width: 320px;
 }		
 
-.first {
-	/*outline: 5px solid red;
-	background: purple;
-	margin-left:0px;*/
-}
-.last {
-	/*outline: 5px solid green;
-	background: green;
-	margin-right: 0;*/
-}
-
-img.triangle {
+div.triangle {
     height: 15px;
     margin-left: 15px;
     margin-top: -15px;
     width: 30px;
+    border:15px solid transparent;
+    border-top:none;
+    position: relative;
+    z-index:1000;
+}
+
+div.triangle_inverse {
+	display:none;
+    height: 15px;
+    margin-left: 15px;
+    margin-top: 0px;
+    width: 30px;
+    border:15px solid transparent;
+    border-bottom:none;
+    position: relative;
+    z-index:1000;
 }
 
 .event h1.titre a {
@@ -885,8 +890,9 @@ img.triangle {
 
 .event a.suite{
 	display: inline-block;
-    height: 8px;
-    width: 4px;
+    height: 0px;
+    width: 0px;
+    border:4px solid transparent;
 }
 
 .event div.reseaux{
@@ -1032,6 +1038,10 @@ a.sinscrire span, a.sinscrire_multiple span{
 .event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 
 .event .resumeContent p.organisateur > span, .event .resumeContent p.infos > span{
 	margin-top: 0px;
+}
+
+.event .resumeContent div.medias{
+	padding-top: 10px;
 }
 
 .event .resumeContent p.langue > span{
@@ -1389,13 +1399,18 @@ body .fancybox-title-float-wrap .child {
 }
 
 .selectedEvent{
-	background: url("img/triangle_inverse.png") no-repeat 15px bottom transparent;
+	background: none;
 }
 
 .selectedEvent > h1{
 	position: absolute;
 	bottom:15px;
 	width: 320px;
+}
+
+.selectedEvent > div.triangle_inverse{
+	position: absolute;
+	bottom:0px;
 }
 
 .resume{
@@ -2228,6 +2243,15 @@ ol.styled > li:before {
 	}
 
 	.fancybox-wrap{
+		width: 320px !important;
+	}
+
+	.event {
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	#liste_evenements{
 		width: 320px !important;
 	}
 }

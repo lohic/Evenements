@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once('../vars/config.php');
 include('cookie.php');
 
 // connection to data base
@@ -31,6 +32,10 @@ $row3 = mysql_fetch_array($res3);
 				?>
 				
 			</select>  
+		</p>
+		<p>
+			<label for="flux_rss" class="inline">Flux RSS :</label>
+			<a href="<?php echo ABSOLUTE_URL;?>integration/rss_events.php?cat=<?php echo $_POST['id'];?>" class="rss" target="_blank"><?php echo ABSOLUTE_URL;?>integration/rss_events.php?cat=<?php echo $_POST['id'];?></a>
 		</p>
 		
 		<div class="clear"></div>

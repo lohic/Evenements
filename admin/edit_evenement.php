@@ -1,4 +1,5 @@
 <?php
+include_once('../vars/config.php');
 // security
 include('cookie.php');
 
@@ -32,7 +33,6 @@ if( isset($_POST['evenement_id']) ){
 					evenement_coorganisateur = '".mysql_real_escape_string(html_entity_decode($_POST["evenement_coorganisateur"], ENT_NOQUOTES, 'UTF-8' ))."', 
 					evenement_coorganisateur_en = '".mysql_real_escape_string(html_entity_decode($_POST["evenement_coorganisateur_en"], ENT_NOQUOTES, 'UTF-8' ))."', 
 					evenement_rubrique = '".$_POST["evenement_rubrique"]."',
-					evenement_keyword = '".$_POST["evenement_keyword"]."',
 					evenement_image = '".$photo."',
 					evenement_facebook = '".$_POST["evenement_facebook"]."',
 					evenement_editeur_id = '".$_SESSION['id']."',
@@ -41,11 +41,21 @@ if( isset($_POST['evenement_id']) ){
 				WHERE evenement_id = '".$_POST['evenement_id']."'";
 		mysql_query($sql) or die(mysql_error());
 		
+		//enregistrement des liaisons avec les groupes partagés
 		$sql="DELETE FROM sp_rel_evenement_groupe WHERE evenement_id = '".$_POST['evenement_id']."'";
 		mysql_query($sql) or die(mysql_error());
 
 		for ($i = 0; $i < count($_POST['groupes']); $i++) {
 			$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$_POST['evenement_id']."', '".$_POST['groupes'][$i]."')";
+			mysql_query($sqlinsert) or die(mysql_error());
+		}
+
+		//enregistrement des liaisons avec les mots-clés
+		$sql="DELETE FROM sp_rel_evenement_keyword WHERE evenement_id = '".$_POST['evenement_id']."'";
+		mysql_query($sql) or die(mysql_error());
+
+		for ($i = 0; $i < count($_POST['keywords']); $i++) {
+			$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$_POST['evenement_id']."', '".$_POST['keywords'][$i]."')";
 			mysql_query($sqlinsert) or die(mysql_error());
 		}
 		
@@ -310,6 +320,34 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 	$sqlGetOrganisme ="SELECT organisme_id, organisme_url_front FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
 	$resGetOrganisme= mysql_query($sqlGetOrganisme) or die(mysql_error());
 	$rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
+
+	if($core->isAdmin && $core->userLevel<=1){
+		$sqlGroupes ="SELECT * FROM sp_groupes ORDER BY groupe_libelle ASC";
+		$resGroupes = mysql_query($sqlGroupes) or die(mysql_error());
+
+		$sqlKeywords ="SELECT * FROM sp_keywords ORDER BY keyword_nom ASC";
+		$sqlKeywords = mysql_query($sqlKeywords) or die(mysql_error());
+
+		$sqllieux ="SELECT * FROM sp_lieux ORDER BY lieu_nom ASC";
+		$reslieux = mysql_query($sqllieux) or die(mysql_error());
+
+		$sqlcodes ="SELECT * FROM sp_codes_batiments ORDER BY code_batiment_nom ASC";
+		$rescodes = mysql_query($sqlcodes) or die(mysql_error());
+	}
+	else{
+		$sqlGroupes ="SELECT * FROM sp_groupes WHERE groupe_organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY groupe_libelle ASC";
+		$resGroupes = mysql_query($sqlGroupes) or die(mysql_error());
+
+		$sqlKeywords ="SELECT * FROM sp_keywords WHERE keyword_organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY keyword_nom ASC";
+		$sqlKeywords = mysql_query($sqlKeywords) or die(mysql_error());
+
+		$sqllieux ="SELECT * FROM sp_lieux as spl, sp_rel_lieu_organisme as sprl WHERE spl.lieu_id=sprl.lieu_id AND organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY lieu_nom ASC";
+		$reslieux = mysql_query($sqllieux) or die(mysql_error());
+
+		$sqlcodes ="SELECT * FROM sp_codes_batiments, sp_rel_batiment_organisme WHERE batiment_id=code_batiment_id AND organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY code_batiment_nom ASC";
+		$rescodes = mysql_query($sqlcodes) or die(mysql_error());
+	}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -429,61 +467,43 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 					<select name="evenement_rubrique" id="evenement_rubrique">
 						<option value="-1">Choisir</option>
 					<?php
-						if($core->isAdmin && $core->userLevel<=1){
-							$sqlGroupes ="SELECT * FROM sp_groupes ORDER BY groupe_libelle ASC";
-							$resGroupes = mysql_query($sqlGroupes) or die(mysql_error());  
-							
-							while($rowGroupe = mysql_fetch_array($resGroupes)){ 
+						while($rowGroupe = mysql_fetch_array($resGroupes)){ 
 					?>
-								<optgroup label="<?php echo $rowGroupe['groupe_libelle'];?>">
+							<optgroup label="<?php echo $rowGroupe['groupe_libelle'];?>">
 					<?php
 							
-								$sqlrubriques ="SELECT * FROM sp_rubriques WHERE rubrique_groupe_id='".$rowGroupe['groupe_id']."' ORDER BY rubrique_titre ASC";
-								$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
-								while($rowrubrique = mysql_fetch_array($resrubriques)){
+							$sqlrubriques ="SELECT * FROM sp_rubriques WHERE rubrique_groupe_id='".$rowGroupe['groupe_id']."' ORDER BY rubrique_titre ASC";
+							$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
+							while($rowrubrique = mysql_fetch_array($resrubriques)){
 					?>
-									<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($row['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
-						<?php
-								}
-							}  
-						}
-						else{
-							$sqlGroupes ="SELECT * FROM sp_groupes WHERE groupe_organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY groupe_libelle ASC";
-							$resGroupes = mysql_query($sqlGroupes) or die(mysql_error());  
-							
-							while($rowGroupe = mysql_fetch_array($resGroupes)){ 
-					?>
-								<optgroup label="<?php echo $rowGroupe['groupe_libelle'];?>">
+								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($row['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
 					<?php
-							
-								$sqlrubriques ="SELECT * FROM sp_rubriques WHERE rubrique_groupe_id='".$rowGroupe['groupe_id']."' ORDER BY rubrique_titre ASC";
-								$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
-								while($rowrubrique = mysql_fetch_array($resrubriques)){
-					?>
-									<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($row['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
-						<?php
-								}
 							}
-						}
+						}  
 					?>
 					</select>
 				</p>
 
-				<p>
-					<label for="evenement_keyword" class="inline">Mot-clé :</label>
-					<select name="evenement_keyword" id="evenement_keyword">
-						<option value="-1" selected="selected">Choisir</option>
-					<?php
-						$sqlKeywords ="SELECT * FROM sp_keywords WHERE keyword_organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY keyword_nom ASC";
-						$sqlKeywords = mysql_query($sqlKeywords) or die(mysql_error());  
-							
+				<p class="legend">Mots-clés :</p>
+				<p> 
+					<?php         
+						/*$sqlGetOrganisme2 ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo, sp_evenements as spe WHERE spe.evenement_groupe_id=spg.groupe_id AND spg.groupe_organisme_id=spo.organisme_id AND evenement_id='".$_GET['id']."'";
+						$resGetOrganisme2= mysql_query($sqlGetOrganisme2) or die(mysql_error());
+						$rowGetOrganisme2 = mysql_fetch_array($resGetOrganisme2);*/
 						while($rowKeyword = mysql_fetch_array($sqlKeywords)){ 
+							$sqlRels ="SELECT * FROM sp_rel_evenement_keyword WHERE evenement_id='".$_GET['id']."'";
+							$resRels= mysql_query($sqlRels) or die(mysql_error());
+							$appartient=false;
+							while($rowRel = mysql_fetch_array($resRels)){
+								if($rowRel['keyword_id']==$rowKeyword['keyword_id']){
+									$appartient=true;
+								}
+							}
 					?>
-							<option value="<?php echo $rowKeyword['keyword_id'];?>" <?php if($row['evenement_keyword']==$rowKeyword['keyword_id']){echo "selected=\"selected\"";} ?>><?php echo $rowKeyword['keyword_nom'];?></option>
-						<?php
+							<input type="checkbox" name="keywords[]" value="<?php echo $rowKeyword['keyword_id'];?>" id="keyword_<?php echo $rowKeyword['keyword_id'];?>" <?php if($appartient){echo "checked";}?> /><label for="keyword_<?php echo $rowKeyword['keyword_id'];?>" class="checkbox" ><?php echo $rowKeyword['keyword_nom'];?></label>
+					<?php
 						}
-					?> 
-					</select>
+					?>
 				</p>
 
 				<p>
@@ -657,8 +677,6 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 						<label for="session_lieu_creation">Lieu / Salle / Amphi :</label>
 						<select name="session_lieu_creation" id="session_lieu_creation" style="width:250px;">
 						<?php
-							$sqllieux ="SELECT * FROM sp_lieux ORDER BY lieu_nom ASC";
-							$reslieux = mysql_query($sqllieux) or die(mysql_error());
 							while($rowlieu = mysql_fetch_array($reslieux)){
 								echo '<option value="'.$rowlieu['lieu_id'].'">'.$rowlieu['lieu_nom'].'</option>';
 							}
@@ -671,10 +689,8 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 						<label for="session_code_batiment_creation">Code du bâtiment :</label>
 						<select name="session_code_batiment_creation" id="session_code_batiment_creation"  style="width:300px;">
 						<?php
-							$sqlcodes ="SELECT * FROM sp_codes_batiments ORDER BY code_batiment_nom ASC";
-							$rescodes = mysql_query($sqlcodes) or die(mysql_error());
 							while($rowcode = mysql_fetch_array($rescodes)){
-								echo '<option value="'.$rowcode['code_batiment_id'].'">'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode($rowcode['code_batiment_adresse']).'</option>';
+								echo '<option value="'.$rowcode['code_batiment_id'].'">'.$rowcode['code_batiment_nom'].' => '.$rowcode['code_batiment_adresse'].'</option>';
 							}
 						   
 							echo '<option value="-1" selected="selected">aucun</option>';

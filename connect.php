@@ -3,7 +3,7 @@
 // configuration /////////////////////////////////////
 $host = 'localhost';
 $user = 'root';
-$password = 'z6po';
+$password = 'root';
 $database = 'evenements';
 
 // make the connection //////////////////////////////

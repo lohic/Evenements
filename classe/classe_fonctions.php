@@ -1,7 +1,11 @@
 <?php
-include_once('../inscription/makeTicket.php');
-include_once('tcpdf_min/config/lang/eng.php');
-include_once('tcpdf_min/tcpdf.php');
+include_once(REAL_LOCAL_PATH.'inscription/makeTicket.php');
+include_once(REAL_LOCAL_PATH.'classe/tcpdf_min/config/lang/eng.php');
+include_once(REAL_LOCAL_PATH.'classe/tcpdf_min/tcpdf.php');
+include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
+include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
+//include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
+
 class Func {
 	/*
 	@ GESTION DES FONCTIONS
@@ -55,7 +59,6 @@ class Func {
 						if ( isset($info[$i]["sn"][0]) ){			$retour->nom	= $info[$i]["sn"][0]; }
 						if ( isset($info[$i]["mail"][0]) ){			$retour->email	= $info[$i]["mail"][0]; }
 						if ( isset($info[$i]["employeetype"][0]) ){	$retour->type	= $info[$i]["employeetype"][0]; }
-
 					}
 					ldap_close($ldapconn);
 				} else {
@@ -226,7 +229,7 @@ class Func {
 		$mailEnvoi -> SMTPAuth = FALSE;
 		$mailEnvoi -> From     = 	'no.reply@sciences-po.fr';
 		$mailEnvoi -> FromName =	utf8_decode('Sciences Po | événements');
-		$mailEnvoi -> AddReplyTo(  );
+		$mailEnvoi -> AddReplyTo('no.reply@sciences-po.fr');
 		$mailEnvoi -> WordWrap = 72;
 		$mailEnvoi -> IsHTML( TRUE );
 		

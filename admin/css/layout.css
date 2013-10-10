@@ -324,6 +324,12 @@ body {
 	font-size:0.75em;
 } 
 
+.bloc_modif a.rss, .bloc_modif a.rss:hover{
+	font-weight:bold;
+	color:#333333;
+	font-size:0.75em;
+} 
+
 .bloc_modif label.checkbox{
 	width:185px; 
 	height:30px;
@@ -424,11 +430,11 @@ span.image{
 }
 
 .couleur_modif{
-	height:200px;
-	position:absolute;
-	right:-15px;
-	top:-190px;
-	width:35px;
+	height: 243px;
+    position: absolute;
+    right: -15px;
+    top: -240px;
+    width: 35px;
 }
 
 
@@ -738,6 +744,12 @@ input.chiffre{
 input[type="file"]{
 	float:left;
 	margin-right:20px;
+	color:#333;
+}
+
+a.supprimer{
+	display: block;
+    margin-top: 4px;
 }
 
 #session_places_internes_totales, #session_places_internes_totales_vision, 
@@ -1020,6 +1032,11 @@ div.clear{
 	color:#333333;
 	margin-top:25px;
 } 
+
+.bloc_modif h4.clear_both{
+	clear: both;
+	padding-top: 15px;
+}
 
 #select_group{
 	float:right; 
