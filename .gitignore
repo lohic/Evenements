@@ -8,6 +8,9 @@ config.php
 *.sublime-project
 *.sublime-workspace
 
+billet/*
+!billet/index.php
+
 # OS generated files #
 ######################
 .DS_Store

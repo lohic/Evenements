@@ -75,9 +75,9 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-		$this->generate_pdf();
-		$this->generate_passcode();
-		$this->generate_mail();
+		$this->PDFurl 		= $this->generate_pdf();
+		$this->passbookFile = $this->generate_passcode();
+		$this->HTMLticket	= $this->generate_mail();
 	}
 
 	/**
