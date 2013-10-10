@@ -1,11 +1,11 @@
 <?php 
 session_start(); 
-
+include_once('../vars/config.php');
 // security
 //include('cookie.php');
 
 // connection to data base
-include('connect.php');
+//include('connect.php');
 
 // functions library
 include('functions.php');
@@ -191,38 +191,8 @@ if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer"){
 						echo '<option value="'.$rowrubrique['rubrique_id'].'"'.$selected.'>'.utf8_encode($rowrubrique['rubrique_titre']).'</option>';
 					}
 					?>
-
 				</select>   
-			       
-			
-			<?php
-				 
-				//if ( $totalPages > 0 ) {
-			?>
-				<!--	MODIF DE LOIC
-                <span class="pagination">Page n° : 
-			<?php
-					/*for ($i = 1 ; $i <= $totalPages ; $i++) {
-						if($i!=1){
-							echo " | ";
-						}
-						
-						if ( $i == $page ) {
-							echo "<strong> ".$i." </strong>";
-						} else {
-							if ( isset($_GET['mois']) ) {
-								echo "<a href=\"list.php?year=".$_GET['year']."&amp;mois=".$_GET['mois']."&amp;page=".$i."\"> ".$i." </a> ";					
-							} else {
-								echo "<a href=\"list.php?page=".$i."\"> ".$i." </a>";					
-							}					
-						}
-					}*/
-			?>
-				</span>-->
 			</p>
-			<?php
-				//}
-			?>
 		</div>
     		<?php
 			if(isset($_GET['mois'])){

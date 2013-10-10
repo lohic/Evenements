@@ -12,7 +12,7 @@ $(document).ready(function(){
 	var sauv = 0;
 	var $container = $('#liste_evenements'), filters = {};
 	
-	$('.event>h1>a').click(function(e){
+	$('.event>h1>a, .event > p > a.suite').click(function(e){
 		e.preventDefault();
 		
 		var nextLastRowEvent;
@@ -23,7 +23,9 @@ $(document).ready(function(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
+		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height(sauv);
 		sauv = $(this).parent().parent().height();
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
@@ -36,22 +38,27 @@ $(document).ready(function(){
 
 		$(this).parent().parent().addClass('selectedEvent');
 		
-		clickEvent($('.selectedEvent'));
+		var classe = $(this).attr('class').split(' ')[1];
+		var couleur = classe.split('_')[1];
+		couleur = couleur.split('#')[1];
+		clickEvent($('.selectedEvent'), sauv);
+		$('.selectedEvent').css('background','none');
 		$('.selectedEvent > a').css('display','none');
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
-		$('.selectedEvent > span').css('display','none');
-		
-	    // on evite le comportement normal du click
-	    
+		$('.selectedEvent > span').css('display','none');	
+		$('.selectedEvent > div.triangle_inverse').css('display','block');
+
+		$('.isotope-item').removeClass('sinscrireEvent');
+	    // on evite le comportement normal du click   
 	});
 
 	$('a.sinscrire').click(function(e){
+		e.preventDefault();
 		$('.isotope-item').removeClass('sinscrireEvent');
 		$(this).parent().addClass('sinscrireEvent');
 		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
 		if($('.sinscrireEvent').hasClass('en')){
 			var la_langue="en";
 		}
@@ -65,7 +72,6 @@ $(document).ready(function(){
 			code="oui";
 		}
 
-		e.preventDefault();
 		$.ajax({
 	        url     :"ajax/get_event_infos_inscription.php",
 	        type    : "GET",
@@ -457,7 +463,7 @@ $(function(){
 			getNextLast($('.selectedEvent'));
 			$('.isotope-hidden').removeClass('first last');
 
-			initIsotopeOuvert();
+			//initIsotopeOuvert();
 	    }
 	});
 
@@ -467,7 +473,9 @@ $(function(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
+		$('.selectedEvent').css('background','#fff');
 		$('.selectedEvent').height($('.selectedEvent').height()-15);
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 
@@ -578,16 +586,18 @@ $(function(){
 		return false;
 
 		var sauv = 0;
-		$('.event>h1>a').click(function(e){
+		$('.event>h1>a, .event > p > a.suite').click(function(e){
 			e.preventDefault();
 			var nextLastRowEvent;
 			var prevFirstRowEvent;
 			console.log('click on event');
 			//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
+			
 			$('.selectedEvent > a').css('display','block');
 			$('.selectedEvent > img').css('display','inline-block');
 			$('.selectedEvent > p').css('display','block');
 			$('.selectedEvent > div').css('display','block');
+			$('.selectedEvent > div.triangle_inverse').css('display','none');
 			$('.selectedEvent > span').css('display','block');
 			$('.selectedEvent').height(sauv);
 			sauv = $(this).parent().parent().height();
@@ -601,14 +611,18 @@ $(function(){
 
 			$(this).parent().parent().addClass('selectedEvent');
 			
-			clickEvent($('.selectedEvent'));
+			var classe = $(this).attr('class').split(' ')[1];
+			var couleur = classe.split('_')[1];
+			couleur = couleur.split('#')[1];
+			clickEvent($('.selectedEvent'), sauv);
+			$('.selectedEvent').css('background','none');
 			$('.selectedEvent > a').css('display','none');
 			$('.selectedEvent > img').css('display','none');
 			$('.selectedEvent > p').css('display','none');
 			$('.selectedEvent > div').css('display','none');
-			$('.selectedEvent > span').css('display','none');
+			$('.selectedEvent > span').css('display','none');	
+			$('.selectedEvent > div.triangle_inverse').css('display','block');
 		    // on evite le comportement normal du click
-		    
 		});
 
 		$('a.sinscrire').click(function(e){
@@ -759,6 +773,7 @@ function initIsotopeOuvert(){
 		$('.selectedEvent > img').css('display','inline-block');
 		$('.selectedEvent > p').css('display','block');
 		$('.selectedEvent > div').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','none');
 		$('.selectedEvent > span').css('display','block');
 		$('.selectedEvent').height(sauv);
 		sauv = monBloc.height();
@@ -779,11 +794,12 @@ function initIsotopeOuvert(){
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
+		$('.selectedEvent > div.triangle_inverse').css('display','block');
 		$('.selectedEvent > span').css('display','none');
 	}
 }
 
-function clickEvent(clickedElement){
+function clickEvent(clickedElement, sauv){
 	var nextLastRowEvent;
 	var prevFirstRowEvent;
 	// on eneleve les classe selected et selectedEvent
@@ -830,6 +846,7 @@ function clickEvent(clickedElement){
 	        twitter: dataJSON.twitter,
 	        ical: dataJSON.ical,
 	        sinscrire: dataJSON.sinscrire,
+	        medias: dataJSON.medias,
 	    };
 	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
 		var $newItems = ich.event_info(event_data);
@@ -849,8 +866,13 @@ function clickEvent(clickedElement){
 			$('.selectedEvent > img').css('display','inline-block');
 			$('.selectedEvent > p').css('display','block');
 			$('.selectedEvent > div').css('display','block');
+			$('.selectedEvent > div.triangle_inverse').css('display','none');
 			$('.selectedEvent > span').css('display','block');
-			$('.selectedEvent').height($('.selectedEvent').height()-15);
+			$('.selectedEvent').css('background','#fff');
+
+			$('.selectedEvent').height(sauv);
+			//$('.selectedEvent').height($('.selectedEvent').height()-15);
+
 			$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 			$('#liste_evenements').isotope( 'remove', $('.resume') );
 			console.log('> suppr resume');
@@ -859,7 +881,7 @@ function clickEvent(clickedElement){
 			e.preventDefault();
 		});
 
-		$('a.sinscrire').click(function(e){
+		$('.resumeContent a.sinscrire').click(function(e){
 			var code = "";
 
 			if($(this).attr('id')=="avec_code"){
@@ -906,7 +928,7 @@ function clickEvent(clickedElement){
 		    });
 		});
 
-		$('a.sinscrire_multiple').click(function(e){
+		$('.resumeContent a.sinscrire_multiple').click(function(e){
 			var code = "";
 
 			if($(this).attr('id')=="avec_code"){
@@ -1233,7 +1255,9 @@ $(window).resize(function() {
 	$('.selectedEvent > img').css('display','inline-block');
 	$('.selectedEvent > p').css('display','block');
 	$('.selectedEvent > div').css('display','block');
+	$('.selectedEvent > div.triangle_inverse').css('display','none');
 	$('.selectedEvent > span').css('display','block');
+	$('.selectedEvent').css('background','#fff');
 	$('.selectedEvent').height($('.selectedEvent').height()-15);
 	$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 });

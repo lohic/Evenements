@@ -1,4 +1,5 @@
 <?php
+include_once('../vars/config.php');
 include('cookie.php');
 
 // connection to data base
@@ -18,6 +19,22 @@ $heure_fin = date("H:i",$row3['session_fin']);
 
 if($heure_fin=="23:59"){
 	$heure_fin="inconnue";
+}
+include_once('../classe/classe_core_event.php');
+$core = new core();
+if($core->isAdmin && $core->userLevel<=1){
+	$sqllieux ="SELECT * FROM sp_lieux ORDER BY lieu_nom ASC";
+	$reslieux = mysql_query($sqllieux) or die(mysql_error());
+
+	$sqlcodes ="SELECT * FROM sp_codes_batiments ORDER BY code_batiment_nom ASC";
+	$rescodes = mysql_query($sqlcodes) or die(mysql_error());
+}
+else{
+	$sqllieux ="SELECT * FROM sp_lieux as spl, sp_rel_lieu_organisme as sprl WHERE spl.lieu_id=sprl.lieu_id AND organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY lieu_nom ASC";
+	$reslieux = mysql_query($sqllieux) or die(mysql_error());
+
+	$sqlcodes ="SELECT * FROM sp_codes_batiments, sp_rel_batiment_organisme WHERE batiment_id=code_batiment_id AND organisme_id='".$rowGetOrganisme['organisme_id']."' ORDER BY code_batiment_nom ASC";
+	$rescodes = mysql_query($sqlcodes) or die(mysql_error());
 }
 
 ?>
@@ -77,26 +94,14 @@ if($heure_fin=="23:59"){
 			<select name="session_lieu" id="session_lieu" style="width:250px;">
 			<?php
 				$estsalle = false;
-				$sqllieux ="SELECT * FROM sp_lieux ORDER BY lieu_nom ASC";
-				$reslieux = mysql_query($sqllieux) or die(mysql_error());
 				while($rowlieu = mysql_fetch_array($reslieux)){
 					echo '<option value="'.$rowlieu['lieu_id'].'" ';
 					if($row3['session_lieu']==$rowlieu['lieu_id']){
 						echo "selected=\"selected\"";
 						$estsalle =true;
 					}
-					echo '>'.utf8_encode(stripslashes($rowlieu['lieu_nom'])).'</option>';
+					echo '>'.stripslashes($rowlieu['lieu_nom']).'</option>';
 				}
-				/*
-				
-				foreach($salles as $salle){
-					echo '<option value="'.$salle.'" ';
-					if($row3['session_lieu']==$salle){
-						echo "selected=\"selected\"";
-						
-					}
-					echo '>'.$salle.'</option>';
-				}*/
 				if($estsalle){
 					echo '<option value="-1">aucun</option>';
 				}
@@ -105,46 +110,22 @@ if($heure_fin=="23:59"){
 				}
 			?>	
 			</select> 
-			<?php
-				/*if(!$estsalle && $row3['session_lieu']!=""){
-			?>
-					<input name="session_complement_lieu" type="text" class="inputField inputdroit" id="session_complement_lieu" value="<?php echo $row3['session_lieu']; ?>"/>
-			<?php	
-				}
-				else{
-			?>
-					<input name="session_complement_lieu" type="text" class="inputField inputdroit" id="session_complement_lieu" value=""  style="display:none;"/>
-			<?php		
-				}*/
-			?>
 		</p>
 		<p>
 			<label for="session_code_batiment">Code du bâtiment :</label>
 			<select name="session_code_batiment" id="session_code_batiment"  style="width:300px;">
 			<?php
 				$estbatiment = false;
-				$sqlcodes ="SELECT * FROM sp_codes_batiments ORDER BY code_batiment_nom ASC";
-				$rescodes = mysql_query($sqlcodes) or die(mysql_error());
 				while($rowcode = mysql_fetch_array($rescodes)){
 					echo '<option value="'.$rowcode['code_batiment_id'].'" ';
 					if($row3['session_code_batiment']==$rowcode['code_batiment_id']){
 						echo "selected=\"selected\"";
 						$estbatiment = true;
 					}
-					echo '>'.utf8_encode($rowcode['code_batiment_nom']).' => '.utf8_encode(stripslashes($rowcode['code_batiment_adresse'])).'</option>';
+					echo '>'.$rowcode['code_batiment_nom'].' => '.stripslashes($rowcode['code_batiment_adresse']).'</option>';
 					
 				}
 			
-				/*
-				
-				foreach($batiments as $cle => $valeur){
-					echo '<option value="'.$cle.'" ';
-					if($row3['session_code_batiment']==$cle){
-						echo "selected=\"selected\"";
-						
-					}
-					echo '>'.$valeur.'</option>';
-				}*/
 				if($estbatiment){
 					echo '<option value="-1">aucun</option>';
 				}
@@ -153,18 +134,6 @@ if($heure_fin=="23:59"){
 				}
 			?>
 			</select>
-			<?php
-				/*if(!$estbatiment && $row3['session_code_batiment']!=""){
-			?>
-					<input name="session_complement_batiment" type="text" class="inputField inputdroit" id="session_complement_batiment" value="<?php echo $row3['session_code_batiment']; ?>"/>
-			<?php	
-				}
-				else{
-			?>
-					<input name="session_complement_batiment" type="text" class="inputField inputdroit" id="session_complement_batiment" value="" style="display:none;"/>
-			<?php		
-				}*/
-			?>
 		</p>
 		
 		<p>
