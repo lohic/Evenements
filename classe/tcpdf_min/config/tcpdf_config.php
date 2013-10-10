@@ -77,7 +77,7 @@
  * Cache directory for temporary files (full path).
  */
 //define ('K_PATH_CACHE', sys_get_temp_dir().'/');
-define ('K_PATH_CACHE', '/Users/loic/Sites/Site_SCIENCESPO_EVENEMENTS/billet/cache/');
+define ('K_PATH_CACHE', REAL_LOCAL_PATH.'billet/cache/');
 /**
  * Generic name for a blank image.
  */

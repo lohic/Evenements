@@ -55,7 +55,7 @@ class Billet {
 			$this->mois			= $temp_date[1];
 			$this->annee		= $temp_date[2];
 
-			$this->nom 			= 'Horellou jh hk kh k ljhkh lk hlkh hlkjhkhhkjhlkhlkhkjh';
+			$this->nom 			= 'Horellou jh hk kh k ljhkh lk hlkh';
 			$this->prenom 		= 'Loïc';
 			$this->statut		= 'interne';
 
@@ -306,7 +306,7 @@ class Billet {
 		// set default monospaced font
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetMargins(PDF_MARGIN_LEFT, 15, PDF_MARGIN_RIGHT);
 		// set auto page breaks
 		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
@@ -351,7 +351,7 @@ class Billet {
 		);
 	
 
-		$barcode1D = '<tcpdf method="write1DBarcode" params="'.$pdf->serializeTCPDFtagParameters(array($this->unique_id, 'C128B', '', '', 90, 30, 0.4, $style, 'N')).'" />';
+		$barcode1D = '<tcpdf method="write1DBarcode" params="'.$pdf->serializeTCPDFtagParameters(array($this->unique_id, 'C128B', '', '', 90, 20, 0.4, $style, 'N')).'" />';
 
 		ob_start();
 			include_once($template_billet);
