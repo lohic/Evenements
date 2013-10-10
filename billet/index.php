@@ -4,7 +4,7 @@
 include('../classe/classe_billet.php');
 
 
-$billet = new billet('1202101936871');
+$billet = new billet('3220110088396');
 
 
-echo $billet->PDFurl;
+echo $billet->HTMLticket;

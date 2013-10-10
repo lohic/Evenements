@@ -188,6 +188,12 @@ class Api {
 		$sql_session_info_query	= mysql_query($sql_session_info) or die(mysql_error());
 		$session_info			= mysql_fetch_assoc($sql_session_info_query);
 
+		$is_inscrits = 	(intVal($session_info['places_internes_prises'])
+						+intVal($session_info['places_externes_prises'])
+						+intVal($session_info['places_internes_prises_visio'])
+						+intVal($session_info['places_externes_prises_visio'])) > 0 ? 1 : 0;
+
+
 		$this->json->session = new stdClass();
 
 		$this->json->session->id 					= $session_info['id'];
@@ -200,6 +206,7 @@ class Api {
 		$this->json->session->nom_adresse 			= $session_info['nom_adresse'];
 		$this->json->session->adresse 				= $session_info['adresse'];
 		$this->json->session->code_batiment_nom 	= $session_info['code_batiment_nom'];
+		$this->json->session->is_inscrits 			= $is_inscrits;
 
 		// important pour plasma
 		$this->json->session->mois					= date("m",$session_info['event_date']);
@@ -334,7 +341,11 @@ class Api {
 															S.session_lien".$add." AS url,
 															S.session_complement_type_inscription AS type_inscription,
 															S.session_adresse1 AS nom_adresse,
-															S.session_adresse2 AS adresse
+															S.session_adresse2 AS adresse,
+															S.session_places_internes_prises AS places_internes_prises,
+															S.session_places_externes_prises AS places_externes_prises,
+															S.session_places_internes_prises_visio AS places_internes_prises_visio,
+															S.session_places_externes_prises_visio AS places_externes_prises_visio
 													FROM sp_sessions AS S
 													LEFT JOIN sp_lieux AS L
 														ON S.session_lieu = L.lieu_id
@@ -347,6 +358,11 @@ class Api {
 		$sessions = array();
 
 		while ($session = mysql_fetch_assoc($sql_event_info_query)){
+
+			$is_inscrits = 	(intVal($session['places_internes_prises'])
+						+intVal($session['places_externes_prises'])
+						+intVal($session['places_internes_prises_visio'])
+						+intVal($session['places_externes_prises_visio'])) > 0 ? 1 : 0;
 
 			$sessionjson = new stdClass();
 
@@ -363,6 +379,7 @@ class Api {
 			$sessionjson->adresse 			= $session['adresse'];
 			$sessionjson->url 				= $session['url'];
 			$sessionjson->type_inscription 	= $session['type_inscription'];
+			$sessionjson->is_inscrits 		= $is_inscrits;
 
 
 			$sessions[$session['id']] = $sessionjson;
@@ -428,7 +445,11 @@ class Api {
 											E.evenement_date AS date1 ,
 											S.session_id AS session_id,
 											S.session_nom'.$add.' AS session_titre,
-											S.session_debut AS session_date1
+											S.session_debut AS session_date1,
+											S.session_places_internes_prises AS places_internes_prises,
+											S.session_places_externes_prises AS places_externes_prises,
+											S.session_places_internes_prises_visio AS places_internes_prises_visio,
+											S.session_places_externes_prises_visio AS places_externes_prises_visio
 											FROM sp_evenements AS E, sp_organismes AS O, sp_groupes AS G, sp_sessions AS S
 											WHERE E.evenement_statut=3
 											AND E.evenement_date >= %s
@@ -448,6 +469,11 @@ class Api {
 
 		while ($eventdata = mysql_fetch_assoc($sql_liste_events_query)){
 
+			$is_inscrits = 	(intVal($eventdata['places_internes_prises'])
+						+intVal($eventdata['places_externes_prises'])
+						+intVal($eventdata['places_internes_prises_visio'])
+						+intVal($eventdata['places_externes_prises_visio'])) >0 ? 1 : 0;
+
 			if(! isset( $liste_events[$eventdata['id']] )) {
 				$event = new stdClass();
 				$event->id 		= $eventdata['id'];
@@ -458,6 +484,7 @@ class Api {
 				$session->id	= $eventdata['session_id'];
 				$session->titre = $eventdata['session_titre'];
 				$session->date 	= date('Y-m-d', $eventdata['session_date1']);
+				$session->is_inscrits 	= $is_inscrits;
 
 				$event->sessions[$eventdata['session_id']] = $session;
 
@@ -467,6 +494,7 @@ class Api {
 				$session->id	= $eventdata['session_id'];
 				$session->titre = $eventdata['session_titre'];
 				$session->date 	= date('Y-m-d', $eventdata['session_date1']);
+				$session->is_inscrits 	= $is_inscrits;
 
 				$liste_events[$eventdata['id']]->sessions[$eventdata['session_id']] = $session;
 			}
