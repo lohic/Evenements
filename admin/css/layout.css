@@ -744,6 +744,12 @@ input.chiffre{
 input[type="file"]{
 	float:left;
 	margin-right:20px;
+	color:#333;
+}
+
+a.supprimer{
+	display: block;
+    margin-top: 4px;
 }
 
 #session_places_internes_totales, #session_places_internes_totales_vision, 
