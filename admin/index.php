@@ -44,7 +44,7 @@ if( isset($_GET['error']) ){
 			break;
 		}
 }
-include_once('../vars/config.php');
+
 include_once('../vars/constantes_vars.php');
 include_once('../vars/statics_vars.php');
 

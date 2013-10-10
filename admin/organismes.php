@@ -1,5 +1,4 @@
 <?php
-include_once('../vars/config.php');
 // security
 include('cookie.php');
 // connection to data base
@@ -12,16 +11,12 @@ if( isset($_POST['type_saisie_organisme'])){
 	if($_POST['type_saisie_organisme']=="modification"){
 		$banniere = retournePhoto($_FILES['organisme_banniere_chemin']['name'], $_POST['banniere_cachee']);
 		$logo = retournePhoto($_FILES['organisme_logo_chemin']['name'], $_POST['logo_cache']);
-		$banniere_facebook = retournePhoto($_FILES['organisme_banniere_facebook_chemin']['name'], $_POST['banniere_facebook_cache']);
-		$footer_facebook = retournePhoto($_FILES['organisme_footer_facebook_chemin']['name'], $_POST['footer_facebook_cache']);
-
+		
 		$sql ="UPDATE sp_organismes SET
 					organisme_nom = '".addslashes($_POST["organisme_nom"])."',
 					organisme_banniere_chemin = '".$banniere."',
 					organisme_banniere_lien = '".$_POST["organisme_banniere_lien"]."',
 					organisme_logo_chemin = '".$logo."',
-					organisme_banniere_facebook_chemin = '".$banniere_facebook."',
-					organisme_footer_facebook_chemin = '".$footer_facebook."',
 					organisme_google_analytics_id = '".$_POST["organisme_google_analytics_id"]."',
 					organisme_couleur = '".$_POST["organisme_couleur"]."',
 					organisme_editeur_id = '".$_SESSION['id']."',
@@ -76,52 +71,6 @@ if( isset($_POST['type_saisie_organisme'])){
 				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
 			}
 		}
-
-		if($_FILES['organisme_banniere_facebook_chemin']['name']!=""){
-			mkdir("upload/banniere_facebook/".$_POST['organisme_id']);
-			// Renseigne ici le chemin de destination de la photo
-			$file_url = 'upload/banniere_facebook/'.$_POST['organisme_id'];
-			// Définition des extensions de fichier autorisées (avec le ".")
-			$extension = getExtension($_FILES['organisme_banniere_facebook_chemin']['name']);
-
-			if(isExtAuthorized($extension)){
-				$banniere_facebook = 'image'.$extension;		
-				// Upload fichier
-				if (@move_uploaded_file($_FILES['organisme_banniere_facebook_chemin']['tmp_name'], $file_url.'/'.$banniere_facebook)){
-					@chmod("$file_url/$banniere_facebook", 0777);
-					$img="$file_url/$banniere_facebook";
-					$repertoire_destination="./".$file_url."/";
-				}
-				else{
-					echo "Erreur, impossible d'envoyer le fichier $banniere_facebook";
-				}
-			}else{
-				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
-			}
-		}
-
-		if($_FILES['organisme_footer_facebook_chemin']['name']!=""){
-			mkdir("upload/footer_facebook/".$_POST['organisme_id']);
-			// Renseigne ici le chemin de destination de la photo
-			$file_url = 'upload/footer_facebook/'.$_POST['organisme_id'];
-			// Définition des extensions de fichier autorisées (avec le ".")
-			$extension = getExtension($_FILES['organisme_footer_facebook_chemin']['name']);
-
-			if(isExtAuthorized($extension)){
-				$footer_facebook = 'image'.$extension;		
-				// Upload fichier
-				if (@move_uploaded_file($_FILES['organisme_footer_facebook_chemin']['tmp_name'], $file_url.'/'.$footer_facebook)){
-					@chmod("$file_url/$footer_facebook", 0777);
-					$img="$file_url/$footer_facebook";
-					$repertoire_destination="./".$file_url."/";
-				}
-				else{
-					echo "Erreur, impossible d'envoyer le fichier $footer_facebook";
-				}
-			}else{
-				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
-			}
-		}
 		
 	}
 
@@ -135,18 +84,8 @@ if( isset($_POST['type_saisie_organisme'])){
 		if(isExtAuthorized($extension)){
 			$logo = 'image'.$extension;
 		}
-
-		$extension = getExtension($_FILES['organisme_banniere_facebook_chemin_creation']['name']);
-		if(isExtAuthorized($extension)){
-			$banniere_facebook = 'image'.$extension;
-		}
-
-		$extension = getExtension($_FILES['organisme_footer_facebook_chemin_creation']['name']);
-		if(isExtAuthorized($extension)){
-			$footer_facebook = 'image'.$extension;
-		}
         
-		$sql ="INSERT INTO sp_organismes VALUES ('', '".addslashes($_POST["organisme_nom_creation"])."', '', '".$_POST["organisme_google_analytics_id_creation"]."', '','".$banniere."','".$_POST['organisme_banniere_lien_creation']."','".$logo."','".$banniere_facebook."','".$footer_facebook."', '".$_POST["organisme_couleur_creation"]."', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."', '".$_POST['organisme_mentions_creation']."', '".$_POST['organisme_url_front_creation']."')";
+		$sql ="INSERT INTO sp_organismes VALUES ('', '".addslashes($_POST["organisme_nom_creation"])."', '', '".$_POST["organisme_google_analytics_id_creation"]."', '','".$banniere."','".$_POST['organisme_banniere_lien_creation']."','".$logo."', '".$_POST["organisme_couleur_creation"]."', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."', '".$_POST['organisme_mentions_creation']."', '".$_POST['organisme_url_front_creation']."')";
 		mysql_query($sql) or die(mysql_error());
        	
 		$lastIdInsert = mysql_insert_id();
@@ -196,52 +135,6 @@ if( isset($_POST['type_saisie_organisme'])){
 			}else{
 				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
 			}
-		}
-
-		if($_FILES['organisme_banniere_facebook_chemin_creation']['name']!=""){
-			mkdir("upload/banniere_facebook/".$lastIdInsert);
-			// Renseigne ici le chemin de destination de la photo
-			$file_url = 'upload/banniere_facebook/'.$lastIdInsert;
-			// Définition des extensions de fichier autorisées (avec le ".")
-			$extension = getExtension($_FILES['organisme_banniere_facebook_chemin_creation']['name']);
-
-			if(isExtAuthorized($extension)){
-				$banniere_facebook = 'image'.$extension;		
-				// Upload fichier
-				if (@move_uploaded_file($_FILES['organisme_banniere_facebook_chemin_creation']['tmp_name'], $file_url.'/'.$banniere_facebook)){
-					@chmod("$file_url/$banniere_facebook", 0777);
-					$img="$file_url/$banniere_facebook";
-					$repertoire_destination="./".$file_url."/";
-				}
-				else{
-					echo "Erreur, impossible d'envoyer le fichier $banniere_facebook";
-				}
-			}else{
-				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
-			}
-		}
-
-		if($_FILES['organisme_footer_facebook_chemin_creation']['name']!=""){
-			mkdir("upload/footer_facebook/".$lastIdInsert);
-			// Renseigne ici le chemin de destination de la photo
-			$file_url = 'upload/footer_facebook/'.$lastIdInsert;
-			// Définition des extensions de fichier autorisées (avec le ".")
-			$extension = getExtension($_FILES['organisme_footer_facebook_chemin_creation']['name']);
-
-			if(isExtAuthorized($extension)){
-				$footer_facebook = 'image'.$extension;		
-				// Upload fichier
-				if (@move_uploaded_file($_FILES['organisme_footer_facebook_chemin_creation']['tmp_name'], $file_url.'/'.$footer_facebook)){
-					@chmod("$file_url/$footer_facebook", 0777);
-					$img="$file_url/$footer_facebook";
-					$repertoire_destination="./".$file_url."/";
-				}
-				else{
-					echo "Erreur, impossible d'envoyer le fichier $footer_facebook";
-				}
-			}else{
-				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
-			}
 		} 
 	} 
 	header("Location:organismes.php?menu_actif=logins"); 
@@ -267,26 +160,6 @@ if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_banniere"){
 if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_logo"){
 	$sql ="UPDATE sp_organismes SET
 				organisme_logo_chemin = ''
-			WHERE organisme_id = '".$_GET['id']."'";
-	mysql_query($sql) or die(mysql_error());  
-	/*$dossier="upload/banniere/".$_GET['id'];
-	clearDir($dossier);*/
-	header("Location:organismes.php?menu_actif=logins");
-}
-
-if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_banniere_facebook"){
-	$sql ="UPDATE sp_organismes SET
-				organisme_banniere_facebook_chemin = ''
-			WHERE organisme_id = '".$_GET['id']."'";
-	mysql_query($sql) or die(mysql_error());  
-	/*$dossier="upload/banniere/".$_GET['id'];
-	clearDir($dossier);*/
-	header("Location:organismes.php?menu_actif=logins");
-}
-
-if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_footer_facebook"){
-	$sql ="UPDATE sp_organismes SET
-				organisme_footer_facebook_chemin = ''
 			WHERE organisme_id = '".$_GET['id']."'";
 	mysql_query($sql) or die(mysql_error());  
 	/*$dossier="upload/banniere/".$_GET['id'];
@@ -337,34 +210,42 @@ if($core->isAdmin && $core->userLevel<=1){
 			<form name="formOrganismeCreation" method="post" enctype="multipart/form-data" action="#" id="formOrganismeCreation">
 				<div class="formulaire_large">
 					<p><label for="organisme_nom_creation">Nom :</label><input name="organisme_nom_creation" type="text" class="inputField" id="organisme_nom_creation" value=""/></p>
+					<!--<p>
+						<label for="organisme_type_creation" class="inline">Droits de l'organisme :</label>
+						<select name="organisme_type_creation" id="organisme_type_creation">
+							<?php
+								$sqlRoles ="SELECT * FROM sp_user_level ORDER BY user_level_libelle ASC";
+								$resRoles= mysql_query($sqlRoles) or die(mysql_error());
+								while($rowRole = mysql_fetch_array($resRoles)){
+									if($rowRole['user_level_level']<=8){
+							?>
+										<option value="<?php echo $rowRole['user_level_level'];?>"><?php echo $rowRole['user_level_libelle'];?></option>
+							<?php 
+									}
+								}
+							?>
+						</select>  
+					</p>-->
 					<p><label for="organisme_google_analytics_id_creation">Identifiant Google :</label><input name="organisme_google_analytics_id_creation" class="inputField" type="text" id="organisme_google_analytics_id_creation" value="" /></p>
 					<p><label for="organisme_couleur_creation">Couleur (hexa : #000000) :</label><input name="organisme_couleur_creation" class="inputFieldTiny" type="text" id="organisme_couleur_creation" value="" /></p>
 					
 					<div class="clear"></div>
-
 					<h4>Bannière</h4>
+					
 				    <p><label for="organisme_banniere_chemin_creation">Fichier image :</label><input type="file" name="organisme_banniere_chemin_creation" id="organisme_banniere_chemin_creation"/></p>
 					<p><label for="organisme_banniere_lien_creation">Lien pour la bannière :</label><input name="organisme_banniere_lien_creation" class="inputField" type="text" id="organisme_banniere_lien_creation" value="" /></p>
-					
 					<div class="clear"></div>
-
 					<h4>Logo</h4>
-				    <p><label for="organisme_logo_chemin_creation">Fichier image :</label><input type="file" name="organisme_logo_chemin_creation" id="organisme_logo_chemin_creation"/></p>
 					
+				    <p><label for="organisme_logo_chemin_creation">Fichier image :</label><input type="file" name="organisme_logo_chemin_creation" id="organisme_logo_chemin_creation"/></p>
 					<div class="clear"></div>
-
-					<h4>Facebook</h4>
-				    <p><label for="organisme_banniere_facebook_chemin_creation">Banniere :</label><input type="file" name="organisme_banniere_facebook_chemin_creation" id="organisme_banniere_facebook_chemin_creation"/></p>
-				    <p><label for="organisme_footer_facebook_chemin_creation">Footer :</label><input type="file" name="organisme_footer_facebook_chemin_creation" id="organisme_footer_facebook_chemin_creation"/></p>	
-
-					<div class="clear"></div>
-
 					<h4>Mentions légales (billet)</h4>
+					
 				    <p style="width:600px;"><label for="organisme_mentions_creation">Texte :</label><textarea name="organisme_mentions_creation" rows="10" cols="20" class="inputField tinymce" id="organisme_mentions_creation"></textarea></p>
 				
 					<div class="clear"></div>
-
 					<h4>URL Front</h4>
+					
 				    <p><label for="organisme_url_front_creation">Chemin :</label><input name="organisme_url_front_creation" type="text" class="inputField" id="organisme_url_front_creation" value=""/></p>
 				</div>
 				<div class="liens">

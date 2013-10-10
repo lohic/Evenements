@@ -455,7 +455,7 @@ function Hex2RGB($color){
 // génération d'un triangle
 // par defaut le triangle est noir de dimension 40x20
 function triangle($couleur='#000000',$largeur=40,$hauteur=20,$name='default'){
-	//triangle normal
+	
 	$col = Hex2RGB($couleur);
 	
 	$image				= imagecreate($largeur,$hauteur);
@@ -469,30 +469,7 @@ function triangle($couleur='#000000',$largeur=40,$hauteur=20,$name='default'){
 	ImageFilledPolygon ($image, $points, 3, $couleur_triangle);
 	
 	if($name == 'default'){
-		$name = 'triangles/triangle_'.$couleur;
-	}
-	imagepng($image, $name.'.png');
-
-	imagedestroy($image);
-}
-
-// génération d'un triangle
-// par defaut le triangle est noir de dimension 40x20
-function triangle_inverse($couleur='#000000',$largeur=40,$hauteur=20,$name='default'){
-	$col = Hex2RGB($couleur);
-	
-	//triangle inversé
-	$image				= imagecreate($largeur,$hauteur);
-	$noir				= imagecolorallocate($image,0,0,0);
-	$couleur_triangle	= imagecolorallocate($image,$col[0],$col[1],$col[2]);
-	$points = array(0, 0, $largeur/2, $hauteur, $largeur, 0);
-	
-	imagecolortransparent($image, $noir);
-	
-	ImageFilledPolygon ($image, $points, 3, $couleur_triangle);
-	
-	if($name == 'default'){
-		$name = 'triangles/triangle_inverse_'.$couleur;
+		$name = 'triangle_'.$couleur;
 	}
 	imagepng($image, $name.'.png');
 

@@ -1,7 +1,5 @@
 <?php
 // security
-include_once('../vars/config.php');
-
 include('cookie.php');
 // connection to data base
 include('connect.php');

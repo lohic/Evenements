@@ -1,5 +1,4 @@
 <?php 
-include_once('../vars/config.php');
 session_start(); 
 // sécurité
 include('cookie.php');
@@ -261,13 +260,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 							<div class="titre_heure">
 								<?php
 									$statut = retourneStatutToutesLettres($row['evenement_statut']);
-									$sqlCouleurOrganisme = mysql_query("SELECT organisme_couleur FROM sp_groupes, sp_organismes WHERE groupe_organisme_id=organisme_id AND groupe_id='".$row['evenement_groupe_id']."'");
-									$resCouleurOrganisme = mysql_fetch_array($sqlCouleurOrganisme);
 								?>	
-									<p class="titre" style="color:<?php echo $resCouleurOrganisme['organisme_couleur'];?>;">
-										<a href="evenement_partage.php?id=<?php echo $row['evenement_id'];?>&amp;menu_actif=evenements" title="modifier" style="color:<?php echo $resCouleurOrganisme['organisme_couleur'];?>;"><?php echo $row['evenement_titre'];?></a>
-										<span class=""><?php echo " (".$statut.")";?><span>
-									</p>
+									<p class="titre"><a href="evenement_partage.php?id=<?php echo $row['evenement_id'];?>&amp;menu_actif=evenements" title="modifier"><?php echo $row['evenement_titre'];?></a><span class=""><?php echo " (".$statut.")";?><span></p>
 							
 								<p><?php echo $horaires;?></p>
 						

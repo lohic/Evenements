@@ -89,7 +89,7 @@ function createSelect($array, $name='', $id = NULL, $additionnal=NULL, $isnull=t
 	if($isnull){ $selectItem .= "\t<option value=\"\" >Aucun</option>\n"; }
 
 	foreach($array as $key => $value){
-		$sep = explode('_',$key);
+		$sep = split('_',$key);
 		
 		if($sep[0]=='separateur'){
 			$selectItem .= "\t<optgroup label=\"$value\"></optgroup>\n";
@@ -118,7 +118,7 @@ function createCombobox($array, $name='', $id = NULL, $selectValue=NULL, $additi
 	if($isnull){ $selectItem .= "\t<option value=\"\" >Aucun</option>\n"; }
 
 	foreach($array as $key => $value){
-		$sep = explode('_',$key);
+		$sep = split('_',$key);
 		
 		if($sep[0]=='separateur'){
 			$selectItem .= "\t<optgroup label=\"$value\"></optgroup>\n";

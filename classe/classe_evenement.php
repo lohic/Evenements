@@ -1,12 +1,13 @@
 <?php
-//include_once('../vars/config.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_session.php');
-include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
-include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
-//include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
-include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
+
+include_once('../vars/config.php');
+include_once('classe_connexion.php');
+include_once('classe_fonctions.php');
+include_once('classe_session.php');
+//include_once('fonctions.php');
+//include_once('connexion_vars.php');
+include_once('class.phpmailer.php');
+include_once('class.smtp.php');
 
 class Evenement {
 	
@@ -57,6 +58,8 @@ class Evenement {
 		// on garde en mémoire le fait que la mise à jour a bien eu lieu
 		self::$updated = true;
 	}
+
+
 	
 	/**
 	* create_event creation ou modification d'un evenement
@@ -262,10 +265,10 @@ class Evenement {
 
 		for($i = 0 ; $i < $borne ; $i++){
 			if($i != ($borne-1)){
-				echo stripslashes($resume[$i])." ";
+				echo $resume[$i]." ";
 			}
 			else{
-				echo stripslashes($resume[$i])."... &nbsp;";
+				echo $resume[$i]."... &nbsp;";
 			}
 		}
 
@@ -351,22 +354,6 @@ class Evenement {
 		return $row['moisUnique'];
 	}
 
-	/**
-	* get_mots récupère les mots-clés liés à un événement
-	* @param $_id => id de l'événement
-	* @return chaine => la chaine de caractère à afficher en classe du bloc événement
-	*/
-	function get_mots($_id=1){
-		$this->evenement_db->connect_db();
-		$sqlmots = sprintf("SELECT * FROM ".TB."rel_evenement_keyword WHERE evenement_id=%s", func::GetSQLValueString($_id, "int"));
-		$resmots= mysql_query($sqlmots) or die(mysql_error());
-		$str = "";
-		while($row = mysql_fetch_array($resmots)){
-			$str.='mot_'.$row['keyword_id'].' ';
-		}
-		return $str;
-	}
-
 
 	/**
 	* get_event_infos récupére les infos pour le détail d'un événement
@@ -375,7 +362,6 @@ class Evenement {
 	* @return JSON => l'objet JSON contiendra les infos de l'événement
 	*/
 	function get_event_infos($_id, $lang){
-		$langues_evenement = array("Français"=>"33", "Anglais"=>"44", "Chinois"=>"86", "Allemand"=>"49", "Danois"=>"45", "Espagnol"=>"34", "Italien"=>"39", "Japonais"=>"83", "Polonais"=>"48", "Russe"=>"7", "Tchèque"=>"420");
 		$this->evenement_db->connect_db();
 		$retour = new stdClass();
 
@@ -407,7 +393,7 @@ class Evenement {
 			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($rowsession1['session_lieu'], "int"));
 			$reslieu = mysql_query($sqllieu) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieu);
-			$lieu = $rowlieu['lieu_nom'];
+			$lieu = utf8_encode($rowlieu['lieu_nom']);
 		}
 		else{
 			$lieu = $rowsession1['session_adresse1'];
@@ -417,7 +403,7 @@ class Evenement {
 			$sqlcode = sprintf("SELECT * FROM ".TB."codes_batiments WHERE code_batiment_id=%s", func::GetSQLValueString($rowsession1['session_code_batiment'], "int"));
 			$rescode = mysql_query($sqlcode) or die(mysql_error());
 			$rowcode = mysql_fetch_array($rescode);
-			$batiment = $rowcode['code_batiment_nom'];
+			$batiment = utf8_encode($rowcode['code_batiment_nom']);
 		}
 		else{
 			$batiment = $rowsession1['session_adresse2'];
@@ -451,21 +437,7 @@ class Evenement {
 		$session = new session();
 
 		$rowSession = $session->get_session($row['evenement_id']);
-        $sinscrireTexte = $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $row['rubrique_couleur']);
-
-        $lesMedias = array();
-        $indice=0;
-
-		$sqlMedias = sprintf("SELECT * FROM ".TB."medias WHERE evenement_id=%s", func::GetSQLValueString($row['evenement_id'], "int"));
-		$resMedias = mysql_query($sqlMedias) or die(mysql_error());
-		if($resMedias){
-			while($rowMedia = mysql_fetch_array($resMedias)){
-	        	if($rowMedia['media_extension']==".jpg" || $rowMedia['media_extension']==".jpeg" || $rowMedia['media_extension']==".png" || $rowMedia['media_extension']==".gif"){
-					$lesMedias[$indice]['fichier'] = '<img src="'.CHEMIN_DOCUMENTS.'evenement_'.$row['evenement_id'].'/'.$rowMedia['media_fichier'].'?cache='.time().'" alt="" width="88"/>';
-					$indice++;
-				}
-			}
-		}
+        $sinscrireTexte = $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $row['rubrique_couleur']); 
 
 		if($lang=="en"){
 			$retour->titre 	= $row['evenement_titre_en'];
@@ -474,7 +446,7 @@ class Evenement {
 			$retour->coorganisateur 	= $row['evenement_coorganisateur_en'];
 			$retour->lien 	= $rowsession1['session_lien_en'];
 			$retour->texte_lien 	= $rowsession1['session_texte_lien_en'];
-			$retour->texte 	= stripslashes($row['evenement_texte_en']);
+			$retour->texte 	= $row['evenement_texte_en'];
 			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre_en']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
 		}
 		else{
@@ -484,7 +456,7 @@ class Evenement {
 			$retour->coorganisateur 	= $row['evenement_coorganisateur'];
 			$retour->lien 	= $rowsession1['session_lien'];
 			$retour->texte_lien 	= $rowsession1['session_texte_lien'];
-			$retour->texte 	= stripslashes($row['evenement_texte']);
+			$retour->texte 	= $row['evenement_texte'];
 			$retour->facebook = "http://www.facebook.com/dialog/feed?app_id=177352718976945&amp;link=".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id']."&amp;picture=".ABSOLU_IMAGES."evenement_".$row['evenement_id']."/mini-".$row['evenement_image']."&amp;name=".$row['evenement_titre']."&amp;caption=".$horaires."&amp;description=".$resumeFacebook."&amp;message=Sciences Po | événements&amp;redirect_uri=".CHEMIN_FRONT_OFFICE; 
 		}
 
@@ -501,7 +473,6 @@ class Evenement {
 		$retour->twitter = "http://twitter.com/home?status=Je participe à cet événement Sciences Po :  ".CHEMIN_FRONT_OFFICE."index.php?id=".$row['evenement_id'];
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		$retour->sinscrire = $sinscrireTexte;
-		$retour->medias 	= $lesMedias;
 		return json_encode($retour);
 	}
 
@@ -529,7 +500,7 @@ class Evenement {
 			$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($row['session_lieu'], "int"));
 			$reslieu = mysql_query($sqllieu) or die(mysql_error());
 			$rowlieu = mysql_fetch_array($reslieu);
-			$lieu = $rowlieu['lieu_nom'];
+			$lieu = utf8_encode($rowlieu['lieu_nom']);
 		}
 		else{
 			$lieu = $row['session_adresse1'];
@@ -674,7 +645,7 @@ class Evenement {
 				$sqllieu = sprintf("SELECT * FROM ".TB."lieux WHERE lieu_id=%s", func::GetSQLValueString($row['session_lieu'], "int"));
 				$reslieu = mysql_query($sqllieu) or die(mysql_error());
 				$rowlieu = mysql_fetch_array($reslieu);
-				$lieu = $rowlieu['lieu_nom'];
+				$lieu = utf8_encode($rowlieu['lieu_nom']);
 			}
 			else{
 				$lieu = $row['session_adresse1'];
@@ -795,7 +766,7 @@ class Evenement {
 			}
 
 			$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$lesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
+			$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
 			$totalInterne = $rowSession['session_places_internes_totales']+$rowSession['session_places_internes_totales_visio'];
 			$totalInternePrises = $rowSession['session_places_internes_prises']+$rowSession['session_places_internes_prises_visio'];
@@ -913,7 +884,7 @@ class Evenement {
 				}
 
 				$lesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-				$lesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
+				$lesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
 				$totalExterne = $rowSession['session_places_externes_totales']+$rowSession['session_places_externes_totales_visio'];
 				$totalExternePrises = $rowSession['session_places_externes_prises']+$rowSession['session_places_externes_prises_visio'];
@@ -1207,7 +1178,7 @@ class Evenement {
 			}
 
 			$toutesLesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$toutesLesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
+			$toutesLesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
 			if($rowSession['session_statut_inscription']==1 && $differenceInterneAmphi!=0){
 				$toutesLesSessions[$indice]['pascomplete'] = true;
@@ -1479,7 +1450,7 @@ class Evenement {
 			}
 
 			$toutesLesSessions[$indice]['horaire'] = $session->get_horaires_session($rowSession['session_debut_datetime'], $rowSession['session_fin_datetime']);
-			$toutesLesSessions[$indice]['lieu'] = $rowlieu['lieu_nom'];
+			$toutesLesSessions[$indice]['lieu'] = utf8_encode($rowlieu['lieu_nom']);
 
 			if($rowSession['session_statut_inscription']==1 && $differenceExterneAmphi!=0){
 				$toutesLesSessions[$indice]['pascomplete'] = true;
@@ -1536,5 +1507,4 @@ class Evenement {
 	}
 
 }
-
 	

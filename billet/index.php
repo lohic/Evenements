@@ -1,12 +1,10 @@
 <?php
 
-include('../vars/config.php');
-include(REAL_LOCAL_PATH.'classe/classe_billet.php');
+
+include('../classe/classe_billet.php');
 
 
-$billet = new billet('3220110088396');
+$billet = new billet('1202101936871');
 
-// echo $billet->HTMLticket;
-// echo $billet->passbookFile;
- echo $billet->PDFurl;
 
+echo $billet->PDFurl;

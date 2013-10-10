@@ -1,8 +1,8 @@
 <?php
 
-//include_once('../vars/config.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
+include_once('../vars/config.php');
+include_once('classe_connexion.php');
+include_once('classe_fonctions.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -76,7 +76,7 @@ class Rubrique {
 	* get_rubriques_organism récupération des rubriques des événements à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_rubriques_organism($_id=1){
+	function get_rubriques_organism($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
@@ -97,7 +97,7 @@ class Rubrique {
 	* get_rubriques_partages récupération des rubriques des événements partagés à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_rubriques_partages($_id=1){
+	function get_rubriques_partages($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){

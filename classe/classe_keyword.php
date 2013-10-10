@@ -1,8 +1,8 @@
 <?php
 
-//include_once('../vars/config.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
-include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
+include_once('../vars/config.php');
+include_once('classe_connexion.php');
+include_once('classe_fonctions.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -33,6 +33,7 @@ class Keyword {
 
 	function updater($_array_val,$_id){
 		// ici on place toutes les fonctions qui servent à mettre à jour ou à créer des objets	
+		
 		if(isset($_array_val['update']) && ($_array_val['update'] == 'update' || $_array_val['update'] == 'create')){
 			$this->create_keyword($_array_val,$_id);
 		}
@@ -54,9 +55,8 @@ class Keyword {
 		$this->evenement_db->connect_db();
 		if(isset($_id)){
 			//MODIFICATION
-			$updateSQL 		= sprintf("UPDATE ".TB."keywords SET keyword_nom=%s, keyword_organisme_id=%s WHERE keyword_id=%s",
+			$updateSQL 		= sprintf("UPDATE ".TB."keywords SET keyword_nom=%s WHERE keyword_id=%s",
 											func::GetSQLValueString($_array_val['keyword_nom'], "text"),
-											func::GetSQLValueString($_array_val['organisme_id'],"int"),
 											func::GetSQLValueString($_id,"int"));
 																										
 			$update_query	= mysql_query($updateSQL) or die(mysql_error());			
@@ -89,12 +89,12 @@ class Keyword {
 	* get_keywords_organism récupération des rubriques des événements à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_keywords_organism($_id=1){
+	function get_keywords_organism($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			$tableauKeywords=array();
-			$sql = sprintf("SELECT spk.keyword_id FROM ".TB."evenements AS spe, ".TB."rel_evenement_keyword AS sprk, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."groupes AS spg WHERE spe.evenement_id = sps.evenement_id AND sprk.evenement_id=spe.evenement_id AND spe.evenement_statut=3 AND sprk.keyword_id=spk.keyword_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() GROUP BY spk.keyword_id", 
+			$sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."groupes AS spg WHERE spe.evenement_id = sps.evenement_id AND spe.evenement_statut=3 AND spe.evenement_keyword=spk.keyword_id AND spg.groupe_organisme_id=%s  AND session_fin_datetime >=NOW() GROUP BY spe.evenement_keyword", 
 									func::GetSQLValueString($_id, "int"));
 			
 			$res = mysql_query($sql)or die(mysql_error());
@@ -110,12 +110,12 @@ class Keyword {
 	* get_keywords_partages récupération des rubriques des événements partagés à venir d'un organisme pour le front office
 	* @param $_id => id de l'organisme
 	*/
-	function get_keywords_partages($_id=1){
+	function get_keywords_partages($_id=1,$debut){
 		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			$tableauKeywords=array();
-		    $sql = sprintf("SELECT spk.keyword_id FROM ".TB."evenements AS spe, ".TB."rel_evenement_keyword AS sprk, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id = sps.evenement_id AND sprk.evenement_id=spe.evenement_id AND sprk.keyword_id=spk.keyword_id AND spe.evenement_statut=3 AND session_fin_datetime >=NOW()  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spk.keyword_id", 
+		    $sql = sprintf("SELECT keyword_id FROM ".TB."evenements AS spe, ".TB."sessions AS sps, ".TB."keywords AS spk, ".TB."rel_evenement_rubrique as spre, ".TB."groupes as spg WHERE spe.evenement_id = sps.evenement_id AND spe.evenement_keyword=spk.keyword_id AND spe.evenement_statut=3 AND session_fin_datetime >=NOW()  AND spre.evenement_id=spe.evenement_id AND spg.groupe_id=spre.groupe_id AND spg.groupe_organisme_id=%s GROUP BY spk.keyword_id", 
 									func::GetSQLValueString($_id, "int")
 									);
 

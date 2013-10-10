@@ -7,8 +7,6 @@ Le système est une web-app PHP/HTML/CSS/JAVASCRIPT.
 
 ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
 
-FLECHES CSS : http://jsfiddle.net/vZfeV/
-
 ###Pour le site
 
 Les classes existantes :
