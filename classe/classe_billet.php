@@ -75,9 +75,9 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-		echo $this->generate_pdf(false);
-		//$this->generate_passcode();
-		//echo $this->generate_mail();
+		$this->generate_pdf();
+		$this->generate_passcode();
+		$this->generate_mail();
 	}
 
 	/**
@@ -217,7 +217,11 @@ class Billet {
 		$pass->addFile( $this->localBilletFolder .'images/icon@2x.png');
 		$pass->addFile( $this->localBilletFolder .'images/logo.png');
 
-		if(!$pass->create(true)) { // Create and output the PKPass
+
+		// Create and output the PKPass
+		if(!$show){
+			return $pass->create(false);
+		}else if(!$pass->create(true)) {
 		    echo 'Error: '.$pass->getError();
 		}
 	}
