@@ -76,15 +76,10 @@ class Billet {
 			$this->big_PDF		= true;
 		}
 
-<<<<<<< HEAD
-		//echo $this->generate_pdf(false);
-		//$this->generate_passcode();
-		//echo $this->generate_mail();
-=======
+
 		$this->PDFurl 			= $this->generate_pdf(false);
 		$this->HTMLticket 		= $this->generate_mail();
 		$this->passbookFile 	= $this->generate_passcode(false);
->>>>>>> 6e603b18bee61778d263ae80cd3192c1bd832694
 	}
 
 
@@ -371,12 +366,6 @@ class Billet {
 		return $chemin;
 	}
 
-<<<<<<< HEAD
-}
-?>
-=======
-
-
 	/**
 	 * Description
 	 * @param type $chaine 
@@ -401,6 +390,5 @@ class Billet {
 		return utf8_encode(strftime('%d %B %Y',strtotime($date)));
 	}
 
-
 }
->>>>>>> 6e603b18bee61778d263ae80cd3192c1bd832694
+?>
