@@ -51,7 +51,7 @@ class Organisme {
 	* @param $_id
 	*/
 	function create_organisme($_array_val,$_id=NULL){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			//MODIFICATION
@@ -112,7 +112,7 @@ class Organisme {
 	@
 	*/
 	function create_user_groupe($_array_val,$_id=NULL){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		if(isset($_id)){
 			//MODIFICATION
@@ -146,7 +146,7 @@ class Organisme {
 	@
 	*/
 	function get_organisme(){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
 		$resOrganisme = mysql_query($sqlOrganisme)or die(mysql_error());
@@ -175,7 +175,7 @@ class Organisme {
 	@
 	*/
 	function get_organisme_edit_liste(){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		$sql_organisme		= sprintf('SELECT * FROM '.TB.'organisme_tb');
 		$sql_organisme_query = mysql_query($sql_organisme) or die(mysql_error());
@@ -201,7 +201,7 @@ class Organisme {
 	}
 	
 	function get_organisme_liste(){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		$sql_organisme		= sprintf('SELECT * FROM '.TB.'organisme_tb');
 		$sql_organisme_query = mysql_query($sql_organisme) or die(mysql_error());
@@ -228,7 +228,7 @@ class Organisme {
 	@
 	*/
 	function get_user_groupe_edit_liste(){
-		$this->news_db->connect_db();
+		$this->evenement_db->connect_db();
 
 		$sql_user_groupe		= sprintf('SELECT * FROM '.TB.'user_groupes_tb');
 		$sql_user_groupe_query = mysql_query($sql_user_groupe) or die(mysql_error());
@@ -261,7 +261,7 @@ class Organisme {
 	*/
 	function suppr_organisme($id=NULL){
 		if(isset($id)){
-			$this->news_db->connect_db();
+			$this->evenement_db->connect_db();
 
 			$supprSQL		= sprintf("DELETE FROM ".TB."organisme_tb WHERE id=%s", func::GetSQLValueString($id,'int'));
 			$suppr_query	= mysql_query($supprSQL) or die(mysql_error());
@@ -287,7 +287,7 @@ class Organisme {
 	*/
 	function suppr_user_groupe($id=NULL){
 		if(isset($id)){
-			$this->news_db->connect_db();
+			$this->evenement_db->connect_db();
 
 			$supprSQL		= sprintf("DELETE FROM ".TB."user_groupes_tb WHERE id=%s", func::GetSQLValueString($id,'int'));
 			$suppr_query	= mysql_query($supprSQL) or die(mysql_error());

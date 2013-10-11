@@ -54,6 +54,8 @@ $(document).ready(function(){
 	    // on evite le comportement normal du click   
 	});
 
+
+
 	$('a.sinscrire').click(function(e){
 		e.preventDefault();
 		$('.isotope-item').removeClass('sinscrireEvent');
@@ -360,7 +362,22 @@ $(document).ready(function(){
 			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
 		}
 	});  
-})
+
+	$('a.soumettre').click(function(e){
+		e.preventDefault();
+		login_soumission = ich.login_soumission_form();
+
+        $.fancybox( login_soumission , {
+            title : 'Proposer un événement',
+        });
+
+        validFancyBox();
+	});
+
+	$('a.plan').fancybox({
+		title : 'Plan',
+	});
+});
 
 
 $(function(){  
@@ -847,6 +864,7 @@ function clickEvent(clickedElement, sauv){
 	        ical: dataJSON.ical,
 	        sinscrire: dataJSON.sinscrire,
 	        medias: dataJSON.medias,
+	        adresse: dataJSON.adresse,
 	    };
 	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
 		var $newItems = ich.event_info(event_data);
@@ -1182,6 +1200,37 @@ function validFancyBox(){
 	        validFancyBox();
 	    });
 	});
+
+	$('a#envoyer_login_soumission, a#renvoyer_login_soumission').click(function(e){
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/login_soumission.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            login:$('#login').val(),
+	            password:$('#password').val()
+	        }
+	    }).done(function (dataJSON) {
+			soumission_data = {
+				title: dataJSON.titre_bloc,
+		        nom:   dataJSON.nom,
+		        prenom: dataJSON.prenom,
+		        erreurLDAP: dataJSON.erreurLDAP,
+		        champVide: dataJSON.champVide,
+	        };
+
+	        soumettre = ich.soumission_form(soumission_data);
+
+	        $.fancybox( soumettre , {
+	            title : 'Proposer un événement',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+
 }
 
 function getNextLast(cible){

@@ -18,7 +18,7 @@
                         {{#inscription}}<p class="inscription"><span style="background-color:{{couleur}}"></span>{{{inscription}}}</p>{{/inscription}}
                         {{#organisateur}}<p class="organisateur"><span style="background-color:{{couleur}}"></span>{{organisateur}}<br/>{{coorganisateur}}</p>{{/organisateur}}
                         {{#infos}}<p class="infos"><span style="background-color:{{couleur}}"></span><a href="{{infos}}" target="_blank">{{infos_texte}}</a></p>{{/infos}}
-                    
+                        {{#adresse}}<p class="plan"><span style="background-color:{{couleur}}"></span><a href="http://maps.google.fr/maps?output=embed&f=q&source=s_q&hl=fr&q={{adresse}}" class="plan fancybox.iframe">plan</a></p>{{/adresse}}
                         {{#medias}}
                             <div class="medias">
                                 {{{fichier}}

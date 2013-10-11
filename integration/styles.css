@@ -1121,10 +1121,15 @@ body .fancybox-opened .fancybox-skin {
 	-moz-border-radius: 0;
 	border-radius: 0;
 	width: 385px !important;
+	/*width: 1385px !important;*/
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;	
 	background: #cb021a;
+}
+
+body .fancybox-wrap{
+	width: 385px !important;
 }
 
 body .fancybox-close {
@@ -1140,12 +1145,20 @@ body .fancybox-close {
 
 body .fancybox-inner{
 	width: 355px !important;
-	overflow: visible !important;
 	height: auto !important;
+	overflow: visible !important;
+	min-height: 300px;
+	
+	/*height: 800px !important;
+	width: 1355px !important;*/
 }
 
 body .fancybox-title-float-wrap .child {
 	display: none;
+}
+
+body .fancybox-iframe{
+	height: 300px;
 }
 
 #cartouche{
@@ -1353,7 +1366,8 @@ body .fancybox-title-float-wrap .child {
 }
 
 .formulaire_interne #envoyer, .formulaire_externe #envoyer_externe, .formulaire_interne #renvoyer, .formulaire_externe #renvoyer_externe,
-.formulaire_interne #envoyer_multiple, .formulaire_externe #envoyer_externe_multiple, .formulaire_interne #renvoyer_multiple, .formulaire_externe #renvoyer_externe_multiple{
+.formulaire_interne #envoyer_multiple, .formulaire_interne #envoyer_login_soumission, .formulaire_interne #renvoyer_login_soumission, 
+.formulaire_externe #envoyer_externe_multiple, .formulaire_interne #renvoyer_multiple, .formulaire_externe #renvoyer_externe_multiple{
 	text-transform: uppercase;
 	color:#f2c0c6;
 	display:block;

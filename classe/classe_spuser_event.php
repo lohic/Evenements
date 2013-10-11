@@ -19,6 +19,7 @@ include_once(REAL_LOCAL_PATH.'vars/constantes_vars.php');
 class Spuser {
 	var $connexion;
 
+	var $evenement_db	= NULL;
 	var $isAdmin;
 	//var $isSuperAdmin;
 	var $info;
@@ -129,7 +130,7 @@ class Spuser {
 				
 				$this->connexion->connect_db();
 			
-				$login_query	= sprintf("SELECT * FROM sp_users WHERE user_email=%s", GetSQLValueString($LDAPinfo->email, "text")); 
+				$login_query	= sprintf("SELECT * FROM ".TB."users WHERE user_email=%s", func::GetSQLValueString($LDAPinfo->email, "text")); 
 			
 				$login_info		= mysql_query($login_query) or die(mysql_error());
 				$infoUser		= mysql_fetch_assoc($login_info);
@@ -483,6 +484,50 @@ class Spuser {
 		}else{
 			return false;
 		}
+	}
+
+	/**
+	* test_LDAP Teste si les infos de login de soumission sont valides LDAP
+	* @param $login => login de l'utilisateur
+	* @param $password => mot de passe de l'utilisateur
+	* @return JSON => l'objet JSON contiendra les infos de réussite ou d'erreur
+	*/
+	function test_LDAP($login=NULL,$password=NULL){
+		$this->evenement_db->connect_db();
+		$retour = new stdClass();
+
+		session_start();
+
+		$erreurLDAP = "";
+		$champVide = "";
+		
+		if(isset($login) && isset($password) && $login!="" && $password!=""){
+			$infosEtudiant = func::connectLDAP($login,$password);
+			
+			switch ($infosEtudiant->info){
+				case "login error" : $erreurLDAP="Les informations fournies ne permettent pas de vous identifier."; break;
+				case "no connexion" : $erreurLDAP="Impossible de se connecter au serveur d'identification pour le moment."; break;
+				case "no login" : $erreurLDAP="Les informations fournies ne permettent pas de vous identifier."; break;
+				default : $erreurLDAP=""; break;
+			}
+
+			if($erreurLDAP==""){
+				$_SESSION['nomSP'] = $infosEtudiant->nom;
+				$_SESSION['prenomSP'] = $infosEtudiant->prenom;
+				$_SESSION['mailSP'] = $infosEtudiant->email;
+				$_SESSION['typeSP'] = $infosEtudiant->type;
+			}
+		}
+		if($login=="" || $password==""){
+			$champVide = "Tous les champs marqués d'une * doivent être remplis.";
+		}
+
+		$retour->titre_bloc 	= "Vous êtes bien inscrit à l'événement";
+		$retour->erreurLDAP = $erreurLDAP;
+		$retour->champVide = $champVide;
+
+		session_unset();
+		return json_encode($retour);
 	}
 }
 

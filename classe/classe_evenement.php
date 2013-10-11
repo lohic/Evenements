@@ -502,6 +502,7 @@ class Evenement {
 		$retour->ical = "makeIcal.php?id=".$row['evenement_id'];
 		$retour->sinscrire = $sinscrireTexte;
 		$retour->medias 	= $lesMedias;
+		$retour->adresse = $rowsession1['session_adresse2'];
 		return json_encode($retour);
 	}
 

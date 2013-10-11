@@ -64,4 +64,5 @@
         $rowSession = $session->get_session($row['evenement_id']);
         echo $session->affiche_statut_inscription($rowSession, $row, $sinscrire, $complet, $rubrique_couleur); 
     ?>
+
 </div>
