@@ -137,7 +137,7 @@ $(document).ready(function(){
 
 	var jPM = $.jPanelMenu({
 	    menu: '#menu_smartphone',
-	    trigger: '#lien_menu_smartphone, #validation_smart',
+	    trigger: '#lien_menu_smartphone, #validation_smart, .valider_recherche_smartphone',
 	    openPosition: '270px',
 	});
 
@@ -194,6 +194,110 @@ $(document).ready(function(){
 	    	$('#jPanelMenu-menu #options_smart').on('change', function( jQEvent ) {
 			    var $checkbox = $( jQEvent.target );
 			    manageCheckbox( $checkbox );
+			});
+
+			$("#jPanelMenu-menu input.valider_recherche_smartphone").click(function(e){
+				e.preventDefault();	
+				$.ajax({
+			        url     :"ajax/charge_liste_evenements.php",
+			        type    : "GET",
+			        data    : {
+			            recherche: $('#jPanelMenu-menu #mot_recherche_smartphone').val(),
+			            langue: $('#jPanelMenu-menu #langue_recherche_smartphone').val()
+			        }
+			    }).done(function (data) {
+			    	$('#conteneur_isotope').html(data);
+			    	var $container = $('#liste_evenements'), filters = {};
+					$container.isotope({
+						// options
+						resizable: false,
+						itemSelector : '.event',
+						layoutMode : 'fitRows',
+						itemPositionDataEnabled : true,
+						animationOptions: {
+							duration: 750,
+							easing: 'linear',
+							queue: false,
+						},
+						getSortData : {
+							number : function($elem) {
+								return parseInt($elem.attr('data-sort'), 10);
+							}
+						},
+						sortBy : 'number', // on trie sur le numéro qu'on a créé
+						// pour ajouterles classes first et last 
+						onLayout: function (elems, instance) {
+							console.log('onLayout');
+							var items, rows, numRows, row, prev, i;
+
+							// gather info for each element
+							items = elems.map(function () {
+								var el = $(this), pos = el.data('isotope-item-position');
+								return {
+									x: pos.x,
+									y: pos.y,
+									w: el.width(),
+									h: el.height(),
+									el: el
+								};
+							});
+
+							// first pass to find the first and last items of each row
+							rows = [];
+							i = {};
+							items.each(function () {
+								var y = this.y, r = i[y];
+								if (!r) {
+									r = {
+										y: y,
+										first: null,
+										last: null
+									};
+									rows.push(r);
+									i[y] = r;
+								}
+								if (!r.first || this.x < r.first.x) {
+									r.first = this;
+								}
+								if (!r.last || this.x > r.last.x) {
+									r.last = this;
+								}
+							});
+							rows.sort(function (a, b) { return a.y - b.y; });
+							numRows = rows.length;
+
+							// compare items for each row against the previous row
+							for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+								row = rows[i];
+								if (prev.first.x < row.first.x &&
+									prev.first.y + prev.first.h > row.y) {
+								row.first = prev.first;
+								}
+								if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+									prev.last.y + prev.last.h > row.y) {
+								row.last = prev.last;
+								}
+							}
+
+							// assign classes to first and last elements
+							elems.removeClass('first last');
+							$.each(rows, function () {
+								this.first.el.addClass('first');
+								this.last.el.addClass('last');
+							});
+							getNextLast($('.selectedEvent'));
+							$('.isotope-hidden').removeClass('first last');
+					    }
+					});
+					//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
+					clickTitre();
+					//fonction s'executant au clic sur le lien inscription simple d'un événement
+					sinscrire();
+					//fonction s'executant au clic sur le lien inscription multiple d'un événement
+					sinscrire_multiple();
+					//fonction recentrant les éléments dans la fenêtre
+					centrageIsotope();
+			    });
 			});
 	    },
 	    exit: function() {
@@ -324,6 +428,8 @@ $(document).ready(function(){
 			clickFiltreIsotope();
 	    });
 	});
+
+
 });
 
 
