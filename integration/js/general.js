@@ -8,162 +8,19 @@ $.urlParam = function(name){
        return results[1] || 0;
     }
 }
+
+var sauv = 0;
+
 $(document).ready(function(){			
-	var sauv = 0;
+	
 	var $container = $('#liste_evenements'), filters = {};
 	
-	$('.event>h1>a, .event > p > a.suite').click(function(e){
-		e.preventDefault();
-		
-		var nextLastRowEvent;
-		var prevFirstRowEvent;
-		
-		//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
-		$('.selectedEvent > a').css('display','block');
-		$('.selectedEvent > img').css('display','inline-block');
-		$('.selectedEvent > p').css('display','block');
-		$('.selectedEvent > div').css('display','block');
-		$('.selectedEvent > div.triangle_inverse').css('display','none');
-		$('.selectedEvent > span').css('display','block');
-		$('.selectedEvent').css('background','#fff');
-		$('.selectedEvent').height(sauv);
-		sauv = $(this).parent().parent().height();
-		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-		$('.event').removeClass('selectedEvent');
-		
-		nextLastRowEvent = getNextLast($(this).parent().parent());
-		prevFirstRowEvent = getPrevFirst($(this).parent().parent());
-		var hauteurMaxTest=prevFirstRowEvent.height();
-		getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
-
-		$(this).parent().parent().addClass('selectedEvent');
-		
-		var classe = $(this).attr('class').split(' ')[1];
-		var couleur = classe.split('_')[1];
-		couleur = couleur.split('#')[1];
-		clickEvent($('.selectedEvent'), sauv);
-		$('.selectedEvent').css('background','none');
-		$('.selectedEvent > a').css('display','none');
-		$('.selectedEvent > img').css('display','none');
-		$('.selectedEvent > p').css('display','none');
-		$('.selectedEvent > div').css('display','none');
-		$('.selectedEvent > span').css('display','none');	
-		$('.selectedEvent > div.triangle_inverse').css('display','block');
-
-		$('.isotope-item').removeClass('sinscrireEvent');
-	    // on evite le comportement normal du click   
-	});
-
-
-
-	$('a.sinscrire').click(function(e){
-		e.preventDefault();
-		$('.isotope-item').removeClass('sinscrireEvent');
-		$(this).parent().addClass('sinscrireEvent');
-		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-		if($('.sinscrireEvent').hasClass('en')){
-			var la_langue="en";
-		}
-		else{
-			var la_langue="fr";
-		}
-
-		var code = "";
-
-		if($(this).attr('id')=="avec_code"){
-			code="oui";
-		}
-
-		$.ajax({
-	        url     :"ajax/get_event_infos_inscription.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_event : evenement_id,
-	            langue : la_langue,
-	            code : code
-	        }
-	    }).done(function (dataJSON) {
-	    	console.log(dataJSON.titre);
-			inscription_data = {
-				id:   dataJSON.evenement_id,
-				session_id:   dataJSON.session_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        casque:   dataJSON.casque,
-		        interneOuvert: dataJSON.interneOuvert,
-		        interneComplet: dataJSON.interneComplet,
-		        externeOuvert:   dataJSON.externeOuvert,
-		        externeComplet: dataJSON.externeComplet,
-		        toutClos: dataJSON.toutClos,
-		        toutComplet:   dataJSON.toutComplet,
-		        alerteInterne: dataJSON.alerteInterne,
-		        alerteExterne: dataJSON.alerteExterne,
-		        code: dataJSON.codeExterne,
-		        mention : dataJSON.mention,
-	        };
-
-	        inscription = ich.inscription_form(inscription_data);
-
-	        $.fancybox( inscription , {
-	            title : 'Inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a.sinscrire_multiple').click(function(e){
-		$('.isotope-item').removeClass('sinscrireEvent');
-		$(this).parent().addClass('sinscrireEvent');
-		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
-		if($('.sinscrireEvent').hasClass('en')){
-			var la_langue="en";
-		}
-		else{
-			var la_langue="fr";
-		}
-
-		var code = "";
-
-		if($(this).attr('id')=="avec_code"){
-			code="oui";
-		}
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/get_event_infos_inscription_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_event : evenement_id,
-	            langue : la_langue,
-	            code : code
-	        }
-	    }).done(function (dataJSON) {
-	    	console.log(dataJSON.titre);
-			inscription_data = {
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        sessions: dataJSON.sessions,
-		        code: dataJSON.codeExterne,
-		        interneOuvert: dataJSON.interneOuvert,
-		        externeOuvert: dataJSON.externeOuvert,
-		        toutComplet: dataJSON.toutComplet,
-		        mention : dataJSON.mention,
-	        };
-
-	        inscription = ich.inscription_form_multiple(inscription_data);
-
-	        $.fancybox( inscription , {
-	            title : 'Inscription',
-	        });
-
-	        validFancyBox();
-	    });
-	});
+	//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
+	clickTitre();
+	//fonction s'executant au clic sur le lien inscription simple d'un événement
+	sinscrire();
+	//fonction s'executant au clic sur le lien inscription multiple d'un événement
+	sinscrire_multiple();
 
 	$origImgW = $('.banniere').width();
 	$origImgH = $('.banniere').height();
@@ -344,24 +201,8 @@ $(document).ready(function(){
 	    }
 	});
 
-	$('.nom_du_filtre').click(function(e){
-		if($(this).text()=="Toutes" || $(this).text()=="Tous"){
-			if($(this).parent().parent().attr('id')=='filtering-nav-categorie'){
-				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Catégories');
-			}
-			if($(this).parent().parent().attr('id')=='filtering-nav-date'){
-				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Dates');
-			}
-			if($(this).parent().parent().attr('id')=='filtering-nav-mot'){
-				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Mots-clés');
-			}
-			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'uppercase');
-		}
-		else{
-			$(this).parent().parent().parent().find('span.le_titre_filtre').text($(this).text());
-			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
-		}
-	});  
+	//fonction qui gère l'affichage des filtre en mode desktop
+	clickFiltre();
 
 	$('a.soumettre').click(function(e){
 		e.preventDefault();
@@ -376,6 +217,112 @@ $(document).ready(function(){
 
 	$('a.plan').fancybox({
 		title : 'Plan',
+	});
+
+	$("input.valider_recherche").click(function(e){
+		e.preventDefault();	
+		$.ajax({
+	        url     :"ajax/charge_liste_evenements.php",
+	        type    : "GET",
+	        data    : {
+	            recherche: $('#mot_recherche').val(),
+	            langue: $('#langue_recherche').val()
+	        }
+	    }).done(function (data) {
+	    	$('#conteneur_isotope').html(data);
+	    	var $container = $('#liste_evenements'), filters = {};
+			$container.isotope({
+				// options
+				resizable: false,
+				itemSelector : '.event',
+				layoutMode : 'fitRows',
+				itemPositionDataEnabled : true,
+				animationOptions: {
+					duration: 750,
+					easing: 'linear',
+					queue: false,
+				},
+				getSortData : {
+					number : function($elem) {
+						return parseInt($elem.attr('data-sort'), 10);
+					}
+				},
+				sortBy : 'number', // on trie sur le numéro qu'on a créé
+				// pour ajouterles classes first et last 
+				onLayout: function (elems, instance) {
+					console.log('onLayout');
+					var items, rows, numRows, row, prev, i;
+
+					// gather info for each element
+					items = elems.map(function () {
+						var el = $(this), pos = el.data('isotope-item-position');
+						return {
+							x: pos.x,
+							y: pos.y,
+							w: el.width(),
+							h: el.height(),
+							el: el
+						};
+					});
+
+					// first pass to find the first and last items of each row
+					rows = [];
+					i = {};
+					items.each(function () {
+						var y = this.y, r = i[y];
+						if (!r) {
+							r = {
+								y: y,
+								first: null,
+								last: null
+							};
+							rows.push(r);
+							i[y] = r;
+						}
+						if (!r.first || this.x < r.first.x) {
+							r.first = this;
+						}
+						if (!r.last || this.x > r.last.x) {
+							r.last = this;
+						}
+					});
+					rows.sort(function (a, b) { return a.y - b.y; });
+					numRows = rows.length;
+
+					// compare items for each row against the previous row
+					for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+						row = rows[i];
+						if (prev.first.x < row.first.x &&
+							prev.first.y + prev.first.h > row.y) {
+						row.first = prev.first;
+						}
+						if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+							prev.last.y + prev.last.h > row.y) {
+						row.last = prev.last;
+						}
+					}
+
+					// assign classes to first and last elements
+					elems.removeClass('first last');
+					$.each(rows, function () {
+						this.first.el.addClass('first');
+						this.last.el.addClass('last');
+					});
+					getNextLast($('.selectedEvent'));
+					$('.isotope-hidden').removeClass('first last');
+			    }
+			});
+			//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
+			clickTitre();
+			//fonction s'executant au clic sur le lien inscription simple d'un événement
+			sinscrire();
+			//fonction s'executant au clic sur le lien inscription multiple d'un événement
+			sinscrire_multiple();
+			//fonction recentrant les éléments dans la fenêtre
+			centrageIsotope();
+
+			clickFiltreIsotope();
+	    });
 	});
 });
 
@@ -399,7 +346,7 @@ $(function(){
 	// var position = clickedElement.data('isotope-item-position');
 	// console.log('item position is x: ' + position.x + ', y: ' + position.y  );
 
-	$('#liste_evenements').isotope({
+	$container.isotope({
 		// options
 		resizable: false,
 		itemSelector : '.event',
@@ -484,22 +431,46 @@ $(function(){
 	    }
 	});
 
-	// filter items when filter link is clicked
+	clickFiltreIsotope();
+
+	centrageIsotope();
+});
+
+function centrageIsotope(){
+	var $container = $('#liste_evenements'), filters = {};
+	$body = $('body'),
+	colW = 335,
+	columns = null;
+	$(window).smartresize(function(){
+		// measure the width of all the items
+		var itemTotalWidth = 0;
+		$container.children().each(function(){
+			itemTotalWidth += $(this).outerWidth(true);
+		});
+		// check if columns has changed
+		var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
+		itemColumns = Math.floor( itemTotalWidth / colW ),
+		currentColumns = Math.min( bodyColumns, itemColumns );
+		if ( currentColumns !== columns ) {
+			// set new column count
+			columns = currentColumns;
+		}
+		$container.width( columns * colW ).isotope().isotope('reLayout');
+	}).smartresize();
+}
+
+function clickFiltreIsotope(){
+	var $container = $('#liste_evenements'), filters = {};
+	$('.filtre_isotope a').unbind( "click" );
 	$('.filtre_isotope a').click(function(){
-		$('.selectedEvent > a').css('display','block');
-		$('.selectedEvent > img').css('display','inline-block');
-		$('.selectedEvent > p').css('display','block');
-		$('.selectedEvent > div').css('display','block');
-		$('.selectedEvent > div.triangle_inverse').css('display','none');
-		$('.selectedEvent > span').css('display','block');
-		$('.selectedEvent').css('background','#fff');
+		reInitBloc();
 		$('.selectedEvent').height($('.selectedEvent').height()-15);
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 
 		var $this = $(this);
 		// don't proceed if already selected
 		if ( $this.hasClass('selected') ) {
-		return;
+			return;
 		}
 
 		var $optionSet = $this.parents('.option-set');
@@ -514,7 +485,7 @@ $(function(){
 		// convert object into array
 		var isoFilters = [];
 		for ( var prop in filters ) {
-		isoFilters.push( filters[ prop ] )
+			isoFilters.push( filters[ prop ] )
 		}
 		var selector = isoFilters.join('');
 
@@ -600,182 +571,193 @@ $(function(){
 		    }
 		});
 
-		return false;
-
 		var sauv = 0;
-		$('.event>h1>a, .event > p > a.suite').click(function(e){
-			e.preventDefault();
-			var nextLastRowEvent;
-			var prevFirstRowEvent;
-			console.log('click on event');
-			//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
-			
-			$('.selectedEvent > a').css('display','block');
-			$('.selectedEvent > img').css('display','inline-block');
-			$('.selectedEvent > p').css('display','block');
-			$('.selectedEvent > div').css('display','block');
-			$('.selectedEvent > div.triangle_inverse').css('display','none');
-			$('.selectedEvent > span').css('display','block');
-			$('.selectedEvent').height(sauv);
-			sauv = $(this).parent().parent().height();
-			$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-			$('.event').removeClass('selectedEvent');
-			nextLastRowEvent = getNextLast($(this).parent().parent());
-			prevFirstRowEvent = getPrevFirst($(this).parent().parent());
 
-			var hauteurMaxTest=prevFirstRowEvent.height();
-			getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
+		//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
+		clickTitre();
+		//fonction s'executant au clic sur le lien inscription simple d'un événement
+		sinscrire();
+		//fonction s'executant au clic sur le lien inscription multiple d'un événement
+		sinscrire_multiple();
 
-			$(this).parent().parent().addClass('selectedEvent');
-			
-			var classe = $(this).attr('class').split(' ')[1];
-			var couleur = classe.split('_')[1];
-			couleur = couleur.split('#')[1];
-			clickEvent($('.selectedEvent'), sauv);
-			$('.selectedEvent').css('background','none');
-			$('.selectedEvent > a').css('display','none');
-			$('.selectedEvent > img').css('display','none');
-			$('.selectedEvent > p').css('display','none');
-			$('.selectedEvent > div').css('display','none');
-			$('.selectedEvent > span').css('display','none');	
-			$('.selectedEvent > div.triangle_inverse').css('display','block');
-		    // on evite le comportement normal du click
-		});
+		$('.selectedEvent').height(sauv);
 
-		$('a.sinscrire').click(function(e){
-			$('.isotope-item').removeClass('sinscrireEvent');
-			$(this).parent().addClass('sinscrireEvent');
-			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
-			if($('.sinscrireEvent').hasClass('en')){
-				var la_langue="en";
-			}
-			else{
-				var la_langue="fr";
-			}
-
-			var code = "";
-
-			if($(this).attr('id')=="avec_code"){
-				code="oui";
-			}
-			e.preventDefault();
-			$.ajax({
-		        url     :"ajax/get_event_infos_inscription.php",
-		        type    : "GET",
-		        dataType:'json',
-		        data    : {
-		            id_event : evenement_id,
-		            langue : la_langue,
-		            code : code
-		        }
-		    }).done(function (dataJSON) {
-		    	console.log(dataJSON.titre);
-				inscription_data = {
-					id:   dataJSON.evenement_id,
-					session_id:   dataJSON.session_id,
-		            titre:   dataJSON.titre,
-			        date: dataJSON.date,
-			        lieu: dataJSON.lieu,
-			        casque:   dataJSON.casque,
-			        interneOuvert: dataJSON.interneOuvert,
-			        interneComplet: dataJSON.interneComplet,
-			        externeOuvert:   dataJSON.externeOuvert,
-			        externeComplet: dataJSON.externeComplet,
-			        toutClos: dataJSON.toutClos,
-			        toutComplet:   dataJSON.toutComplet,
-			        alerteInterne: dataJSON.alerteInterne,
-			        alerteExterne: dataJSON.alerteExterne,
-			        code: dataJSON.codeExterne,
-			        mention : dataJSON.mention,
-		        };
-
-		        inscription = ich.inscription_form(inscription_data);
-
-		        $.fancybox( inscription , {
-		            title : 'Inscription',
-		        });
-
-		        validFancyBox();
-		    });
-		});
-
-		$('a.sinscrire_multiple').click(function(e){
-			$('.isotope-item').removeClass('sinscrireEvent');
-			$(this).parent().addClass('sinscrireEvent');
-			var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
-			if($('.sinscrireEvent').hasClass('en')){
-				var la_langue="en";
-			}
-			else{
-				var la_langue="fr";
-			}
-			var code = "";
-
-			if($(this).attr('id')=="avec_code"){
-				code="oui";
-			}
-			e.preventDefault();
-			$.ajax({
-		        url     :"ajax/get_event_infos_inscription_multiple.php",
-		        type    : "GET",
-		        dataType:'json',
-		        data    : {
-		            id_event : evenement_id,
-		            langue : la_langue,
-		            code : code
-		        }
-		    }).done(function (dataJSON) {
-		    	console.log(dataJSON.titre);
-				inscription_data = {
-					id:   dataJSON.evenement_id,
-		            titre:   dataJSON.titre,
-			        date: dataJSON.date,
-			        sessions: dataJSON.sessions,
-			        code: dataJSON.codeExterne,
-			        mention : dataJSON.mention,
-			        interneOuvert: dataJSON.interneOuvert,
-			        externeOuvert: dataJSON.externeOuvert,
-			        toutComplet: dataJSON.toutComplet,
-		        };
-
-		        inscription = ich.inscription_form_multiple(inscription_data);
-
-		        $.fancybox( inscription , {
-		            title : 'Inscription',
-		        });
-
-		        validFancyBox();
-		    });
-		});
-
-		
+		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+		$('#liste_evenements').isotope( 'remove', $('.resume') );
 		return false;
 	});
+}
 
-	$(window).smartresize(function(){
+function clickFiltre(){
+	$('.nom_du_filtre').click(function(e){
+		if($(this).text()=="Toutes" || $(this).text()=="Tous"){
+			if($(this).parent().parent().attr('id')=='filtering-nav-categorie'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Catégories');
+			}
+			if($(this).parent().parent().attr('id')=='filtering-nav-date'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Dates');
+			}
+			if($(this).parent().parent().attr('id')=='filtering-nav-mot'){
+				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Mots-clés');
+			}
+			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'uppercase');
+		}
+		else{
+			$(this).parent().parent().parent().find('span.le_titre_filtre').text($(this).text());
+			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
+		}
+	});  
+}
 
-		// measure the width of all the items
-		var itemTotalWidth = 0;
-		$container.children().each(function(){
-			itemTotalWidth += $(this).outerWidth(true);
-		});
+function clickTitre(){
+	$('.event>h1>a, .event > p > a.suite').click(function(e){
+		e.preventDefault();
+		
+		var nextLastRowEvent;
+		var prevFirstRowEvent;
+		//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
+		reInitBloc();
+		$('.selectedEvent').height(sauv);
 
-		// check if columns has changed
-		var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
-		itemColumns = Math.floor( itemTotalWidth / colW ),
-		currentColumns = Math.min( bodyColumns, itemColumns );
-		if ( currentColumns !== columns ) {
-			// set new column count
-			columns = currentColumns;
-			// apply width to container manually, then trigger relayout
-			$container.width( columns * colW )
-			.isotope('reLayout');
+		sauv = $(this).parent().parent().height();
+		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+		$('.event').removeClass('selectedEvent');
+		nextLastRowEvent = getNextLast($(this).parent().parent());
+		prevFirstRowEvent = getPrevFirst($(this).parent().parent());
+		var hauteurMaxTest=prevFirstRowEvent.height();
+		getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
+
+		$(this).parent().parent().addClass('selectedEvent');
+		
+		var classe = $(this).attr('class').split(' ')[1];
+		var couleur = classe.split('_')[1];
+		couleur = couleur.split('#')[1];
+		clickEvent($('.selectedEvent'), sauv);
+		$('.selectedEvent').css('background','none');
+		$('.selectedEvent > a').css('display','none');
+		$('.selectedEvent > img').css('display','none');
+		$('.selectedEvent > p').css('display','none');
+		$('.selectedEvent > div').css('display','none');
+		$('.selectedEvent > span').css('display','none');	
+		$('.selectedEvent > div.triangle_inverse').css('display','block');
+
+		$('.isotope-item').removeClass('sinscrireEvent');
+	    // on evite le comportement normal du click   
+	});
+}
+
+function sinscrire(){
+	$('a.sinscrire').click(function(e){
+		e.preventDefault();
+		$('.isotope-item').removeClass('sinscrireEvent');
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
 		}
 
-	}).smartresize();
-});
+		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
+
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id:   dataJSON.evenement_id,
+				session_id:   dataJSON.session_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        lieu: dataJSON.lieu,
+		        casque:   dataJSON.casque,
+		        interneOuvert: dataJSON.interneOuvert,
+		        interneComplet: dataJSON.interneComplet,
+		        externeOuvert:   dataJSON.externeOuvert,
+		        externeComplet: dataJSON.externeComplet,
+		        toutClos: dataJSON.toutClos,
+		        toutComplet:   dataJSON.toutComplet,
+		        alerteInterne: dataJSON.alerteInterne,
+		        alerteExterne: dataJSON.alerteExterne,
+		        code: dataJSON.codeExterne,
+		        mention : dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+}
+
+function sinscrire_multiple(){
+	$('a.sinscrire_multiple').click(function(e){
+		$('.isotope-item').removeClass('sinscrireEvent');
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
+		}
+
+		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id:   dataJSON.evenement_id,
+	            titre:   dataJSON.titre,
+		        date: dataJSON.date,
+		        sessions: dataJSON.sessions,
+		        code: dataJSON.codeExterne,
+		        interneOuvert: dataJSON.interneOuvert,
+		        externeOuvert: dataJSON.externeOuvert,
+		        toutComplet: dataJSON.toutComplet,
+		        mention : dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form_multiple(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+}
 
 function initIsotopeOuvert(){
 	var sauv=0;
@@ -880,13 +862,8 @@ function clickEvent(clickedElement, sauv){
 
         // quand on clique sur le bouton de fermeture de bloc événement
 	    $('a#close').click(function(e){
-			$('.selectedEvent > a').css('display','block');
-			$('.selectedEvent > img').css('display','inline-block');
-			$('.selectedEvent > p').css('display','block');
-			$('.selectedEvent > div').css('display','block');
-			$('.selectedEvent > div.triangle_inverse').css('display','none');
-			$('.selectedEvent > span').css('display','block');
-			$('.selectedEvent').css('background','#fff');
+
+			reInitBloc();
 
 			$('.selectedEvent').height(sauv);
 			//$('.selectedEvent').height($('.selectedEvent').height()-15);
@@ -1229,8 +1206,6 @@ function validFancyBox(){
 	        validFancyBox();
 	    });
 	});
-
-
 }
 
 function getNextLast(cible){
@@ -1296,10 +1271,7 @@ function getPrevFirst(cible){
 	return target;
 }
 
-
-$(window).resize(function() {
-	console.log('> suppr resume');
-	$('#liste_evenements').isotope( 'remove', $('.resume') );
+function reInitBloc(){
 	$('.selectedEvent > a').css('display','block');
 	$('.selectedEvent > img').css('display','inline-block');
 	$('.selectedEvent > p').css('display','block');
@@ -1307,9 +1279,18 @@ $(window).resize(function() {
 	$('.selectedEvent > div.triangle_inverse').css('display','none');
 	$('.selectedEvent > span').css('display','block');
 	$('.selectedEvent').css('background','#fff');
+}
+
+
+$(window).resize(function() {
+	console.log('> suppr resume');
+	$('#liste_evenements').isotope( 'remove', $('.resume') );
+	reInitBloc();
 	$('.selectedEvent').height($('.selectedEvent').height()-15);
 	$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 });
+
+
 
 $(window).resizeend({
 	onDragEnd : function(){

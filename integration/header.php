@@ -20,8 +20,11 @@
             <?php
                 }
             ?>
-                <input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher" class="small-hidden"/>
-                <input type="submit" value="OK" class="valider_recherche small-hidden"/>
+                <form id="recherche_isotope" action="#" method="get">
+                    <input type="text" name="mot_recherche" id="mot_recherche" placeholder="Rechercher" class="small-hidden"/>
+                    <input type="hidden" name="langue_recherche" id="langue_recherche" value="<?php echo $lang;?>"/>
+                    <input type="submit" value="OK" class="valider_recherche small-hidden"/>
+                </form>
             <?php
                 if($lang=="fr"){
             ?>

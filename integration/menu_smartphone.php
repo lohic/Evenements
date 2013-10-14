@@ -1,5 +1,5 @@
 <section id="menu_smartphone" class="grand-hidden">
-    <input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
+    <input type="text" name="mot_recherche_smartphone" id="mot_recherche_smartphone" value="Rechercher"/>
     <div id="options_smart" class="little_bigger">
     <?php
         if(count($rubriques_organisme)>0){

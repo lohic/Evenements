@@ -582,6 +582,10 @@ a span.anglais{
 	text-align: right;
 }
 
+#pre_header form{
+	display: inline;
+}
+
 #pre_header input[type="text"]{
 	background: url("img/icn_rechercher.png") no-repeat scroll 195px center #FFFFFF;
     border: 1px solid #CCCCCC;
