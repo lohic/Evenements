@@ -12,9 +12,7 @@ $.urlParam = function(name){
 var sauv = 0;
 
 $(document).ready(function(){			
-	
 	var $container = $('#liste_evenements'), filters = {};
-	
 	//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
 	clickTitre();
 	//fonction s'executant au clic sur le lien inscription simple d'un événement
@@ -428,8 +426,6 @@ $(document).ready(function(){
 			clickFiltreIsotope();
 	    });
 	});
-
-
 });
 
 
@@ -532,10 +528,11 @@ $(function(){
 
 			getNextLast($('.selectedEvent'));
 			$('.isotope-hidden').removeClass('first last');
-
-			//initIsotopeOuvert();
 	    }
 	});
+
+	//fonction ouvrant le détail d'un événement automatiquement quand on arrive sur la page avec l'id de l'événement en paramètre
+	initIsotopeOuvert();
 
 	clickFiltreIsotope();
 
@@ -866,7 +863,6 @@ function sinscrire_multiple(){
 }
 
 function initIsotopeOuvert(){
-	var sauv=0;
 	if(decodeURIComponent($.urlParam('id')) != "null"){	
 		var nextLastRowEventTest;
 		var prevFirstRowEventTest;
@@ -885,7 +881,7 @@ function initIsotopeOuvert(){
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 		$('.event').removeClass('selectedEvent');
 		
-
+		
 		nextLastRowEventTest = getNextLast(monBloc);
 		prevFirstRowEventTest = getPrevFirst(monBloc);
 		var hauteurMaxTest=prevFirstRowEventTest.height();
@@ -893,8 +889,7 @@ function initIsotopeOuvert(){
 		getHauteurMax(prevFirstRowEventTest, hauteurMaxTest, monBloc);
 
 		monBloc.addClass('selectedEvent');
-		
-		//clickEvent(monBloc);
+		clickEvent(monBloc);
 		$('.selectedEvent > a').css('display','none');
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
@@ -1371,9 +1366,7 @@ function getPrevFirst(cible){
 			.first()
 			.prev();
 	}
-
 	target.addClass('prevFirstRowItem');
-
 	return target;
 }
 

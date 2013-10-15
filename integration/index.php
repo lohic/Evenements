@@ -41,7 +41,7 @@
 				include('bloc_validation_multiple.php');
 				include('bloc_validation_externe_multiple.php');
 				include('bloc_login_soumission.php');
-				include('bloc_soumission.php');
+				//include('bloc_soumission.php');
 			?>
 		</section>
 	</body>
