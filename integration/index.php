@@ -1,11 +1,9 @@
 <?php
 	include('head.php');
 	include('menu_smartphone.php');
+	include('header.php');
 ?>
 		<section id="contenu_principal">
-<?php
-			include('header.php');
-?>
 			<div id="conteneur_isotope">
 				<div id="liste_evenements" class="masonry">
 					<!-- attention data-sort doit être un multiple de 10-->

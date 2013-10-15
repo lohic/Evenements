@@ -155,6 +155,7 @@ $(document).ready(function(){
 	    breakpoint: 'small',
 	    enter: function() {
 	        jPM.on();
+
 	        $('#jPanelMenu-menu .checkbox_smart').each(function(){
 	    		var nouvel_identifiant = $(this).attr('id')+"_smart";
 	    		$(this).attr('id', nouvel_identifiant);
