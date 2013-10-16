@@ -16,12 +16,12 @@
                         {{#langue}}<p class="langue"><span style="background-color:{{couleur}}"></span>{{langue}}</p>{{/langue}}
                         {{#lieu}}<p class="lieu"><span style="background-color:{{couleur}}"></span>{{lieu}}, {{batiment}}</p>{{/lieu}}
                         {{#inscription}}<p class="inscription"><span style="background-color:{{couleur}}"></span>{{{inscription}}}</p>{{/inscription}}
-                        {{#organisateur}}<p class="organisateur"><span style="background-color:{{couleur}}"></span>{{organisateur}}<br/>{{coorganisateur}}</p>{{/organisateur}}
+                        {{#organisateur}}<p class="organisateur"><span style="background-color:{{couleur}}"></span>{{organisateur}}{{#coorganisateur}}<span class="coorganisateur">{{coorganisateur}}</span>{{/coorganisateur}}</p>{{/organisateur}}
                         {{#infos}}<p class="infos"><span style="background-color:{{couleur}}"></span><a href="{{infos}}" target="_blank">{{infos_texte}}</a></p>{{/infos}}
                         {{#adresse}}<p class="plan"><span style="background-color:{{couleur}}"></span><a href="http://maps.google.fr/maps?output=embed&f=q&source=s_q&hl=fr&q={{adresse}}" class="plan fancybox.iframe">plan</a></p>{{/adresse}}
                         {{#medias}}
                             <div class="medias">
-                                {{{fichier}}
+                                {{{fichier}}}
                             </div>
                         {{/medias}}
                     </div>

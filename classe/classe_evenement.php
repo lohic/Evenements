@@ -461,7 +461,7 @@ class Evenement {
 		if($resMedias){
 			while($rowMedia = mysql_fetch_array($resMedias)){
 	        	if($rowMedia['media_extension']==".jpg" || $rowMedia['media_extension']==".jpeg" || $rowMedia['media_extension']==".png" || $rowMedia['media_extension']==".gif"){
-					$lesMedias[$indice]['fichier'] = '<img src="'.CHEMIN_DOCUMENTS.'evenement_'.$row['evenement_id'].'/'.$rowMedia['media_fichier'].'?cache='.time().'" alt="" width="88"/>';
+					$lesMedias[$indice]['fichier'] = '<img src="'.CHEMIN_DOCUMENTS.'evenement_'.$row['evenement_id'].'/'.$rowMedia['media_fichier'].'?cache='.time().'" alt=""/>';
 					$indice++;
 				}
 			}

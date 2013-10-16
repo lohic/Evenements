@@ -494,7 +494,7 @@ textarea {
 }
 
 a.facebook, a.twitter, a.ical, .event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, 
-.event p.infos > span, a.rss, span.francais, span.anglais, a.soumettre span.icone, .resumeContent .fermer #close, body .fancybox-close, 
+.event p.infos > span, .event p.plan > span, a.rss, span.francais, span.anglais, a.soumettre span.icone, .resumeContent .fermer #close, body .fancybox-close, 
 a.sinscrire span, a.sinscrire_multiple span, #lien_menu_smartphone{
 	background: url("img/sprite.png") no-repeat left top;
 	width:20px;
@@ -871,7 +871,7 @@ div.triangle_inverse {
     padding: 6px 0 4px;
 }
 
-.event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, .event p.infos > span{
+.event p.organisateur > span, .event p.langue > span, .event p.lieu > span, .event p.inscription > span, .event p.infos > span, .event p.plan > span{
 	background-position: left -140px;
     display: block;
     float: left;
@@ -879,6 +879,12 @@ div.triangle_inverse {
     margin-right: 8px;
     width: 20px;
     margin-top: -2px;
+}
+
+.event p.organisateur > span.coorganisateur{
+	background: none;
+	float: none;
+	padding-left:29px;
 }
 
 .event p + p.organisateur{
@@ -1025,7 +1031,7 @@ a.sinscrire span, a.sinscrire_multiple span{
 }
 
 .event .resumeContent p.langue, .event .resumeContent p.lieu, .event .resumeContent p.inscription, 
-.event .resumeContent p.organisateur, .event .resumeContent p.infos{
+.event .resumeContent p.organisateur, .event .resumeContent p.infos, .event .resumeContent p.plan{
 	border-bottom: 1px solid #CCCCCC;
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
     line-height: 1.55em;
@@ -1034,18 +1040,25 @@ a.sinscrire span, a.sinscrire_multiple span{
 }
 
 .event .resumeContent p.langue a, .event .resumeContent p.lieu a, .event .resumeContent p.inscription a, 
-.event .resumeContent p.organisateur a, .event .resumeContent p.infos a{
+.event .resumeContent p.organisateur a, .event .resumeContent p.infos a, .event .resumeContent p.plan a{
     font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
     color:#000;
 }
 
 .event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 
-.event .resumeContent p.organisateur > span, .event .resumeContent p.infos > span{
+.event .resumeContent p.organisateur > span, .event .resumeContent p.infos > span, .event .resumeContent p.plan > span{
 	margin-top: 0px;
 }
 
 .event .resumeContent div.medias{
 	padding-top: 10px;
+	height: 45px;
+}
+
+.event .resumeContent div.medias img{
+	float: left;
+	margin-right: 10px;
+	height: 45px;
 }
 
 .event .resumeContent p.langue > span{
@@ -1062,6 +1075,10 @@ a.sinscrire span, a.sinscrire_multiple span{
 
 .event .resumeContent p.infos > span{
 	background-position: left -60px;
+}
+
+.event .resumeContent p.plan > span{
+	background-position: left -180px;
 }
 
 .event .resumeContent .texte p{
@@ -1307,12 +1324,21 @@ body .fancybox-iframe{
 	margin-top: 15px;
 }
 
+.depliable form{
+	display:none;
+	margin-top: 20px;
+}
+
+.depliable h3{
+	cursor: pointer;
+}
+
 .formulaire_interne div.session, .formulaire_externe div.session{
 	margin-bottom: 30px;
 }
 
 .formulaire_interne div.session p.lieu, .formulaire_interne div.session p.horaire, .formulaire_externe div.session p.lieu, .formulaire_externe div.session p.horaire{
-	color:#cb021a;
+	color:#333;
 }
 
 .formulaire_interne h3, .formulaire_externe h3{
@@ -1322,9 +1348,17 @@ body .fancybox-iframe{
 	margin-bottom: 20px;
 }
 
+.formulaire_interne.depliable h3, .formulaire_externe.depliable h3{
+	margin-bottom: 0px;
+}
+
 .formulaire_interne label, .formulaire_externe label{
 	color:#cc0033;
 	margin-right: 5px;
+}
+
+.formulaire_interne input[type="checkbox"] + label, .formulaire_externe input[type="checkbox"] + label{
+	font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
 }
 
 .formulaire_interne label.session, .formulaire_externe label.session{
@@ -1402,7 +1436,7 @@ body .fancybox-iframe{
 .formulaire_externe{
 	background: none repeat scroll 0 0 #FFFFFF;
     margin-top: 15px;
-    padding: 7px 10px 5px;
+    padding: 10px;
 }
 
 .formulaire_externe h3{
