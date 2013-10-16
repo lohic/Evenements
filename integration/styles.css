@@ -885,6 +885,7 @@ div.triangle_inverse {
 	background: none;
 	float: none;
 	padding-left:29px;
+	width: auto;
 }
 
 .event p + p.organisateur{
@@ -2299,6 +2300,22 @@ ol.styled > li:before {
 
 	#liste_evenements{
 		width: 320px !important;
+	}
+
+	.resumeContent {
+	    margin-left: 0;
+	}
+
+	.formulaire_interne input#login {
+	    width: 195px;
+	}
+
+	.formulaire_interne input#password {
+	    width: 174px;
+	}
+
+	.fancybox-iframe{
+	    width: 310px !important;
 	}
 }
 
