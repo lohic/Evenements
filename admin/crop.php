@@ -18,7 +18,7 @@ include('functions.php');
  */
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
+/*if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	if($_POST['evenement_texte_image']!=""){
 		
@@ -94,104 +94,161 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	else{
 		$erreur = "le texte alternatif de l'image est obligatoire";
 	}
-}
+}*/
 include_once('../vars/constantes_vars.php');
 include_once('../vars/statics_vars.php');
 
 include_once('../classe/classe_core_event.php');
+include_once('../classe/classe_fonctions.php');
 include_once('../classe/fonctions.php');
+
+
 
 $core = new core();
 $sqlGetOrganisme ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
 $resGetOrganisme= mysql_query($sqlGetOrganisme) or die(mysql_error());
 $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
+
+
+// REF https://github.com/nilopc/NilPortugues_Javascript_Multiple_JCrop
+
+$sql = sprintf("SELECT evenement_image, evenement_texte_image FROM ".TB."evenements WHERE evenement_id = %s",
+										func::GetSQLValueString($_GET['id'],"int"));
+$res = mysql_query($sql) or die(mysql_error());
+$row = mysql_fetch_array($res);
+$image_url = 'upload/photos/evenement_'.$_GET['id'].'/'.$row['evenement_image'];
+$extension_img = substr(strchr($image_url,'.'),1);
+
+$image_url = 'upload/photos/evenement_'.$_GET['id'].'/original.'.$extension_img;
+
+//$image_url = 'crop/images/1490-image.jpg';
+$dimensions = json_decode(file_get_contents('crop/var-size.json'));
+
+$erreur="";
+/**
+ * This is part of https://github.com/nilopc/NilPortugues_Javascript_Multiple_JCrop
+ *
+ * (c) 2013 Nil Portugués Calderó <contact@nilportugues.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+if ($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+	if($_POST['evenement_texte_image']!=""){
+		
+		$sql =sprintf("UPDATE ".TB."evenements SET evenement_texte_image=%s WHERE evenement_id=%s",
+											func::GetSQLValueString($_POST["evenement_texte_image"], "text"),
+											func::GetSQLValueString($_GET['id'],"int"));
+		mysql_query($sql) or die(mysql_error());
+		/*
+		 * SAVING THE SELECTIONS TO SEPARATE FILES
+		 * (I'm aware of the naive code going on here...)
+		 *
+		 */
+		include('crop/image.class.php');
+		$image = new imageClass();
+
+		$index = 0;
+		$src = array();
+
+		foreach($dimensions as $dimension){
+
+			$tempName = empty($dimension->suffix) ? 'crop/temp/image' : 'crop/temp/image-'.$dimension->suffix;
+			$fileName = empty($dimension->suffix) ? 'image' : 'image-'.$dimension->suffix;
+
+			file_put_contents($tempName, file_get_contents($_POST['jcrop-src'][0]) );
+
+			$src[] = $image
+					->setImage($tempName)
+				    ->crop(	$_POST['jcrop-x'][$index],
+		    				$_POST['jcrop-y'][$index],
+		    				$_POST['jcrop-x2'][$index],
+		    				$_POST['jcrop-y2'][$index])
+				    ->resize($dimension->width,$dimension->height,'exact')
+				    ->save('./upload/photos/evenement_'.$_GET['id'] , $fileName , $image->getFileType());
+
+			if($dimension->id=="evenement"){
+				$file_url = 'upload/photos/evenement_'.$_GET['id'].'/image.'.$extension_img;
+				$repertoire_destination="./upload/photos/evenement_".$_GET['id']."/";
+				make_miniature($file_url, 160, 90, $repertoire_destination, "mini-");
+			}
+
+			unlink($tempName);
+
+			$index++;
+		}
+
+		//HTML OUTPUT
+		/*echo '<h2>Crop Return</h2>';
+
+		foreach($src as $image){
+			echo '<img style="border:1px solid #ccc" src="'.$image.'"> <br>';
+		}
+
+		echo '<pre>';
+		print_r($_POST);
+		echo '</pre>';
+		exit;*/
+
+		header("Location:list.php?menu_actif=evenements");
+	}
+	else{
+		$erreur = "le texte alternatif de l'image est obligatoire";
+	}
+}
+
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Sciences Po | Événements : administration</title>
 	<link href="css/layout.css" rel="stylesheet" type="text/css" />
 	<link href="css/couleur_<?php echo $rowGetOrganisme['organisme_id'];?>.css" rel="stylesheet" type="text/css" />
-	<link href="jquery-ui/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
 	<script language="JavaScript" src="tools.js"></script>
-	<script type="text/javascript" src="jquery-ui/js/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
-	<script type="text/javascript" src="jquery-ui/js/jquery.ui.datepicker-fr.js"></script>
-	<script src="Jcrop/js/jquery.Jcrop.min.js"></script>
-	<link rel="stylesheet" href="Jcrop/css/jquery.Jcrop.css" type="text/css" />
-	<link rel="stylesheet" href="Jcrop/demos/demo_files/demos.css" type="text/css" />
 
-	<script language="Javascript">
+	<script src="crop/js/jquery.min.js"></script>
 
-		/*$(function(){
-			$('#cropbox').Jcrop({
-				onSelect: updateCoords,
-				minSize: [ 16, 9 ],
-				aspectRatio: 16/9
-			});
+	<!-- The original JCrop Plugin -->
+	<script src="crop/js/jquery.Jcrop.js"></script>
+	<link href="crop/css/jquery.Jcrop.css" type="text/css" rel="stylesheet" />
 
-		});
+	<!-- The JCrop Multiple Plugin -->
+	<script src="crop/js/jquery.Jcrop.multiple.js"></script>
+	<link href="crop/css/jquery.Jcrop.custom.css" type="text/css" rel="stylesheet"/>
 
-		function updateCoords(c){
-			$('#x').val(c.x);
-			$('#y').val(c.y);
-			$('#w').val(c.w);
-			$('#h').val(c.h);
-		};
-
-		function checkCoords(){
-			if (parseInt($('#w').val())) return true;
-			alert('Sélectionnez d\'abord une zone de l\'image.');
-			return false;
-		};*/
+	<script>
 		
-		jQuery(window).load(function(){
+		$(document).ready(function(){
 
-			jQuery('#cropbox').Jcrop({
-				//onChange: showCoords,
-				setSelect: [ 0, 0, 160, 90],
-				onChange: showCoords,
-				onSelect: showCoords,
-				aspectRatio: 16/9
-			});
+			var widthLimit = 500;
 
-			function showCoords(c)
-			{
-				$('#x').val(c.x);
-				$('#y').val(c.y);
-				$('#w').val(c.w);
-				$('#h').val(c.h);
+			$('.jcrop-preview-container').each(function(){
 
-				if(c.w<320 || c.h<180){
-					$('#alerte').show();
-					if(c.w<180 || c.h < 90){
-						$('#alerte').text('Attention votre image sera très pixelisée').css('background-color','#FF0000');
-					}else{
-						$('#alerte').text('Attention votre image sera pixelisée').css('background-color','#FFFF00');
-					}
-				}else{
-					$('#alerte').hide();
+				if( parseInt($(this).width()) >= widthLimit){
+
+					var ratio = widthLimit/parseInt($(this).width());
+
+					$(this).parent()
+					.css('transform-origin','0 0')
+					.css('transform','scale('+ratio+')');
+
+					
 				}
-			};
 
+				var boxHeight = $(this).parent().parent().find('.jcrop-box').data('height');
+				var newHeight = $(this)[0].getBoundingClientRect().height;
+
+				var finalHeight = boxHeight > newHeight ? boxHeight + 20 : newHeight +20;
+					
+				//$(this).parent().parent().parent().css('padding-bottom',finalHeight+'px');
+			});
 
 		});
-		
+
 
 	</script>
-	<style>
-	#alerte{
-		background:#FF0;
-		color:#000;
-		text-transform:uppercase;
-		font-size:12px;
-		padding:6px;
-		display:inline-block;
-		font-family:Arial, Helvetica, sans-serif;
-		font-weight:bold;
-	}
-
-	</style>
 </head>
 
 <body>
@@ -201,48 +258,55 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			<?php include("menu.php"); ?>
 	    </div>
 	    <div id="content">
-			<?php
-			if($erreur!=""){
+	    	<?php
+    		if($erreur!=""){
 				echo '<p class="erreur">'.$erreur.'</p>';
 			}
 
 			?>
-			
-			<div id="outer">
-				<div class="jcExample">
-					<div class="article">
+			<div class="jcrop_container">
+				<div class="article">
+					<h1>Recadrage de l'image</h1>
+					<form method="post" id="crop_form">
+						
+						<?php foreach($dimensions as $dimension){ ?>
 
-						<h1>Recadrage de l'image</h1>
-		
-						<?php
-							$sql ="SELECT evenement_image, evenement_texte_image FROM sp_evenements WHERE evenement_id = '".$_GET['id']."'";
-							$res = mysql_query($sql) or die(mysql_error());
-							$row = mysql_fetch_array($res);
-							$src = 'upload/photos/evenement_'.$_GET['id'].'/'.$row['evenement_image'];
-							$extension_img = substr(strchr($src,'.'),1);
-							
-							$src = 'upload/photos/evenement_'.$_GET['id'].'/original.'.$extension_img.'?cache='.time();
+							<div class="jcrop-item">
+								<h4><?php echo $dimension->label ?></h4>
+
+								<div class="jcrop-viewer">		
+									<div class="jcrop-preview-pane" class="jcrop-transparent-bg">
+										<div class="jcrop-preview-container">
+											<img class="jcrop-preview"
+												data-height="<?php echo $dimension->height ?>"
+												data-width="<?php echo $dimension->width ?>" />
+										</div>				
+									</div>	
+									<img class="jcrop-box" src="<?php echo $image_url; ?>"
+									     data-height="300" data-width="300"
+									     data-x='0'
+									     data-y='0'
+									     data-x2='<?php echo $dimension->width ?>'
+									     data-y2='<?php echo $dimension->height ?>'
+									/>
+								</div>	
+								<input type="hidden" class="jcrop-src" name="jcrop-src[]" />
+								<input type="hidden" class="jcrop-x"   name="jcrop-x[]" />
+								<input type="hidden" class="jcrop-y"   name="jcrop-y[]" />
+								<input type="hidden" class="jcrop-x2"  name="jcrop-x2[]" />
+								<input type="hidden" class="jcrop-y2"  name="jcrop-y2[]" />
+
+								<div style="clear:left"></div>
+							</div>
+
+						<?php } 
 						?>
-		
-						<!-- This is the image we're attaching Jcrop to -->
-						<img src="<?php echo $src; ?>" id="cropbox" />
-
-						<!-- This is the form that our event handler fills -->
-						<form action="crop.php?menu_actif=evenements&amp;id=<?php echo $_GET['id']; ?>" method="post" onsubmit="return checkCoords();">
-							<input type="hidden" id="x" name="x" />
-							<input type="hidden" id="y" name="y" />
-							<input type="hidden" id="id" name="id" value="<?php echo $_GET['id']; ?>"/>
-							<input type="hidden" id="w" name="w" />
-							<input type="hidden" id="h" name="h" />
-							<p>
-								<label for="evenement_texte_image">Texte alternatif de l'image* :</label>
-								<input type="text" name="evenement_texte_image" value="<?php echo $row['evenement_texte_image'];?>" class="inputField" id="evenement_texte_image"/>
-							</p>
-							<div id="alerte">Attention votre image sera très pixelisée</div>
-						    <input type="hidden" id="crop_image" name="crop_image" />
-							<p><input type="submit" value="Recadrer l'image" /></p>
-						</form>
-					</div>
+						<p>
+							<label for="evenement_texte_image">Texte alternatif de l'image* :</label>
+							<input type="text" name="evenement_texte_image" value="<?php echo $row['evenement_texte_image'];?>" class="inputField" id="evenement_texte_image"/>
+						</p>
+						<p><input type="submit" value="Recadrer l'image" id="recadrer"/></p>
+					</form>
 				</div>
 			</div>
 		</div>

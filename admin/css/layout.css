@@ -489,37 +489,63 @@ fieldset .inputdroit{
 	height:22px;
 }
 
-.jcExample .inputField{
+.jcrop_container .inputField{
 	border:1px solid #333333;
 	padding-left:3px;
 }
 
-.jcExample label{
-	font-size:1em;
+.jcrop_container label{
+	color: #333333;
+    font-size: 1em;
+    margin-right: 10px;
 }
 
-.jcExample p{
+.jcrop_container p{
 	float:left;
 	margin-bottom:5px;
 	width:730px;
 }
 
-.jcExample input[type="submit"]{
+.jcrop_container input[type="submit"]{
 	clear:both;
 }
 
-.jcExample{
+.jcrop_container{
 	float:left;
 }
 
-.jcExample h1{
+.jcrop_container h1{
 	color:#333333;
 	font-family:Arial, "Times New Roman", serif;
 	margin-bottom:10px;
+	margin-top: 10px;
 }
 
-.jcExample form{
+.jcrop_container form{
 	float:left;
+}
+
+.jcrop_container .jcrop-item{
+	border: 1px solid #333333;
+    height: 380px;
+    padding: 10px;
+    position: relative;
+}
+
+.jcrop_container .jcrop-item h4{
+	color:#333;
+	padding-left: 10px;
+}
+
+.jcrop_container .jcrop-viewer{
+	position: absolute;
+	top:60px;
+	left:20px;
+}
+
+.jcrop_container .jcrop-preview-pane{
+	position: absolute;
+	height: 0;
 }
 
 .bloc_modif .inputField, .bloc_modif .inputFieldTiny{
