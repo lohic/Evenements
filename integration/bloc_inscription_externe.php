@@ -9,7 +9,7 @@
         </div>
 
         {{#externeOuvert}}
-        <div class="formulaire_externe">
+        <div class="formulaire_externe depliable">
             <h3 class="bit_big">Vous êtes externe à Sciences po</h3>
             <form>
                 {{#alerteExterne}}{{{alerteExterne}}{{/alerteExterne}}

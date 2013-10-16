@@ -329,6 +329,9 @@ $(document).ready(function(){
 
 	$('a.plan').fancybox({
 		title : 'Plan',
+		width : '100%',
+		height: '100%',
+		padding: 5,
 	});
 
 	$("input.valider_recherche").click(function(e){
@@ -812,6 +815,7 @@ function sinscrire(){
 
 	        $.fancybox( inscription , {
 	            title : 'Inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -865,6 +869,7 @@ function sinscrire_multiple(){
 
 	        $.fancybox( inscription , {
 	            title : 'Inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -1028,6 +1033,7 @@ function clickEvent(clickedElement, sauv){
 
 		        $.fancybox( inscription , {
 		            title : 'Inscription',
+		            maxWidth : 355,
 		        });
 
 		        validFancyBox();
@@ -1068,6 +1074,7 @@ function clickEvent(clickedElement, sauv){
 
 		        $.fancybox( inscription , {
 		            title : 'Inscription',
+		            maxWidth : 355,
 		        });
 
 		        validFancyBox();
@@ -1122,6 +1129,7 @@ function validFancyBox(){
 
 	        $.fancybox( validation , {
 	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -1171,6 +1179,7 @@ function validFancyBox(){
 
 	        $.fancybox( validation , {
 	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -1229,6 +1238,7 @@ function validFancyBox(){
 
 	        $.fancybox( validation , {
 	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -1288,6 +1298,7 @@ function validFancyBox(){
 
 	        $.fancybox( validation , {
 	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();
@@ -1317,6 +1328,7 @@ function validFancyBox(){
 
 	        $.fancybox( soumettre , {
 	            title : 'Proposer un événement',
+	            maxWidth : 355,
 	        });
 
 	        validFancyBox();

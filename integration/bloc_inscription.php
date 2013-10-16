@@ -9,7 +9,7 @@
         </div>
 
         {{#interneOuvert}}
-        <div class="formulaire_interne">
+        <div class="formulaire_interne depliable">
             <h3 class="bit_big">Vous êtes interne à Sciences po</h3>
             <form>
                 {{#alerteInterne}}{{{alerteInterne}}{{/alerteInterne}}
@@ -41,7 +41,7 @@
 
         {{#code}}
             {{#externeOuvert}}
-            <div class="formulaire_externe">
+            <div class="formulaire_externe depliable">
                 <h3 class="bit_big">Vous êtes externe à Sciences po</h3>
                 <form>
                     {{#alerteExterne}}{{{alerteExterne}}{{/alerteExterne}}

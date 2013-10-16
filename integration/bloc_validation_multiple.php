@@ -8,7 +8,7 @@
             <p class="date very_bigger">{{date}}</p>
             {{#lieu}}<p class="lieu very_bigger">{{lieu}}</p>{{/lieu}}
         </div>
-        <div class="formulaire_interne">
+        <div class="formulaire_interne depliable">
             <h3 class="bit_big">Vous êtes interne à Sciences po</h3>
             <form>
                 {{#toutesLesSessions}}
@@ -46,7 +46,7 @@
             <p class="date very_bigger">{{date}}</p>
             {{#lieu}}<p class="lieu very_bigger">{{lieu}}</p>{{/lieu}}
         </div>
-        <div class="formulaire_interne">
+        <div class="formulaire_interne depliable">
             <h3 class="bit_big">Vous êtes interne à Sciences po</h3>
             <form>
                 {{#toutesLesSessions}}
@@ -85,7 +85,7 @@
             <p class="date very_bigger">{{date}}</p>
             {{#lieu}}<p class="lieu very_bigger">{{lieu}}</p>{{/lieu}}
         </div>
-        <div class="formulaire_interne">
+        <div class="formulaire_interne depliable">
             <h3 class="bit_big">Vous êtes interne à Sciences po</h3>
             <form>
                 {{#toutesLesSessions}}
