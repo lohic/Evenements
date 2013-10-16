@@ -1167,7 +1167,10 @@ body .fancybox-close {
 
 body .fancybox-inner{
 	overflow: visible !important;
-	min-height: 300px;
+}
+
+body .non-plan .fancybox-inner{
+	height: auto !important;
 }
 
 body .fancybox-title-float-wrap .child {
