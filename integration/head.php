@@ -7,12 +7,13 @@
     include_once(REAL_LOCAL_PATH.'classe/classe_keyword.php');
 
     $organisme = new organisme();
-    $event = new evenement();
-    $rubrique = new rubrique();
-    $session = new session();
-    $keyword = new keyword();
+    $event     = new evenement();
+    $rubrique  = new rubrique();
+    $session   = new session();
+    $keyword   = new keyword();
 
-    if($_GET['lang']=="en"){
+
+    if(isset($_GET['lang']) && $_GET['lang']=="en"){
         $lang="en";
         $complet = "FULL";
         $sinscrire = "SIGN UP";
