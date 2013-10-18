@@ -423,7 +423,10 @@ class Evenement {
 			$batiment = $rowsession1['session_adresse2'];
 		}
 
-		$image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/grande-".$row['evenement_image']."?cache=".time();
+		$image ='';
+		if(!empty($row['evenement_image'])){
+			$image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/grande-".$row['evenement_image']."?cache=".time();
+		}
 
 		$inscription = func::detectURL($rowsession1['session_complement_type_inscription']);
 
@@ -438,14 +441,25 @@ class Evenement {
         	$sinscrire = "S'INSCRIRE";
 		}
 		$resumeFacebook = "";
-		for($i = 0 ; $i < 15 ; $i++){
+		/*for($i = 0 ; $i < 15 ; $i++){
 			if($i != 14){
 				$resumeFacebook .= $resume[$i]." ";
 			}
 			else{
 				$resumeFacebook .= $resume[$i]."... &nbsp;";
 			}
+		}*/
+		// LOIC
+		$max = count($resume);
+		for($i = 0 ; $i < $max ; $i++){
+			if($i != ($max-1) ){
+				$resumeFacebook .= $resume[$i]." ";
+			}
+			else{
+				$resumeFacebook .= $resume[$i]."... &nbsp;";
+			}
 		}
+
 
 		$sinscrireTexte = "";
 		$session = new session();
