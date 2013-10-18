@@ -130,6 +130,35 @@ class Func {
 	}
 
 	/*
+	@ testChampsSoumission Teste si les champs obligatoires du formulaire de soumission d'un événement sont bien remplis, retourne vrai si c'est le cas
+	@
+	@
+	*/
+	static function testChampsSoumission($titre, $texte, $organisateur, $rubrique, $date, $heure){
+		$erreur = "";
+		
+		if($titre==""){
+			$erreur .= "le champ titre de l'événement est obligatoire<br/>";
+		}
+		if($texte==""){
+			$erreur .= "le champ description de l'événement est obligatoire<br/>";
+		}
+		if($organisateur==""){
+			$erreur .= "le champ organisateur de l'événement est obligatoire<br/>";
+		}
+		if($rubrique=="-1"){
+			$erreur .= "Merci de choisir une rubrique pour l'événement<br/>";
+		}
+		if($date==""){
+			$erreur .= "la date de début de l'événement est obligatoire<br/>";
+		}
+		if($heure==""){
+			$erreur .= "l'heure de début de l'événement est obligatoire<br/>";
+		}
+		return $erreur;
+	}
+
+	/*
 	@ Retourne les dates et horaires d'un événement en fonction de la langue
 	@
 	@
@@ -295,6 +324,248 @@ class Func {
 				unset($mailAlerte);
 			}
 		}	
+	}
+
+
+	/*
+	@ Envoie la soumission d'un événement
+	@
+	@
+	*/
+	static function envoiImage($image, $evenement, $user, $photo){ 
+		$sqlEvenement = sprintf("SELECT * FROM ".TB."evenements WHERE evenement_id=%s", func::GetSQLValueString($evenement, "int"));
+		$resEvenement=mysql_query($sqlEvenement) or die(mysql_error());
+		$rowEvenement = mysql_fetch_array($resEvenement);
+		
+		$sqlSoumetteur = sprintf("SELECT * FROM ".TB."users WHERE user_id =%s", func::GetSQLValueString($user, "int"));
+		$resSoumetteur=mysql_query($sqlSoumetteur) or die(mysql_error());
+		$rowSoumetteur = mysql_fetch_array($resSoumetteur);
+	    
+
+
+		$sqlUser=sprintf("SELECT * FROM ".TB."users as spu, ".TB."rel_user_groupe as spr WHERE (user_alerte = '1' AND user_type='1') OR (user_alerte='1' AND groupe_id=%s AND spr.user_id=spu.user_id) GROUP BY spu.user_id",func::GetSQLValueString($rowEvenement['evenement_groupe_id'], "int"));
+		$resUser=mysql_query($sqlUser) or die(mysql_error());
+		
+		$sqlsessions = sprintf("SELECT * FROM ".TB."sessions WHERE evenement_id=%s", func::GetSQLValueString($evenement, "int"));
+		$ressessions = mysql_query($sqlsessions) or die(mysql_error()); 
+		
+		$finEvenement=0;
+		while($rowsession = mysql_fetch_array($ressessions)){
+			if($rowsession['session_fin']>$finEvenement){
+				$finEvenement = $rowsession['session_fin'];
+			}
+		}
+
+		$jourDebut = date("d", $rowEvenement['evenement_date']);
+		$jourFin = date("d", $finEvenement);
+		$horaires = func::getHorairesAlerte($jourDebut, $jourFin, $rowEvenement['evenement_date'], $finEvenement);
+		
+		
+		while($rowUser = mysql_fetch_array($resUser)){
+			$mailAlerte  = new phpmailer();
+			$mailAlerte -> IsMail();
+			$mailAlerte -> Host     = 'localhost';
+			$mailAlerte -> Charset  = 'UTF-8';
+			$mailAlerte -> SMTPAuth = FALSE;
+			$mailAlerte -> From     = 	'no.reply@sciences-po.fr';
+			$mailAlerte -> FromName =	utf8_decode('Sciences Po - Evénements');
+			$mailAlerte -> AddReplyTo( );
+			$mailAlerte -> WordWrap = 72;
+			$mailAlerte -> IsHTML( TRUE );
+			$mailAlerte -> Subject		= utf8_decode("Nouvel événement proposé : ".$rowEvenement['evenement_titre']." par : ".$rowSoumetteur['user_nom']." ".$rowSoumetteur['user_prenom']);
+	        
+			$mailAlerte -> Body		.= utf8_decode($rowEvenement['evenement_titre'].", ".$horaires."<br/>");
+	        
+			$mailAlerte -> Body		.= utf8_decode("Proposé par ".$rowSoumetteur['user_nom']." ".$rowSoumetteur['user_prenom']." (<a href=\"mailto:".$rowSoumetteur['user_email']."\">".$rowSoumetteur['user_email']."</a>)<br/>");
+
+			$mailAlerte -> Body		.= utf8_decode("<a href=\"".CHEMIN_BACK."edit_evenement_unique.php?id=".$rowEvenement['evenement_id']."&menu_actif=evenements\">".$rowEvenement['evenement_titre']."</a><br/>");
+
+	        if($image!=""){
+		    	$mailAlerte -> Body		.= utf8_decode("Ci-joint l'image pour l'événement:<br/>"); 
+				$mailAlerte -> Body		.= utf8_decode("<img src=\"".CHEMIN_IMAGES."evenement_".$evenement."/".$photo."\" alt=\"".$rowEvenement['evenement_titre']."\"/>");    
+				$mailAlerte -> AddAttachment($image);
+			}
+
+			$mailAlerte -> AddAddress($rowUser['user_email']);
+
+			$mailAlerte->Send();
+			unset($mailAlerte);
+		}
+	}
+
+	/*
+	@ Horaires pour l'envoi de la soumission
+	@
+	@
+	*/
+	static function getHorairesAlerte($jourDebut, $jourFin, $debut, $fin){
+		if($jourDebut==$jourFin){
+			if(date("H:i", $fin)!="23:59"){
+				$horaires = date("d/m/Y", $debut)." : ".date("H\hi", $debut)." > ".date("H\hi", $fin);
+			}
+			else{
+				$horaires = date("d/m/Y", $debut)." à ".date("H\hi", $debut);
+			}	
+		}
+		else{
+			if(date("H:i", $fin)!="23:59"){
+				$horaires = "du ".date("d/m/Y", $debut)." à ".date("H\hi", $debut)." au ".date("d/m/Y", $fin)." à ".date("H\hi", $fin);
+			}
+			else{
+				$horaires = "du ".date("d/m/Y", $debut)." à ".date("H\hi", $debut)." au ".date("d/m/Y", $fin);
+			}
+		}
+		return $horaires;
+	}
+
+	/*
+	@ extension d'un fichier
+	@
+	@
+	*/
+	static function getExtension($fileName){
+		
+		// get the extension
+		$ext = substr(strrchr($fileName, '.'), 1);
+		
+		// to lower case
+		$ext = "." . strtolower($ext);
+		
+		return $ext;
+	}
+
+	/*
+	@ contrôle la validité de l'extension
+	@
+	@
+	*/
+	static function isExtAuthorized($ext){
+		$format_autorise = array( ".jpg", ".jpeg", ".png", ".gif");
+		if(in_array($ext, $format_autorise)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	/*
+	@ crée une miniature pour une image
+	@
+	@
+	*/
+	static function make_miniature($img, $max_width=400, $max_height=400, $repertoire_destination='./', $prefixe='mini-', $supprimer_original=false){
+		/*Fonction qui créer la mimiature d'une image.
+		Retourne true si la miniature a bien été créée, un message d'erreur sinon
+
+		Liste des paramètres :
+		- $img : Chemin relatif du répertoire dans lequel se trouve l'image originale
+		- $max_width : Largeur maximale pour la miniature
+		- $max_height : Hauteur maximale pour la miniature
+		- $repertoire_destination : Répertoire dans lequel doit être sauvegardée la miniature
+		- $prefixe : Préfixe donné à la miniature (Ex : "ma-photo.jpg" devient "mini-ma-photo.jpg"
+		- $supprimer_original : Si est égal à true on supprime l'image originale
+
+		/*Initialisations*/
+		$reussi = false;
+		$message = '';
+
+		/*on ouvre le fichier*/
+		$file = fopen($img,'r');
+		
+		
+		
+		if ($file !== false){ //Le fichier existe
+			/*On recupere le nom de l'image*/
+			$nom = $prefixe.basename($img);
+			
+			/*getimagesize() renvoie FALSE si le fichier n'est pas une image*/
+			if (false !== list($largeur_orig,$hauteur_orig,$extension) = getimagesize($img)){
+				/*On récupère l'extension de l'image*/
+				$extension_img = substr(strchr($nom,'.'),1);
+				/*On vérifie que le fichier soit bien au format jpg, gif ou png*/
+				if(ereg('(jpeg|jpg|gif|png)$',$extension_img)){
+					
+					switch ($extension_img){
+						case "gif": // GIF
+						$type_img = imagecreatefromgif($img); break;
+						case "jpg": //JPEG
+						$type_img = imagecreatefromjpeg($img); break;
+						case "jpeg": //JPEG
+						$type_img = imagecreatefromjpeg($img); break;
+						case "png": // PNG
+						$type_img = imagecreatefrompng($img); break;
+					}
+					
+			
+					/*On verifie la taille*/
+					if(($largeur_orig > $max_width) || ($hauteur_orig > $max_height)){
+						// si l'image est trop large ou trop haute
+						if ($largeur_orig > $hauteur_orig){
+							// image plus large que haute
+							$hauteur = round(($hauteur_orig * $max_width) / $largeur_orig);
+							$largeur = $max_width;
+						}
+						else{
+							// image plus haute que large
+							$hauteur = $max_height;
+							$largeur = round(($largeur_orig * $max_height) / $hauteur_orig);
+						}
+					}
+					else{
+						$largeur = $largeur_orig;
+						$hauteur = $hauteur_orig;
+					}
+
+					/*On créer la miniature*/
+					$src = imagecreatetruecolor($largeur,$hauteur);
+					imagealphablending($src, false);
+			
+					imagecopyresampled($src,$type_img,0,0,0,0,$largeur,$hauteur,$largeur_orig,$hauteur_orig);
+					
+					imagesavealpha($src, true);
+					
+					/*On sauvegarde la miniature*/
+					
+					
+					switch ($extension_img){
+						case "gif": // GIF
+						imagegif($src, $repertoire_destination.$nom); break;
+						case "jpg": //JPEG
+						imagejpeg($src, $repertoire_destination.$nom); break;
+						case "jpeg": //JPEG
+						imagejpeg($src, $repertoire_destination.$nom); break;
+						case "png": // PNG
+						imagepng($src, $repertoire_destination.$nom); break;
+					}
+					
+					/*On libere la memoire utilisée par cette image.*/
+					imagedestroy($src);
+					
+					/*On supprime éventuellement l'image originale*/
+					if ($supprimer_original === true){
+						unlink($img);
+					}
+					
+					$reussi=true;
+				}
+				else{
+					$message = 'Erreur : L\'extension de l\'image est '.$extension_img.' ! Elle devrait être JPG, JPEG, GIF ou PNG';
+				}
+			}
+			else{
+				$message = 'Erreur : Le fichier n\'est pas une image !';
+			}
+		}
+		else{
+			$message = 'Erreur : Le fichier n\'existe pas !';
+		}
+
+		if ($reussi){
+			return true;
+		}
+		else{
+			return $message;
+		}
 	}
 
 	/*
@@ -927,6 +1198,23 @@ class Func {
 		setlocale(LC_TIME, 'fr_FR');
 		return utf8_encode(strftime('%d %B %Y',strtotime($date)));
 	}
+
+	/*
+	@ Génère le code extene pour une session
+	@
+	@
+	*/
+	static function genereCode(){
+		$code = '';
+		for($i=0;$i<6;$i++){
+			switch(rand(1,3)){
+				case 1: $code.=chr(rand(48,57));  break; //0-9
+				case 2: $code.=chr(rand(65,90));  break; //A-Z
+				case 3: $code.=chr(rand(97,122)); break; //a-z
+			}
+		}
+		return $code;
+	} 
 
 }
 

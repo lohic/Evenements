@@ -55,6 +55,10 @@ body {
 	line-height: 1.5; /* adapt to your design */
 }
 
+body.iframe{
+	background: none;
+}
+
 a{
 	text-decoration: none;
 	color:#000;
@@ -1184,6 +1188,11 @@ body .fancybox-iframe{
 	color:#fff;
 }
 
+#cartouche .resumeContent{
+	color:#333;
+	margin-top: 20px;
+}
+
 #cartouche h2{
 	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
     margin-top: -3px;
@@ -1371,6 +1380,15 @@ body .fancybox-iframe{
 	padding: 0 5px;
 }
 
+body.iframe input#user_login_LDAP{
+	width: 261px;
+}
+
+body.iframe input#envoyer{
+	margin-left: 269px;
+    width: 70px;
+}
+
 .formulaire_interne input[type="checkbox"], .formulaire_externe input[type="checkbox"]{
 	width: 20px;
 }
@@ -1409,6 +1427,8 @@ body .fancybox-iframe{
 	display:block;
 	text-align: right;
 	font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
+	border:none;
+	background: none;
 }
 
 .formulaire_interne form, .formulaire_externe form{

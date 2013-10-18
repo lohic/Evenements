@@ -316,15 +316,11 @@ $(document).ready(function(){
 	//fonction qui gère l'affichage des filtre en mode desktop
 	clickFiltre();
 
-	$('a.soumettre').click(function(e){
-		e.preventDefault();
-		login_soumission = ich.login_soumission_form();
-
-        $.fancybox( login_soumission , {
-            title : 'Proposer un événement',
-        });
-
-        validFancyBox();
+	$('a.soumettre').fancybox({
+		title : 'Proposer un événement',
+		width : 800,
+		height: '100%',
+		padding: 15,
 	});
 
 	$('a.plan').fancybox({
