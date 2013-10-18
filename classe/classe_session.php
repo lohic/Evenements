@@ -41,8 +41,8 @@ class Session {
 		// ici on place toutes les fonctions qui servent à mettre à jour ou à créer des objets
 		//
 		// ici on peut aussi normaliser les données à l'aide de :
-		func::GetSQLValueString($valeur, 'int');
-		func::GetSQLValueString($valeur, 'text');
+		// func::GetSQLValueString($valeur, 'int');
+		// func::GetSQLValueString($valeur, 'text');
 		// ...etc		
 		
 		if(isset($_POST['update']) && $_POST['update'] == 'update'){
@@ -52,8 +52,6 @@ class Session {
 		if(isset($_POST['update']) && $_POST['update'] == 'delete'){
 			delete_session($_id);
 		}
-
-
 
 		// ...etc
 		// 
@@ -837,6 +835,5 @@ class Session {
 		return $contents;
 
 	}
-
 }
 	
