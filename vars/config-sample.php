@@ -2,6 +2,7 @@
 
 // CONFIG SAMPLE
 
+define ('MAINTENANCE',			false);
 
 /**
 * variables de connexion
