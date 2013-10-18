@@ -26,6 +26,8 @@ class Organisme {
 		global $connexion_info;
 		$this->evenement_db		= new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
 		if(self::$updated == false){
+			$_array_val = array();
+
 			$this->updater($_array_val,$_id);
 		}
 	}
