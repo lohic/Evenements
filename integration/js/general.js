@@ -313,9 +313,6 @@ $(document).ready(function(){
 	    }
 	});
 
-	//fonction qui gère l'affichage des filtre en mode desktop
-	clickFiltre();
-
 	$('a.soumettre').fancybox({
 		title : 'Proposer un événement',
 		width : 800,
@@ -697,12 +694,7 @@ function clickFiltreIsotope(){
 
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 		$('#liste_evenements').isotope( 'remove', $('.resume') );
-		return false;
-	});
-}
 
-function clickFiltre(){
-	$('.nom_du_filtre').click(function(e){
 		if($(this).text()=="Toutes" || $(this).text()=="Tous"){
 			if($(this).parent().parent().attr('id')=='filtering-nav-categorie'){
 				$(this).parent().parent().parent().find('span.le_titre_filtre').text('Catégories');
@@ -719,7 +711,9 @@ function clickFiltre(){
 			$(this).parent().parent().parent().find('span.le_titre_filtre').text($(this).text());
 			$(this).parent().parent().parent().find('span.le_titre_filtre').css('text-transform', 'none');
 		}
-	});  
+
+		return false;
+	});
 }
 
 function clickTitre(){
