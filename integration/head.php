@@ -69,7 +69,7 @@
         <script type="text/javascript" src="js/jRespond.min.js"></script>
         <script type="text/javascript" src="lib/jquery.mousewheel-3.0.6.pack.js"></script>
         <script type="text/javascript" src="source/jquery.fancybox.js?v=2.1.4"></script>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
 
         <script type="text/javascript" src="js/general.js"></script>
     </head>
