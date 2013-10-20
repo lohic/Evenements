@@ -20,19 +20,48 @@ class Billet {
 
 	var $connexion;
 	var $unique_id;
+	var $couleur;
+	var $session_nom;
+	var $date;
+	var $heure;
+	var $langue;
+	var $inscrit_nom;
+	var $inscrit_prenom;
+	var $inscrit_type;
+	var $inscrit_acces;
+	var $inscrit_traduction;
+	var $session_lieu;
+	var $session_organisateur;
+	var $organisme_image_billet;
+	var $organisme_url_image;
+	
 	var $big_PDF;
 
 	/**
-	 * [billet description]
-	 * @param  [type] $_unique_id [description]
+	 * création d'un billet dans les 3 formats utiles en fonction des informations de l'inscrit et de l'événement auquel il s'est inscrit
+	 * @param  int $_unique_id identifiant unique de l'inscrit
+	 * @param  text $couleur couleur de l'organisme pour le billet
+	 * @param  text $session_nom nom de la session
+	 * @param  text $date date de la session au format jj/mm/aaaa
+	 * @param  text $heure heure de la session au format hh:mm
+	 * @param  text $langue langue de la session (abbréviation)
+	 * @param  text $inscrit_nom nom de l'inscrit
+	 * @param  text $inscrit_prenom prénom de l'inscrit
+	 * @param  text $inscrit_type inscription interne ou externe 
+	 * @param  text $inscrit_acces salle de la session (ou retransmission)
+	 * @param  boolean $inscrit_traduction vrai si l'inscrit a demandé un casque pour la traduction
+	 * @param  text $session_lieu lieu de l'événement
+	 * @param  text $session_organisateur organisateur de l'événement
+	 * @param  text $organisme_image_billet image optionnelle pour le billet, liée à l'organisme
+	 * @param  text $organisme_url_image url vers laquelle pointe l'image optionnelle, liée à l'organisme
 	 * @return [type]             [description]
 	 */
-	function billet($_unique_id = NULL){
+	function billet($_unique_id = NULL, $couleur='#cb021a', $session_nom='', $date='', $heure='', $langue='', $inscrit_nom='', $inscrit_prenom='', $inscrit_type='', $inscrit_acces='', $inscrit_traduction='', $session_lieu='', $session_organisateur='', $organisme_image_billet='', $organisme_url_image=''){
 
 		if(!empty($_unique_id)){
 
 			$template = 'default';
-			$this->code_couleur = '#cb021a';
+			$this->code_couleur = $couleur;
 			if(!is_dir( REAL_LOCAL_PATH.'template_front/'. $template . '/billet/' ) ){
 				$template = 'default';
 				$this->code_couleur = '#cb021a';
@@ -43,11 +72,11 @@ class Billet {
 
 			$this->unique_id = $_unique_id;
 
-			$this->session_name	= "Le nom de la conférence à laquelle on assiste encore plus long";
+			$this->session_name	= $session_nom;
 
-			$this->date			= "30/12/2013";
-			$this->horaire		= "20:30";
-			$this->lang			= "FR";
+			$this->date			= $date;
+			$this->horaire		= $heure;
+			$this->lang			= $langue;
 
 			// attention sert pour le chemin du billet
 			$temp_date 			= explode('/',$this->date);
@@ -55,22 +84,18 @@ class Billet {
 			$this->mois			= $temp_date[1];
 			$this->annee		= $temp_date[2];
 
-			$this->nom 			= 'Horellou jh hk kh k ljhkh lk hlkh';
-			$this->prenom 		= 'Loïc';
-			$this->statut		= 'interne';
+			$this->nom 			= $inscrit_nom;
+			$this->prenom 		= $inscrit_prenom;
+			$this->statut		= $inscrit_type;
 
-			$this->acces		= 'retransmission'; // Retransmission ou le nom de la salle
-			$this->ecouteurs	= true;
+			$this->acces		= $inscrit_acces; // Retransmission ou le nom de la salle
+			$this->ecouteurs	= $inscrit_traduction;
 
-			$this->image		= '';
-			$this->url_image	= '';
+			$this->lieu			= $session_lieu;
+			$this->organisateur = $session_organisateur;
 
-			$this->lieu			= "27 Rue Saint-Guillaume\n75007 Paris";
-			$this->organisateur = "Sciences Po Paris";
-
-			//$this->imageBillet  = "http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_1980/grande-image.jpg?cache=1380555674";
-			$this->imageBillet	= $this->absoluteBilletFolder.'images/pdf/billet_boutique.jpg';
-			$this->url_image	= "http://www.sciencespo.fr/evenements/#/?lang=fr&id=1980"; 
+			$this->imageBillet	= $organisme_image_billet;
+			$this->url_image	= $organisme_url_image; 
 
 			$this->big_PDF		= true;
 		}

@@ -1,6 +1,7 @@
 <?php
 
-//include_once('../vars/config.php');
+include_once('../vars/config.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_organisme.php');
@@ -8,7 +9,7 @@ include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');
 
 include_once(REAL_LOCAL_PATH.'classe/class.phpmailer.php');
 include_once(REAL_LOCAL_PATH.'classe/class.smtp.php');
-//include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_billet.php');
 //include_once('fonctions.php');
 //include_once('connexion_vars.php');
 
@@ -429,17 +430,17 @@ class Session {
 												func::GetSQLValueString($lastIdInsert, "int"));
 
 					mysql_query($sqlupdate) or die(mysql_error());
-					$dateBillet=date("Y-m-d", $rowSession['session_debut']);
+					$dateBillet=date("d/m/Y", $rowSession['session_debut']);
 					$dateMail=date("d/m/Y", $rowSession['session_debut']);
 					$heureDebut = date("H:i", $rowSession['session_debut']);
 					$heureFin = date("H:i", $rowSession['session_fin']);
 					
-					if($heureFin=="23:59"){
+					/*if($heureFin=="23:59"){
 						$heureBillet="à ".$heureDebut;
 					}
 					else{
 						$heureBillet="de ".$heureDebut." à ".$heureFin;
-					}
+					}*/
 					
 					if($casque==1){
 						$casque = true;
@@ -459,12 +460,14 @@ class Session {
 						$mentions = $rowBan['organisme_mentions'];
 					}
 					
-					//func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
+					$billet = new billet($uniqueId, $rowBan['organisme_couleur'], $rowSession['session_nom'], $dateBillet, $heureDebut, $code_langues_evenement[$rowSession['session_langue']], $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $endroit, $casque, $rowSession['session_adresse2'], $rowSession['evenement_organisateur'], $rowBan['organisme_image_billet'], $rowBan['organisme_url_image']);
+
+					/*func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
 					
-					$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";
+					$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
 					$session = $rowSession['session_nom'];
 				
-					func::envoiMail($_SESSION['nomSP'], $_SESSION['prenomSP'], $_SESSION['mailSP'], $session, $dateMail, $cheminBillet, $endroitMessage);
+					func::envoiMail($session, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $_SESSION['mailSP']);
 					
 					func::envoiAlerte($rowSession['session_id']);
 
@@ -636,17 +639,17 @@ class Session {
 													func::GetSQLValueString($lastIdInsert, "int"));
 						mysql_query($sqlupdate) or die(mysql_error());
 
-						$dateBillet=date("Y-m-d", $rowSession['session_debut']);
+						$dateBillet=date("d/m/Y", $rowSession['session_debut']);
 						$dateMail=date("d/m/Y", $rowSession['session_debut']);
 						$heureDebut = date("H:i", $rowSession['session_debut']);
 						$heureFin = date("H:i", $rowSession['session_fin']);
 
-						if($heureFin=="23:59"){
+						/*if($heureFin=="23:59"){
 							$heureBillet="à ".$heureDebut;
 						}
 						else{
 							$heureBillet="de ".$heureDebut." à ".$heureFin;
-						}
+						}*/
 					    
 						if($casque==1){
 							$casque = true;
@@ -666,14 +669,16 @@ class Session {
 							$mentions = $rowBan['organisme_mentions'];
 						}
 					
-						//func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $nom, $prenom, 'externe', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
-									
-						$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";
+						$billet = new billet($uniqueId, $rowBan['organisme_couleur'], $rowSession['session_nom'], $dateBillet, $heureDebut, $code_langues_evenement[$rowSession['session_langue']], $nom, $prenom, 'externe', $endroit, $casque, $rowSession['session_adresse2'], $rowSession['evenement_organisateur'], $rowBan['organisme_image_billet'], $rowBan['organisme_url_image']);
+
+						/*func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
+						
+						$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
 						$session = $rowSession['session_nom'];
 					
-						func::envoiMail($nom, $prenom, $mail, $session, $dateMail, $cheminBillet, $endroitMessage);
+						func::envoiMail($session, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $mail);
 
-						//func::envoiAlerte($rowSession['session_id']);
+						func::envoiAlerte($rowSession['session_id']);
 					
 						if($rowSession['session_statut_inscription']==1 && !$testVisio){
 							$estCompleteBis = $this->test_session_complete($rowSession['session_id'], "session_places_internes_totales", "session_places_internes_prises");

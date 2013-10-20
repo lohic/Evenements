@@ -59,6 +59,15 @@ $row3 = mysql_fetch_array($res3);
 
 		<h4>URL Front</h4>
 	    <p><label for="organisme_url_front">Chemin :</label><input name="organisme_url_front" type="text" class="inputField" id="organisme_url_front" value="<?php echo $row3['organisme_url_front'];?>"/></p>
+	
+		<div class="clear"></div>
+
+		<h4>Billet</h4>
+		<img src="upload/billet/<?php echo $row3['organisme_id'];?>/<?php echo $row3['organisme_image_billet'];?>" alt=""/>
+	    <p><label for="organisme_image_billet">Image pour les billets :</label><input type="file" name="organisme_image_billet" id="organisme_image_billet"/></p>
+		<a href="organismes.php?fonction=supprimer_image_billet&amp;id=<?php echo $row3['organisme_id'];?>&amp;menu_actif=logins" class="supprimer" onclick="confirmar('organismes.php?fonction=supprimer_image_billet&amp;id=<?php echo $row3['organisme_id'];?>', 'Etes-vous sûr de vouloir supprimer cette image?')" title="supprimer"><img src="img/trash.png" alt="supprimer"/></a>	
+		<input type="hidden" name="image_billet_cache" id="image_billet_cache" value="<?php echo $row3['organisme_image_billet']; ?>"/>
+		<p><label for="organisme_url_image">Lien pour l'image des billets :</label><input name="organisme_url_image" class="inputField" type="text" id="organisme_url_image" value="<?php echo $row3['organisme_url_image'];?>" /></p>
 	</div>
 	<div class="liens">
 		

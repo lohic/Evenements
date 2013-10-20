@@ -57,7 +57,7 @@ class Organisme {
 			//MODIFICATION
 			$updateSQL 		= sprintf("UPDATE ".TB."organismes SET organisme_nom=%s, organisme_google_analytics_id=%s, organisme_couleur=%s, 
 																   organisme_banniere_chemin=%s, organisme_banniere_lien=%s, organisme_logo_chemin=%s,
-																   organisme_mentions, organisme_url_front WHERE id=%s",
+																   organisme_mentions, organisme_url_front, organisme_image_billet, organisme_url_image WHERE id=%s",
 													func::GetSQLValueString($_array_val['organisme_nom'], "text"),
 													func::GetSQLValueString($_array_val['google_analytics_id'], "text"),
 													func::GetSQLValueString($_array_val['organisme_couleur'], "text"),
@@ -66,6 +66,8 @@ class Organisme {
 													func::GetSQLValueString($_array_val['organisme_logo_chemin'], "text"),
 													func::GetSQLValueString($_array_val['organisme_mentions'], "text"),
 													func::GetSQLValueString($_array_val['organisme_url_front'], "text"),
+													func::GetSQLValueString($_array_val['organisme_image_billet'], "text"),
+													func::GetSQLValueString($_array_val['organisme_url_image'], "text"),
 													func::GetSQLValueString($_id,"int"));
 																										
 			$update_query	= mysql_query($updateSQL) or die(mysql_error());
@@ -75,7 +77,7 @@ class Organisme {
 			//CREATION
 			$insertSQL 		= sprintf("INSERT INTO ".TB."organismes (organisme_nom, organisme_google_analytics_id, organisme_couleur, 
 																	 organisme_banniere_chemin, organisme_banniere_lien, organisme_logo_chemin,
-																	 organisme_mentions, organisme_url_front) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+																	 organisme_mentions, organisme_url_front, organisme_image_billet, organisme_url_image) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 													func::GetSQLValueString($_array_val['organisme_nom_creation'], "text"),
 													func::GetSQLValueString($_array_val['google_analytics_id_creation'], "text"),
 													func::GetSQLValueString($_array_val['organisme_couleur_creation'], "text"),
@@ -83,7 +85,9 @@ class Organisme {
 													func::GetSQLValueString($_array_val['organisme_banniere_lien_creation'], "text"),
 													func::GetSQLValueString($_array_val['organisme_logo_chemin_creation'], "text"),
 													func::GetSQLValueString($_array_val['organisme_mentions_creation'], "text"),
-													func::GetSQLValueString($_array_val['organisme_url_front_creation'], "text"));
+													func::GetSQLValueString($_array_val['organisme_url_front_creation'], "text"),
+													func::GetSQLValueString($_array_val['organisme_image_billet_creation'], "text"),
+													func::GetSQLValueString($_array_val['organisme_url_image_creation'], "text"));
 			$insert_query	= mysql_query($insertSQL) or die(mysql_error());
 			
 			$_id = mysql_insert_id();

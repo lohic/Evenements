@@ -14,6 +14,7 @@ if( isset($_POST['type_saisie_organisme'])){
 		$logo = retournePhoto($_FILES['organisme_logo_chemin']['name'], $_POST['logo_cache']);
 		$banniere_facebook = retournePhoto($_FILES['organisme_banniere_facebook_chemin']['name'], $_POST['banniere_facebook_cache']);
 		$footer_facebook = retournePhoto($_FILES['organisme_footer_facebook_chemin']['name'], $_POST['footer_facebook_cache']);
+		$image_billet = retournePhoto($_FILES['organisme_image_billet']['name'], $_POST['image_billet_cache']);
 
 		$sql ="UPDATE sp_organismes SET
 					organisme_nom = '".addslashes($_POST["organisme_nom"])."',
@@ -27,7 +28,9 @@ if( isset($_POST['type_saisie_organisme'])){
 					organisme_editeur_id = '".$_SESSION['id']."',
 					organisme_editeur_ip =  '".$_SERVER["REMOTE_ADDR"]."',
 					organisme_mentions = '".$_POST["organisme_mentions"]."',
-					organisme_url_front = '".$_POST["organisme_url_front"]."'
+					organisme_url_front = '".$_POST["organisme_url_front"]."',
+					organisme_image_billet = '".$image_billet."',
+					organisme_url_image = '".$_POST["organisme_url_image"]."'
 				WHERE organisme_id = '".$_POST['organisme_id']."'";
 		mysql_query($sql) or die(mysql_error());
 		
@@ -122,6 +125,29 @@ if( isset($_POST['type_saisie_organisme'])){
 				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
 			}
 		}
+
+		if($_FILES['organisme_image_billet']['name']!=""){
+			mkdir("upload/billet/".$_POST['organisme_id']);
+			// Renseigne ici le chemin de destination de la photo
+			$file_url = 'upload/billet/'.$_POST['organisme_id'];
+			// Définition des extensions de fichier autorisées (avec le ".")
+			$extension = getExtension($_FILES['organisme_image_billet']['name']);
+
+			if(isExtAuthorized($extension)){
+				$image_billet = 'image'.$extension;		
+				// Upload fichier
+				if (@move_uploaded_file($_FILES['organisme_image_billet']['tmp_name'], $file_url.'/'.$image_billet)){
+					@chmod("$file_url/$image_billet", 0777);
+					$img="$file_url/$image_billet";
+					$repertoire_destination="./".$file_url."/";
+				}
+				else{
+					echo "Erreur, impossible d'envoyer le fichier $image_billet";
+				}
+			}else{
+				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
+			}
+		}
 		
 	}
 
@@ -145,8 +171,13 @@ if( isset($_POST['type_saisie_organisme'])){
 		if(isExtAuthorized($extension)){
 			$footer_facebook = 'image'.$extension;
 		}
+
+		$extension = getExtension($_FILES['organisme_image_billet_creation']['name']);
+		if(isExtAuthorized($extension)){
+			$image_billet = 'image'.$extension;
+		}
         
-		$sql ="INSERT INTO sp_organismes VALUES ('', '".addslashes($_POST["organisme_nom_creation"])."', '', '".$_POST["organisme_google_analytics_id_creation"]."', '','".$banniere."','".$_POST['organisme_banniere_lien_creation']."','".$logo."','".$banniere_facebook."','".$footer_facebook."', '".$_POST["organisme_couleur_creation"]."', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."', '".$_POST['organisme_mentions_creation']."', '".$_POST['organisme_url_front_creation']."')";
+		$sql ="INSERT INTO sp_organismes VALUES ('', '', '".addslashes($_POST["organisme_nom_creation"])."', '', '".$_POST["organisme_google_analytics_id_creation"]."', '','".$banniere."','".$_POST['organisme_banniere_lien_creation']."','".$logo."','".$banniere_facebook."','".$footer_facebook."', '".$_POST["organisme_couleur_creation"]."', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."', '".$_POST['organisme_mentions_creation']."', '".$_POST['organisme_url_front_creation']."', '".$image_billet."', '".$_POST['organisme_url_image_creation']."')";
 		mysql_query($sql) or die(mysql_error());
        	
 		$lastIdInsert = mysql_insert_id();
@@ -243,6 +274,29 @@ if( isset($_POST['type_saisie_organisme'])){
 				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
 			}
 		} 
+
+		if($_FILES['organisme_image_billet_creation']['name']!=""){
+			mkdir("upload/billet/".$lastIdInsert);
+			// Renseigne ici le chemin de destination de la photo
+			$file_url = 'upload/billet/'.$lastIdInsert;
+			// Définition des extensions de fichier autorisées (avec le ".")
+			$extension = getExtension($_FILES['organisme_image_billet_creation']['name']);
+
+			if(isExtAuthorized($extension)){
+				$image_billet = 'image'.$extension;		
+				// Upload fichier
+				if (@move_uploaded_file($_FILES['organisme_image_billet_creation']['tmp_name'], $file_url.'/'.$image_billet)){
+					@chmod("$file_url/$image_billet", 0777);
+					$img="$file_url/$image_billet";
+					$repertoire_destination="./".$file_url."/";
+				}
+				else{
+					echo "Erreur, impossible d'envoyer le fichier $image_billet";
+				}
+			}else{
+				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
+			}
+		}
 	} 
 	header("Location:organismes.php?menu_actif=logins"); 
 }
@@ -287,6 +341,16 @@ if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_banniere_facebook"
 if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_footer_facebook"){
 	$sql ="UPDATE sp_organismes SET
 				organisme_footer_facebook_chemin = ''
+			WHERE organisme_id = '".$_GET['id']."'";
+	mysql_query($sql) or die(mysql_error());  
+	/*$dossier="upload/banniere/".$_GET['id'];
+	clearDir($dossier);*/
+	header("Location:organismes.php?menu_actif=logins");
+}
+
+if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_image_billet"){
+	$sql ="UPDATE sp_organismes SET
+				organisme_image_billet = ''
 			WHERE organisme_id = '".$_GET['id']."'";
 	mysql_query($sql) or die(mysql_error());  
 	/*$dossier="upload/banniere/".$_GET['id'];
@@ -366,6 +430,12 @@ if($core->isAdmin && $core->userLevel<=1){
 
 					<h4>URL Front</h4>
 				    <p><label for="organisme_url_front_creation">Chemin :</label><input name="organisme_url_front_creation" type="text" class="inputField" id="organisme_url_front_creation" value=""/></p>
+				
+					<div class="clear"></div>
+
+					<h4>Billet</h4>
+				    <p><label for="organisme_image_billet_creation">Image pour les billets :</label><input type="file" name="organisme_image_billet_creation" id="organisme_image_billet_creation"/></p>
+					<p><label for="organisme_url_image_creation">Lien pour l'image des billets :</label><input name="organisme_url_image_creation" class="inputField" type="text" id="organisme_url_image_creation" value="" /></p>					
 				</div>
 				<div class="liens">
 					

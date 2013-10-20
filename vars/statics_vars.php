@@ -5,6 +5,18 @@ $langues_evenement = array("Français"=>"33", "Anglais"=>"44", "Chinois"=>"86", 
 $batiments = array("A"=>"A => 27, rue Saint Guillaume 75006 - Paris", "B"=>"B => 56, rue des Saint-Pères 75006 - Paris", "C"=>"C => 9, rue de la Chaise 75006 - Paris", "D"=>"D => 199, bd Saint-Germain 75006 - Paris", "J"=>"J => 13, rue de l'Université 75006 - Paris", "K"=>"K => 117, bd Saint-Germain 75006 - Paris", "H"=>"H => 28, rue des Saints-Pères 75006 - Paris", "S"=>"S => 56, rue Jacob 75006 - Paris", "CEVIPOF"=>"CEVIDOF => 98, rue de l'Université 75006 - Paris", "Bibliothèque et Librairie"=>"Bibliothèque et Librairie => 30, rue Saint Guillaume 75006 - Paris");
 $salles = array("Amphithéâtre Emile Boutmy","Amphithéâtre Jacques Chapsal","Salle Leroy-Beaulieu","Salle Albert Sorel","Amphithéâtre Leroy-Beaulieu-Sorel","Salle François Goguel","Amphithéâtre Jean Moulin","Amphithéâtre Albert Caquot","Amphithéâtre Erignac");
 
+$code_langues_evenement = array();
+$code_langues_evenement ['33']  = "FR";
+$code_langues_evenement ['44']  = "EN";
+$code_langues_evenement ['86']  = "ZH";
+$code_langues_evenement ['49']  = "DE";
+$code_langues_evenement ['45']  = "DA";
+$code_langues_evenement ['34']  = "ES";
+$code_langues_evenement ['39']  = "IT";
+$code_langues_evenement ['83']  = "JA";
+$code_langues_evenement ['48']  = "PL";
+$code_langues_evenement ['7']   = "RU";
+$code_langues_evenement ['420'] = "CS";
 
 date_default_timezone_set('UTC');
 

@@ -249,7 +249,7 @@ class Func {
 	@
 	@
 	*/
-	static function envoiMail($nom, $prenom, $mail, $session, $date, $billet, $endroit){
+	static function envoiMail($session, $mailHTML, $billet, $passBook, $mail){
 		$mailEnvoi  = new phpmailer();
 		$mailEnvoi -> IsMail();
 		$mailEnvoi -> Host     = 'localhost';
@@ -262,22 +262,11 @@ class Func {
 		$mailEnvoi -> WordWrap = 72;
 		$mailEnvoi -> IsHTML( TRUE );
 		
-		if($endroit==1){
-			$mailEnvoi -> Subject		= utf8_decode("Inscription à la retransmission: ".$session);
-			$mailEnvoi -> Body		.= utf8_decode("Bonjour ".$prenom." ".$nom.".<br/>Vous êtes maintenant inscrit(e) à la retransmission:<br/>");
-		}
-		else{
-			$mailEnvoi -> Subject		= utf8_decode("Inscription à ".$session);
-			$mailEnvoi -> Body		.= utf8_decode("Bonjour ".$prenom." ".$nom.".<br/>Vous êtes maintenant inscrit(e) à l'événement:<br/>");
-		}
+		$mailEnvoi -> Subject		= utf8_decode("Inscription à ".$session);
 
-		
-		$mailEnvoi -> Body		.= utf8_decode("<strong>".$session."</strong><br/><br/>");
-		
-		$mailEnvoi -> Body		.= utf8_decode("Veuillez trouver le billet correspondant en pièce jointe.<br/>Merci de vous munir de ce billet imprimé et d'une pièce d'identité le jour de l'événement.<br/><br/>Ce billet est strictement personnel et incessible, il peut être contrôlé à l'entrée.<br/><br/>Cordialement<br/>Sciences Po Evénements");
-			
+		$mailEnvoi -> Body		.= $mailHTML;
+				
 		$mailEnvoi -> AddAttachment($billet);
-		//$mailEnvoi -> AddAttachment('export/billet_7000000404633.pdf');
 		
 		$mailEnvoi -> AddAddress($mail);
 		$mailEnvoi->Send();
