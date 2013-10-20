@@ -15,6 +15,7 @@ class FrontOffice {
 
 	var $lang			= 'fr';
 	var $organisme		= 'dircom';
+	var $organisme_id;
 	var $url			= '/index.php';
 	
 	static $updated		= false;
@@ -71,8 +72,22 @@ class FrontOffice {
 
 		// on vérifie l'organisme
 		if(isset($_GET['organisme']) && !empty($_GET['organisme'])){
-			$this->organisme = $_GET['organisme'];
+			$organisme = $_GET['organisme'];
 		}
+
+		if(empty($organisme)){
+			$organisme = $this->organisme;
+		}
+
+		$sql = sprintf("SELECT organisme_id, organisme_shortcode
+						FROM sp_organismes
+						WHERE organisme_shortcode=%s",
+						func::GetSQLValueString($organisme, 'text'));
+		$query	= mysql_query($sql) or die(mysql_error());
+		$result = mysql_fetch_assoc($query);
+
+		$this->organisme 	= $result['organisme_shortcode'];
+		$this->organisme_id = $result['organisme_id'];
 
 		// on récupère et on normalise l'url
 		if(isset($_GET['url']) && !empty($_GET['url'])){
@@ -126,33 +141,38 @@ class FrontOffice {
 			}
 		}
 
-		$template_url = ABSOLUTE_URL.'template_front/' . $this->template;
-		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template;
+		$template_url 		 = ABSOLUTE_URL.'template_front/' . $this->template . '/';
+		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template . '/';
 
 
 		$file = $this->url;
 
 
 		// on vérifie le fichier index.php du template
-		if( is_file($template_local_path.$file) ){
+		if( is_file($template_local_path . $file) ){
 			// on créé les variables locales et absolues pour le chemin du template
-			$template_index = $template_local_path.$file;
+			$file_to_show 	   = $template_local_path.$file;
 			$template_file_url = $template_url;
 		}else{
-			$template_index = REAL_LOCAL_PATH.'template_front/default'.$file;
-			$template_file_url = ABSOLUTE_URL.'template_front/default/';
+			$file_to_show 	   = REAL_LOCAL_PATH . 'template_front/default' . $file;
+			$template_file_url = ABSOLUTE_URL . 'template_front/default/';
 		}
 
+		//echo $template_local_path . 'style.css'."\n";
+
 		// on vérifie le fichier style.css du template
-		if(is_file($template_local_path.'style.css')){
-			$template_css = $template_url.'style.css';
+		if(is_file($template_local_path . 'style.css')){
+			$template_css = $template_url . 'style.css';
 		}else{
-			$template_css = ABSOLUTE_URL.'template_front/default/style.css';
+			$template_css = ABSOLUTE_URL . 'template_front/default/style.css';
 		}
+
+
+		//echo $template_css;
 
 		ob_start();
 
-			include($template_index);
+			include($file_to_show);
 			$contents = ob_get_contents();
 
 		ob_end_clean();

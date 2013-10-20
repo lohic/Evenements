@@ -142,11 +142,10 @@ class Organisme {
 		}	
 	}
 	
-	/*
-	@ RECUPERE LES INFOS DE L'ORGANISME DU FRONT CONSULTE
-	@
-	@
-	*/
+	/**
+	 * RECUPERE LES INFOS DE L'ORGANISME DU FRONT CONSULTE
+	 * @return [type] [description]
+	 */
 	function get_organisme(){
 		$this->evenement_db->connect_db();
 

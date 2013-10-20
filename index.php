@@ -16,26 +16,3 @@ include_once(REAL_LOCAL_PATH.'classe/classe_front_office.php');
 $front = new frontoffice();
 
 /*$front->generate();*/
-
-
-
-
-
-
-
-
-function l(){
-	echo '<br/>';
-}
-
-function checkParam($param){
-
-	if(isset($_GET[$param])){
-		echo $param.' = '.$_GET[$param];
-	}else{
-		echo $param.' vide';
-	}
-
-	l();
-
-}
