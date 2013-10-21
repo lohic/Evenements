@@ -62,12 +62,11 @@ class Billet {
 	 * @param  boolean $inscrit_traduction vrai si l'inscrit a demandé un casque pour la traduction
 	 * @param  text $session_lieu lieu de l'événement
 	 * @param  text $session_organisateur organisateur de l'événement
-	 * @param  text $organisme_image_billet image optionnelle pour le billet, liée à l'organisme
+	 * @param  text $organisme_image_billet chemin vers l'image optionnelle pour le billet, liée à l'organisme
 	 * @param  text $organisme_url_image url vers laquelle pointe l'image optionnelle, liée à l'organisme
 	 * @return [type]             [description]
 	 */
 	function billet($_unique_id = NULL, $couleur='#cb021a', $session_nom='', $date='21/10/2013', $heure='', $langue='', $inscrit_nom='', $inscrit_prenom='', $inscrit_type='', $inscrit_acces='', $inscrit_traduction='', $session_lieu='', $session_organisateur='', $organisme_image_billet='', $organisme_url_image=''){
-	//function billet($_unique_id = '3220110088396', $couleur='#cb021a', $session_nom='nom de la session', $date='21/10/2013', $heure='12:00', $langue='FR', $inscrit_nom='nom', $inscrit_prenom='prenom', $inscrit_type='interne', $inscrit_acces='retransmission', $inscrit_traduction=false, $session_lieu='boutmy', $session_organisateur='dir com', $organisme_image_billet='', $organisme_url_image='http://www.test.com'){
 		if(!empty($_unique_id)){
 			$template = 'default';
 			$this->code_couleur = $couleur;
@@ -103,15 +102,14 @@ class Billet {
 			$this->lieu			= $session_lieu;
 			$this->organisateur = $session_organisateur;
 
-			$this->imageBillet        = $this->absoluteBilletFolder.'images/pdf/billet_boutique.jpg';
-			//$this->imageBillet	= REAL_LOCAL_PATH.'admin/upload/billet/10/'.$organisme_image_billet;
+			$this->imageBillet	= $organisme_image_billet;
 			$this->url_image	= $organisme_url_image; 
 
 			$this->big_PDF		= true;
 		}
 
 		$this->PDFurl 		= $this->generate_pdf();
-		//$this->passbookFile = $this->generate_passcode();
+		$this->passbookFile = $this->generate_passcode();
 		$this->HTMLticket	= $this->generate_mail();
 	}
 
