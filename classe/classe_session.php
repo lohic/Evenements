@@ -1,6 +1,6 @@
 <?php
 
-include_once('../vars/config.php');
+//include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
@@ -465,9 +465,9 @@ class Session {
 					/*func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
 					
 					$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
-					$session = $rowSession['session_nom'];
+					$sessionBillet = $rowSession['session_nom'];
 				
-					func::envoiMail($session, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $_SESSION['mailSP']);
+					func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $_SESSION['mailSP']);
 					
 					func::envoiAlerte($rowSession['session_id']);
 
@@ -674,9 +674,9 @@ class Session {
 						/*func::createBillet($uniqueId, $rowSession['session_nom'], $dateBillet, $heureBillet, $_SESSION['nomSP'], $_SESSION['prenomSP'], 'interne', $rowSession['evenement_organisateur'], $rowSession['session_adresse2'], utf8_encode($endroit), $casque, $mentions);
 						
 						$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
-						$session = $rowSession['session_nom'];
+						$sessionBillet = $rowSession['session_nom'];
 					
-						func::envoiMail($session, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $mail);
+						func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $mail);
 
 						func::envoiAlerte($rowSession['session_id']);
 					

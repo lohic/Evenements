@@ -20,22 +20,32 @@ class Billet {
 
 	var $connexion;
 	var $unique_id;
-	var $couleur;
-	var $session_nom;
+	var $code_couleur;
+	var $localBilletFolder;
+	var $absoluteBilletFolder;
+	var $session_name;
 	var $date;
-	var $heure;
-	var $langue;
-	var $inscrit_nom;
-	var $inscrit_prenom;
-	var $inscrit_type;
-	var $inscrit_acces;
-	var $inscrit_traduction;
-	var $session_lieu;
-	var $session_organisateur;
-	var $organisme_image_billet;
-	var $organisme_url_image;
-	
+	var $horaire;
+	var $lang;
+	var $jour;
+	var $mois;
+	var $annee;
+	var $nom;
+	var $prenom;
+	var $statut;
+	var $acces;
+	var $ecouteurs;
+	var $lieu;
+	var $organisateur;
+	var $imageBillet;
+	var $url_image;
+
 	var $big_PDF;
+
+	var $PDFurl;
+	var $passbookFile;
+	var $HTMLticket;
+
 
 	/**
 	 * création d'un billet dans les 3 formats utiles en fonction des informations de l'inscrit et de l'événement auquel il s'est inscrit
@@ -94,15 +104,17 @@ class Billet {
 			$this->lieu			= $session_lieu;
 			$this->organisateur = $session_organisateur;
 
-			$this->imageBillet	= $organisme_image_billet;
+			$this->imageBillet        = $this->absoluteBilletFolder.'images/pdf/billet_boutique.jpg';
+			//$this->imageBillet	= REAL_LOCAL_PATH.'admin/upload/billet/10/'.$organisme_image_billet;
 			$this->url_image	= $organisme_url_image; 
 
 			$this->big_PDF		= true;
 		}
 
-		$this->PDFurl 		= $this->generate_pdf();
+		//$this->PDFurl 		= $this->generate_pdf();
 		$this->passbookFile = $this->generate_passcode();
-		$this->HTMLticket	= $this->generate_mail();
+		//$this->HTMLticket	= $this->generate_mail();
+
 	}
 
 	/**
