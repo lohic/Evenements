@@ -249,7 +249,9 @@ class Func {
 	@
 	@
 	*/
-	static function envoiMail($session, $mailHTML, $billet, $passBook, $mail){
+	//static function envoiMail($session, $mailHTML, $billet, $passBook, $mail){
+	static function envoiMail($session, $mailHTML, $billet, $mail){
+
 		$mailEnvoi  = new phpmailer();
 		$mailEnvoi -> IsMail();
 		$mailEnvoi -> Host     = 'localhost';

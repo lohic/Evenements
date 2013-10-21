@@ -467,7 +467,8 @@ class Session {
 					$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
 					$sessionBillet = $rowSession['session_nom'];
 				
-					func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $_SESSION['mailSP']);
+					//func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $_SESSION['mailSP']);
+					func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $_SESSION['mailSP']);
 					
 					func::envoiAlerte($rowSession['session_id']);
 
@@ -676,7 +677,8 @@ class Session {
 						$cheminBillet = "../inscription/export/".date("M_Y")."/billet_".$uniqueId.".pdf";*/
 						$sessionBillet = $rowSession['session_nom'];
 					
-						func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $mail);
+						//func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $billet->passbookFile, $mail);
+						func::envoiMail($sessionBillet, $billet->HTMLticket, $billet->PDFurl, $mail);
 
 						func::envoiAlerte($rowSession['session_id']);
 					
