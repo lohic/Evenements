@@ -26,7 +26,7 @@
     }
 
 
-    $rowOrganisme = $organisme->get_organisme();
+    $rowOrganisme = $organisme->get_organisme($organisme_id);
     //print_r($rowOrganisme);
     $rubriques_organisme = $rubrique->get_rubriques_organism($rowOrganisme['organisme_id']);
     $rubriques_partages = $rubrique->get_rubriques_partages($rowOrganisme['organisme_id']);
@@ -56,7 +56,7 @@
 ?>
 <html>
     <head>
-        <title>Science po événement</title>
+        <title>Science po événement | <?php echo $rowOrganisme['organisme_nom']; ?></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, maximum-scale=1.0">
         <link rel="stylesheet" type="text/css" href="<?php echo $template_file_url ; ?>/styles.css" media="screen" />

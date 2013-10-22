@@ -170,6 +170,8 @@ class FrontOffice {
 
 		//echo $template_css;
 
+		$organisme_id = $this->organisme_id;
+
 		ob_start();
 
 			include($file_to_show);

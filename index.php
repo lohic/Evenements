@@ -14,5 +14,3 @@ include_once(REAL_LOCAL_PATH.'classe/classe_front_office.php');
 
 
 $front = new frontoffice();
-
-/*$front->generate();*/

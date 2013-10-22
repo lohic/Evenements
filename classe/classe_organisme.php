@@ -146,10 +146,13 @@ class Organisme {
 	 * RECUPERE LES INFOS DE L'ORGANISME DU FRONT CONSULTE
 	 * @return [type] [description]
 	 */
-	function get_organisme(){
+	function get_organisme($_id_organisme){
+
 		$this->evenement_db->connect_db();
 
-		$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
+		$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_id=%s", func::GetSQLValueString($_id_organisme, "int"));
+
+		//$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
 		$resOrganisme = mysql_query($sqlOrganisme)or die(mysql_error());
 		$rowOrganisme = mysql_fetch_array($resOrganisme);
 		return $rowOrganisme;
