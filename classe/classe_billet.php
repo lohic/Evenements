@@ -62,14 +62,12 @@ class Billet {
 	 * @param  boolean $inscrit_traduction vrai si l'inscrit a demandé un casque pour la traduction
 	 * @param  text $session_lieu lieu de l'événement
 	 * @param  text $session_organisateur organisateur de l'événement
-	 * @param  text $organisme_image_billet image optionnelle pour le billet, liée à l'organisme
+	 * @param  text $organisme_image_billet chemin vers l'image optionnelle pour le billet, liée à l'organisme
 	 * @param  text $organisme_url_image url vers laquelle pointe l'image optionnelle, liée à l'organisme
 	 * @return [type]             [description]
 	 */
-	function billet($_unique_id = NULL, $couleur='#cb021a', $session_nom='', $date='', $heure='', $langue='', $inscrit_nom='', $inscrit_prenom='', $inscrit_type='', $inscrit_acces='', $inscrit_traduction='', $session_lieu='', $session_organisateur='', $organisme_image_billet='', $organisme_url_image=''){
-
+	function billet($_unique_id = NULL, $couleur='#cb021a', $session_nom='', $date='21/10/2013', $heure='', $langue='', $inscrit_nom='', $inscrit_prenom='', $inscrit_type='', $inscrit_acces='', $inscrit_traduction='', $session_lieu='', $session_organisateur='', $organisme_image_billet='', $organisme_url_image=''){
 		if(!empty($_unique_id)){
-
 			$template = 'default';
 			$this->code_couleur = $couleur;
 			if(!is_dir( REAL_LOCAL_PATH.'template_front/'. $template . '/billet/' ) ){
@@ -104,17 +102,19 @@ class Billet {
 			$this->lieu			= $session_lieu;
 			$this->organisateur = $session_organisateur;
 
-			$this->imageBillet        = $this->absoluteBilletFolder.'images/pdf/billet_boutique.jpg';
-			//$this->imageBillet	= REAL_LOCAL_PATH.'admin/upload/billet/10/'.$organisme_image_billet;
+			$this->imageBillet	= $organisme_image_billet;
 			$this->url_image	= $organisme_url_image; 
 
 			$this->big_PDF		= true;
 		}
 
-		//$this->PDFurl 		= $this->generate_pdf();
+		$this->PDFurl 		= $this->generate_pdf();
 		$this->passbookFile = $this->generate_passcode();
-		//$this->HTMLticket	= $this->generate_mail();
+		$this->HTMLticket	= $this->generate_mail();
+<<<<<<< HEAD
 
+=======
+>>>>>>> c8d01605e5ad77e9c29335108fc7ffddcee45522
 	}
 
 	/**
@@ -127,7 +127,6 @@ class Billet {
 		$pass->setCertificate(REAL_LOCAL_PATH.'certificat/CertificatsBillet.p12');  // 2. Set the path to your Pass Certificate (.p12 file)
 		$pass->setCertificatePassword('frmdbl@sciencespo');     // 2. Set password for certificate
 		$pass->setWWDRcertPath(REAL_LOCAL_PATH.'certificat/AppleWWDRCA.pem'); // 3. Set the path to your WWDR Intermediate certificate (.pem file)
-
 		// Top-Level Keys http://developer.apple.com/library/ios/#documentation/userexperience/Reference/PassKit_Bundle/Chapters/TopLevel.html
 		$standardKeys         = array(
 		    'description'        => 'Demo pass',
@@ -223,6 +222,8 @@ class Billet {
 		        )
 		    )
 		);
+		
+
 		$visualAppearanceKeys = array(
 		    'barcode'         => array(
 		        'format'          => 'PKBarcodeFormatQR',
@@ -235,6 +236,7 @@ class Billet {
 		    //'foregroundColor' => 'rgb(100, 10, 110)'
 		    //'logoText'        => 'Sciences Po'
 		);
+
 		$webServiceKeys       = array();
 
 		// Merge all pass data and set JSON for $pass object
@@ -246,6 +248,7 @@ class Billet {
 		    $visualAppearanceKeys,
 		    $webServiceKeys
 		);
+
 
 		$pass->setJSON(json_encode($passData));
 

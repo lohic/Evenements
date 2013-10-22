@@ -97,5 +97,5 @@
         </div>
 
         <button id="validation_smart" class="very_small">Filtrer</button>
-        <a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
+        <!--<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>-->
 </section>

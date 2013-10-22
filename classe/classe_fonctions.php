@@ -249,7 +249,7 @@ class Func {
 	@
 	@
 	*/
-	static function envoiMail($session, $mailHTML, $billet, $passBook, $mail){
+	static function envoiMail($session, $mailHTML, $billet, $passBook, $uniqueId, $mail){
 		$mailEnvoi  = new phpmailer();
 		$mailEnvoi -> IsMail();
 		$mailEnvoi -> Host     = 'localhost';
@@ -267,6 +267,8 @@ class Func {
 		$mailEnvoi -> Body		.= $mailHTML;
 				
 		$mailEnvoi -> AddAttachment($billet);
+
+		$mailEnvoi -> AddStringAttachment($passBook,'billet-'.$uniqueId.'.pkpass', 'binary', 'application/vnd.apple.pkpass');
 		
 		$mailEnvoi -> AddAddress($mail);
 		$mailEnvoi->Send();
