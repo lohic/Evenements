@@ -1,11 +1,9 @@
 <?php
 	include('head.php');
 	include('menu_smartphone.php');
+	include('header.php');
 ?>
 		<section id="contenu_principal">
-<?php
-			include('header.php');
-?>
 			<div id="liste_evenements" class="masonry">
 				<!-- attention data-sort doit être un multiple de 10-->
 				<?php
@@ -39,7 +37,6 @@
 				include('bloc_validation_multiple.php');
 				include('bloc_validation_externe_multiple.php');
 				include('bloc_login_soumission.php');
-				//include('bloc_soumission.php');
 			?>
 		</section>
 	</body>

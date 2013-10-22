@@ -3,7 +3,7 @@
         <section id="pre_header">
             <a href="#" id="lien_menu_smartphone" class="grand-hidden"></a>
             <div class="small-hidden">
-                <a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
+                <a href="soumettre.php" class="soumettre fancybox.iframe"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
             </div>
             <div>
             <?php
