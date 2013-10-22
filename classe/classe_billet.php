@@ -111,10 +111,6 @@ class Billet {
 		$this->PDFurl 		= $this->generate_pdf();
 		$this->passbookFile = $this->generate_passcode();
 		$this->HTMLticket	= $this->generate_mail();
-<<<<<<< HEAD
-
-=======
->>>>>>> c8d01605e5ad77e9c29335108fc7ffddcee45522
 	}
 
 	/**
