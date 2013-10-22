@@ -1166,15 +1166,24 @@ function clickEvent(clickedElement, sauv){
     });
 }
 
+
+function fancyboxrefresh(){
+	$.fancybox.update();
+}
+
 function validFancyBox(){
 	$('.depliable h3').click(function(e){
 		e.preventDefault();
 		$('.depliable').removeClass('open');
 		$(this).parent().addClass('open');
 
+		var updater = setInterval(fancyboxrefresh,40);
+
 		$('.depliable:not(.open)').find('form').slideUp(200);
 		$('.depliable.open').find('form').slideDown(200,function(){
 			$.fancybox.update();
+
+			clearInterval(updater);
 			//$.fancybox.reposition();
 		});
 		//$(this).siblings('form').toggle(200);
