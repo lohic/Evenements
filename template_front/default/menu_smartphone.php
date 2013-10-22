@@ -1,5 +1,10 @@
 <section id="menu_smartphone" class="grand-hidden">
-    <input type="text" name="mot_recherche" id="mot_recherche" value="Rechercher"/>
+    <form id="recherche_isotope_smartphone" action="#" method="get">
+        <input type="text" name="mot_recherche_smartphone" id="mot_recherche_smartphone" placeholder="Rechercher"/>
+        <input type="hidden" name="langue_recherche_smartphone" id="langue_recherche_smartphone" value="<?php echo $lang;?>"/>
+        <input type="submit" value="" class="valider_recherche_smartphone small-hidden"/>
+    </form>
+
     <div id="options_smart" class="little_bigger">
     <?php
         if(count($rubriques_organisme)>0){
@@ -92,5 +97,5 @@
         </div>
 
         <button id="validation_smart" class="very_small">Filtrer</button>
-        <a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>
+        <!--<a href="soumettre.php" class="soumettre"><span class="icone"></span><span class="texte_icone">Proposer un événement</span></a>-->
 </section>

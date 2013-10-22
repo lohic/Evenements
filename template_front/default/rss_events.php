@@ -1,5 +1,5 @@
 <?php
-//include_once('../vars/config.php');
+include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_organisme.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 // ajout par loic - plus simple pour mettre les liens des images et du flux en absolu.
@@ -87,4 +87,7 @@ $rss	.= '	</channel>'."\n";
 $rss	.= '</rss>'."\n";
 
 echo $rss;
+?>
 
+							
+			
