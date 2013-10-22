@@ -26,6 +26,8 @@ class Organisme {
 		global $connexion_info;
 		$this->evenement_db		= new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
 		if(self::$updated == false){
+			$_array_val = array();
+
 			$this->updater($_array_val,$_id);
 		}
 	}
@@ -144,15 +146,17 @@ class Organisme {
 		}	
 	}
 	
-	/*
-	@ RECUPERE LES INFOS DE L'ORGANISME DU FRONT CONSULTE
-	@
-	@
-	*/
-	function get_organisme(){
+	/**
+	 * RECUPERE LES INFOS DE L'ORGANISME DU FRONT CONSULTE
+	 * @return [type] [description]
+	 */
+	function get_organisme($_id_organisme){
+
 		$this->evenement_db->connect_db();
 
-		$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
+		$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_id=%s", func::GetSQLValueString($_id_organisme, "int"));
+
+		//$sqlOrganisme = sprintf("SELECT * FROM ".TB."organismes WHERE organisme_url_front=%s", func::GetSQLValueString(CHEMIN_FRONT_OFFICE, "text"));
 		$resOrganisme = mysql_query($sqlOrganisme)or die(mysql_error());
 		$rowOrganisme = mysql_fetch_array($resOrganisme);
 		return $rowOrganisme;

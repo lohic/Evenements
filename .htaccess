@@ -1,5 +1,9 @@
 # htaccess pour acceder au fichier de front office
 # via une URL propre
+# http://www.scriptol.fr/wordpress/redirection.php
+# http://amandine.aupetit.info/135/
+# http://stackoverflow.com/questions/12551382/what-does-1-qsa-l-mean-in-my-htaccess-file
+# http://fr.openclassrooms.com/forum/sujet/htaccess-rediriger-vers-un-script-41931?page=1
 
 RewriteEngine on
 # RewriteRule ^archive-([a-z0-9]+)\.html$  index.php?organisme=$1  [L]
@@ -7,7 +11,23 @@ RewriteEngine on
 # cf http://www.expreg.com/memo.php
 # QSA permet de garder les paramètres GET
 
+# on exclue les dossiers integration, admin
+#RewriteRule ^integration - [L,NC]
+#RewriteRule ^admin - [L,NC]
 
-RewriteRule ^(evenement)\/?$ index.php?organisme=$1 [QSA,L]
-RewriteRule ^(picasso)\/?$ index.php?organisme=$1 [QSA,L]
-RewriteRule ^(ceri)\/?$ index.php?organisme=$1 [QSA,L]
+
+# file
+RewriteCond %{REQUEST_FILENAME} !-f
+# directory
+RewriteCond %{REQUEST_FILENAME} !-d
+# symlink
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
+
+
+
+# OLD
+# RewriteRule ^(evenement)\/?$ index.php?organisme=$1 [QSA,L]
+# RewriteRule ^(picasso)\/?$ index.php?organisme=$1 [QSA,L]
+# RewriteRule ^(ceri)\/?$ index.php?organisme=$1 [QSA,L]

@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>FRONT OFFICE CERI</title>
-		<link rel="stylesheet" href="<?php echo $template_url ?>/style.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $template_css ?>" type="text/css" media="screen" />
 
 	</head>
 
