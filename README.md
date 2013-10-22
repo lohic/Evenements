@@ -46,3 +46,24 @@ Le système de template fonctionne avec la fonction `ob_content` qui permet de g
 
 Pour les filtres isotopes avec checkbox :
 - http://jsfiddle.net/bj5WG/
+- 
+
+
+Redirection d'un front-office ne faisant par partie du dossier principal via .HTACCESS
+```bash
+
+RewriteEngine on
+
+
+# file
+#RewriteCond %{REQUEST_FILENAME} !-f
+# directory
+RewriteCond %{REQUEST_FILENAME} !-d
+# symlink
+RewriteCond %{REQUEST_FILENAME} !-l
+
+#RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
+
+RewriteRule ^()(.+)$ http://localhost:8888/Site_SCIENCESPO_EVENEMENTS/index.php?organisme=ceri&url=$2 [QSA,L]
+
+```
