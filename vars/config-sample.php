@@ -32,9 +32,7 @@ define ('BILLETS_FOLDER',		'billet/');
 
 define ('TB',					'sp_');
 
-define ('EVENEMENT_DATA_URL',	'http://www.sciencespo.fr/evenements/api/');
-
-define ('METEO_DATA_URL',		'vars/meteo_json.txt');
+/* FABIEN */
 
 define("CHEMIN_DOCUMENTS", "http://www.sciencespo.fr/evenements/admin/upload/medias/");
 define("CHEMIN_IMAGES", "http://www.sciencespo.fr/evenements/admin/upload/photos/");
