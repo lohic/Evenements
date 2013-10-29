@@ -60,6 +60,7 @@ if(!$core->isAdmin || isset($error)){
  
 }
 else{
+
 	$sql = "SELECT * FROM sp_users
 			WHERE user_login = '". $_POST['login'] ."'
 			LIMIT 1";
@@ -69,9 +70,9 @@ else{
 	setcookie('CMSCookie', '1' , 0);
 	setcookie('admin', $row['user_id'] , 0);
 	
-	if( $row['user_admin'] == 1 ) {
+	/*if( $row['user_admin'] == 1 ) {
 		$_SESSION['admin'] = 1;
-	} 
+	}*/
 
 	// sinon redirection vers la liste des événements 
 	header('Location:list.php?menu_actif=evenements');
