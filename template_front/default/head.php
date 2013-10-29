@@ -36,8 +36,8 @@
     
 
     $evenements_organisme=array();
-    $evenements_organisme = $event->get_events_organism();
-    $evenements_partages = $event->get_events_partages();
+    $evenements_organisme = $event->get_events_organism($organisme_id);
+    $evenements_partages = $event->get_events_partages($organisme_id);
     if(count($evenements_partages)>0){
         $evenements_organisme = array_merge($evenements_organisme, $evenements_partages);
     }
