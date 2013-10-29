@@ -45,6 +45,10 @@ if(isset($_GET['mois'])){
 	$complement="";
 }
 
+$mois  = !empty( $_GET['mois'] ) ? $_GET['mois'] : date("n");
+$annee = !empty( $_GET['year'] ) ? $_GET['year'] : date("Y");
+
+
 $sqlGetOrganisme ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
 $resGetOrganisme= mysql_query($sqlGetOrganisme) or die(mysql_error());
 $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
@@ -67,12 +71,14 @@ else{*/
 		}
 		
 		$idGroups = implode(',',$idGroups);
-		$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_groupe_id IN ($idGroups) ".$complement." AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'  ORDER BY evenement_date DESC"; 
+		//$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_groupe_id IN ($idGroups) ".$complement." AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'  ORDER BY evenement_date DESC";
+		$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_groupe_id IN ($idGroups) ".$complement." AND MONTH(evenement_datetime) = ".$mois." AND YEAR(evenement_datetime) =".$annee."  ORDER BY evenement_datetime DESC"; 
 		$sqlcount = mysql_query("SELECT COUNT(*) AS nb FROM sp_evenements WHERE evenement_statut!=4 ".$complement." AND evenement_groupe_id IN ($idGroups) AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'");
 	}
 	else{
 		if($core->userLevel<=7){
-			$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_user_id='".$_SESSION['id']."' ".$complement." AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'  ORDER BY evenement_date DESC"; 
+			//$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_user_id='".$_SESSION['id']."' ".$complement." AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'  ORDER BY evenement_date DESC";
+			$sql = "SELECT * FROM sp_evenements WHERE evenement_statut!=4 AND evenement_user_id='".$_SESSION['id']."' ".$complement." AND MONTH(evenement_datetime) =".$mois." AND YEAR(evenement_datetime) = ".$annee."  ORDER BY evenement_datetime DESC"; 
 			$sqlcount = mysql_query("SELECT COUNT(*) AS nb FROM sp_evenements WHERE evenement_statut!=4 ".$complement." AND evenement_user_id='".$_SESSION['id']."' AND evenement_date >='".$debutmois."' AND evenement_date <='".$finmois."'");
 		}
 	}
