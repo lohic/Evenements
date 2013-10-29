@@ -1,6 +1,6 @@
 <?php
 // connection to data base
-include('../vars/config.php');
+//include('../../../../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_session.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_rubrique.php');
