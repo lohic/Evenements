@@ -11,6 +11,31 @@ $.urlParam = function(name){
 
 var sauv = 0;
 
+function redim(){
+
+	$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
+	$ratioImg = $('.banniere').width() / $('.banniere').height();
+	
+	if($ratioDiv>$ratioImg){
+		$w = $('.maxDivImg').width();
+		$h = $w / $ratioImg;
+	}else{
+		$h = $('.maxDivImg').height();
+		$w = $h * $ratioImg;
+	}
+	
+	$('.banniere').width($w);
+	$('.banniere').height($h);
+
+	if($('.maxDivImg').offset() != undefined){
+
+		$xPos = ($('.maxDivImg').width()-$w)/2 + $('.maxDivImg').offset().left;
+		$yPos = ($('.maxDivImg').height()-$h)/2 + $('.maxDivImg').offset().top;
+
+		$('.banniere').offset({left:$xPos,top:$yPos});
+	}
+}
+
 $(document).ready(function(){			
 	var $container = $('#liste_evenements'), filters = {};
 	//fonction s'executant au clic sur le titre d'un événement : affiche le détail de l'événement
@@ -33,25 +58,9 @@ $(document).ready(function(){
 		redim();
 	});
 
-	function redim(){
-		$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
-		
-		if($ratioDiv>$ratioImg){
-			$w = $('.maxDivImg').width();
-			$h = $w/$ratioImg;
-		}else{
-			$h = $('.maxDivImg').height();
-			$w = $h*$ratioImg;
-		}
-		
-		$('.banniere').width($w);
-		$('.banniere').height($h);
-		$xPos = ($('.maxDivImg').width()-$w)/2+$('.maxDivImg').offset().left;
-		$yPos = ($('.maxDivImg').height()-$h)/2+$('.maxDivImg').offset().top;
-
-		$('.banniere').offset({left:$xPos,top:$yPos});
-
-	}
+	$('img.banniere').load(function() {
+		redim();
+	});
 
 	function getComboFilter( filters ) {
 		var i = 0;
@@ -1525,7 +1534,8 @@ $(window).resize(function() {
 
 $(window).resizeend({
 	onDragEnd : function(){
-		console.log('end resize !!!');
+		redim();
+		//console.log('end resize !!!');
 	},
 	runOnStart : true,
 });

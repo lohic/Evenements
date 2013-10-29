@@ -40,7 +40,13 @@
             </div>
         </section>
         <section id="header">
-            <h1><span class="invisible">Science po événements</span><a href="index.php"><img src="img/logo_spo.png" alt="sciences Po événements"/></a></h1>
+            <h1>
+                <span class="invisible"><?php echo $this->organisme_nom; ?></span>
+                <a href="index.php">
+                    <img src="<?php echo $this->logo_url; ?>" alt="sciences Po événements"/>
+                    <!--<img src="img/logo_spo.png" alt="sciences Po événements"/>-->
+                </a>
+            </h1>
         <?php
             if(count($rubriques_organisme)>0){
                 $sql = "SELECT * FROM ".TB."rubriques WHERE rubrique_id IN (".implode(',',$rubriques_organisme).") ORDER BY rubrique_titre";
@@ -141,5 +147,6 @@
     </div>
 </header>
 <div id="image" class="maxDivImg conteneur_banniere">
-    <img src="admin/upload/banniere/banniere.jpg?cache=1375289621" alt="bannière" class="banniere" width="1280" height="128"/>
+    <img src="<?php echo $this->banniere_url; ?>" alt="bannière" class="banniere" width="1280" height="128"/>
+    <!--<img src="admin/upload/banniere/banniere.jpg?cache=1375289621" alt="bannière" class="banniere" width="1280" height="128"/>-->
 </div>

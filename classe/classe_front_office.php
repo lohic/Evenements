@@ -16,6 +16,9 @@ class FrontOffice {
 	var $lang			= 'fr';
 	var $organisme		= 'dircom';
 	var $organisme_id;
+	var $organisme_nom;
+	var $logo_url;
+	var $banniere_url;
 	var $url			= '/index.php';
 	
 	static $updated		= false;
@@ -79,7 +82,7 @@ class FrontOffice {
 			$organisme = $this->organisme;
 		}
 
-		$sql = sprintf("SELECT organisme_id, organisme_shortcode
+		$sql = sprintf("SELECT organisme_id, organisme_shortcode, organisme_nom, organisme_banniere_chemin, organisme_logo_chemin, organisme_banniere_facebook_chemin, organisme_footer_facebook_chemin, organisme_couleur
 						FROM sp_organismes
 						WHERE organisme_shortcode=%s",
 						func::GetSQLValueString($organisme, 'text'));
@@ -88,6 +91,9 @@ class FrontOffice {
 
 		$this->organisme 	= $result['organisme_shortcode'];
 		$this->organisme_id = $result['organisme_id'];
+		$this->organisme_nom = $result['organisme_nom'];
+		$this->logo_url = ABSOLUTE_URL.'admin/upload/logo/'.$result['organisme_id'].'/'.$result['organisme_logo_chemin'];
+		$this->banniere_url = ABSOLUTE_URL.'admin/upload/banniere/'.$result['organisme_id'].'/'.$result['organisme_banniere_chemin'];
 
 		// on récupère et on normalise l'url
 		if(isset($_GET['url']) && !empty($_GET['url'])){
@@ -143,6 +149,8 @@ class FrontOffice {
 
 		$template_url 		 = ABSOLUTE_URL.'template_front/' . $this->template . '/';
 		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template . '/';
+
+		
 
 
 		$file = $this->url;
