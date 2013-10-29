@@ -13,6 +13,13 @@ include('functions.php');
 include('feedcreator.class.php');
 
 include('variables.php');
+//include_once('../vars/constantes_vars.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
+$core = new core(); 
 
 $erreur="";
 //Création d'un événement
@@ -276,13 +283,7 @@ if(isset($_POST['date_debut'])){
 	echo $out;
 	exit;
 }
-include_once('../vars/constantes_vars.php');
-include_once('../vars/statics_vars.php');
-
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-
-$core = new core();  
+ 
 $sqlGetOrganisme ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
 $resGetOrganisme= mysql_query($sqlGetOrganisme) or die(mysql_error());
 $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
@@ -346,7 +347,7 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 						$sqlorganismes ="SELECT * FROM sp_organismes ORDER BY organisme_nom ASC";
 						$resorganismes = mysql_query($sqlorganismes) or die(mysql_error());
 						while($roworganisme = mysql_fetch_array($resorganismes)){
-							echo '<option value="'.$roworganisme['organisme_id'].'">'.utf8_encode(stripslashes($roworganisme['organisme_nom'])).'</option>';
+							echo '<option value="'.$roworganisme['organisme_id'].'">'.$roworganisme['organisme_nom'].'</option>';
 						}
 					?>	
 				</select>

@@ -1,6 +1,6 @@
 <?php
 include_once('../vars/config.php');
-session_start();
+//session_start();
 // security
 include('cookie.php');
 
@@ -10,14 +10,14 @@ include('connect.php');
 // functions library
 include('functions.php');
 
-include_once('../vars/constantes_vars.php');
-include_once('../vars/statics_vars.php');
+//include_once('../vars/constantes_vars.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/classe_keyword.php');
-include_once('../classe/classe_lieu.php');
-include_once('../classe/classe_batiment.php');
-include_once('../classe/fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_keyword.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_lieu.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_batiment.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
 
 $core = new core();
 

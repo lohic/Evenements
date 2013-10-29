@@ -7,9 +7,9 @@ include('cookie.php');
 include('connect.php');
 // fichiers nécessaires
 include('functions.php');
-include_once('../vars/constantes_vars.php');
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
+//include_once('../vars/constantes_vars.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
 
 $core = new core();
 

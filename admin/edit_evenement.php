@@ -13,7 +13,15 @@ include('functions.php');
 include('feedcreator.class.php');
 
 include('variables.php');
-session_start();
+//session_start();
+//include_once('../vars/constantes_vars.php');
+//include_once('../vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
+$core = new core();
+
 
 // if editing...
 if( isset($_POST['evenement_id']) ){ 
@@ -308,13 +316,7 @@ if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_document"){
 	$res = mysql_query($sql) or die(mysql_error());
 }
 
-include_once('../vars/constantes_vars.php');
-//include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-
-$core = new core();
 
 if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SESSION['id_actual_group']){
 	$sqlGetOrganisme ="SELECT organisme_id, organisme_url_front FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";

@@ -14,7 +14,17 @@ include('functions.php');
 include('feedcreator.class.php');
 
 include('variables.php');
-session_start();
+
+//include_once('../vars/constantes_vars.php');
+//include_once('../vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
+
+$core = new core();
+
+//session_start();
 $erreur=""; 
 
 
@@ -60,6 +70,11 @@ if( isset($_POST['evenement_id']) ){
 				WHERE evenement_id = '".$_POST['evenement_id']."'";
 		mysql_query($sql) or die(mysql_error());
 		
+
+		$session_statut_inscription = !empty($_POST["session_statut_inscription"]) ? 1 : 0 ;
+		$session_statut_vision = !empty($_POST["session_statut_vision"]) ? 1 : 0 ;
+
+
 		$sql ="UPDATE sp_sessions SET
 					session_nom = '".mysql_real_escape_string(html_entity_decode( $_POST["evenement_titre"], ENT_NOQUOTES, 'UTF-8' ))."', 
 					session_nom_en = '".mysql_real_escape_string(html_entity_decode( $_POST["evenement_titre_en"], ENT_NOQUOTES, 'UTF-8' ))."',
@@ -76,10 +91,10 @@ if( isset($_POST['evenement_id']) ){
 					session_texte_lien_en = '".addslashes($_POST["session_texte_lien_en"])."',
 					session_type_inscription = '".$_POST["session_type_inscription"]."',
 					session_complement_type_inscription = '".addslashes($_POST["session_complement_type_inscription"])."',
-					session_statut_inscription = '".$_POST["session_statut_inscription"]."',
+					session_statut_inscription = '".$session_statut_inscription."',
 					session_places_internes_totales = '".$_POST["session_places_internes_totales"]."',
 					session_places_externes_totales = '".$_POST["session_places_externes_totales"]."',
-					session_statut_visio = '".$_POST["session_statut_vision"]."',
+					session_statut_visio = '".$session_statut_vision."',
 					session_places_internes_totales_visio = '".$_POST["session_places_internes_totales_vision"]."',
 					session_places_externes_totales_visio = '".$_POST["session_places_externes_totales_vision"]."',
 					session_adresse1 = '".addslashes($_POST["session_adresse1"])."',
@@ -95,9 +110,11 @@ if( isset($_POST['evenement_id']) ){
 		$sql="DELETE FROM sp_rel_evenement_groupe WHERE evenement_id = '".$_POST['evenement_id']."'";
 		mysql_query($sql) or die(mysql_error());
 
-		for ($i = 0; $i < count($_POST['groupes']); $i++) {
-			$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$_POST['evenement_id']."', '".$_POST['groupes'][$i]."')";
-			mysql_query($sqlinsert) or die(mysql_error());
+		if(isset($_POST['groupes'])){
+			for ($i = 0; $i < count($_POST['groupes']); $i++) {
+				$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$_POST['evenement_id']."', '".$_POST['groupes'][$i]."')";
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 		}
 
 		//enregistrement des liaisons avec les mots-clés
@@ -286,13 +303,7 @@ if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_document"){
 	$res = mysql_query($sql) or die(mysql_error());
 }
 
-include_once('../vars/constantes_vars.php');
-//include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-
-$core = new core();
 
 if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SESSION['id_actual_group']){
 	$sqlGetOrganisme ="SELECT organisme_id, organisme_url_front FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
@@ -401,7 +412,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 				<?php
 					}
 					else{
-						if($rowSession['session_type_inscription']==2){
+						if(isset($rowSession['session_type_inscription']) && $rowSession['session_type_inscription']==2){
 				?>
 							<p><strong><?php echo $rescountsessions['nb'];?> SESSIONS</strong></p>
 				<?php
@@ -550,6 +561,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 				<p class="legend">Partager avec les Groupes :</p>
 				<p> 
 					<?php         
+						$rowGetOrganisme2['organisme_id'] = isset($rowGetOrganisme2['organisme_id']) ? $rowGetOrganisme2['organisme_id'] : NULL;
 
 						$sqlGroupes ="SELECT * FROM sp_groupes WHERE groupe_organisme_id!='".$rowGetOrganisme2['organisme_id']."' ORDER BY groupe_libelle ASC";
 						$resGroupes= mysql_query($sqlGroupes) or die(mysql_error());

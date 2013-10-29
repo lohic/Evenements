@@ -8,8 +8,8 @@ $database = 'evenements';*/
 
 $host = 'localhost';
 $user = 'root';
-$password = 'root';
-$database = 'evenements';
+$password = 'z6po';
+$database = 'sciences_po_evenements_new2_db';
 
 /*$host = 'localhost';
 $user = 'root';

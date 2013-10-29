@@ -20,7 +20,7 @@ $heure_fin = date("H:i",$row3['session_fin']);
 if($heure_fin=="23:59"){
 	$heure_fin="inconnue";
 }
-include_once('../classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
 $core = new core();
 if($core->isAdmin && $core->userLevel<=1){
 	$sqllieux ="SELECT * FROM sp_lieux ORDER BY lieu_nom ASC";

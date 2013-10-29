@@ -1,5 +1,5 @@
 <?php 
-session_start(); 
+//session_start(); 
 include_once('../vars/config.php');
 // security
 //include('cookie.php');
@@ -9,6 +9,14 @@ include_once('../vars/config.php');
 
 // functions library
 include('functions.php');
+
+//include_once('../vars/constantes_vars.php');
+//include_once('../vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
+$core = new core();
 
 $eventsPerPage = 10;
 // Pages...
@@ -20,13 +28,7 @@ if (isset($_GET['page'])) {
 
 $firstEvent = ($page - 1) * $eventsPerPage;
 
-include_once('../vars/constantes_vars.php');
-//include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-
-$core = new core();
 
 //récupère la liste des evenements
 if(isset($_GET['mois'])){

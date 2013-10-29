@@ -13,12 +13,12 @@ include('functions.php');
 include('feedcreator.class.php');
 
 include('variables.php');
-include_once('../vars/constantes_vars.php');
+//include_once('../vars/constantes_vars.php');
 //include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-session_start();
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+//session_start();
 $core = new core();
 
 $erreur="";

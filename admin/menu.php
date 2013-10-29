@@ -1,12 +1,12 @@
 <?php
 include_once('../vars/config.php');
-include_once('../vars/constantes_vars.php');
+//include_once('../vars/constantes_vars.php');
 //include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
 
-$core = new core(); 
+//$core = new core(); 
 
 $idGroups= array();
 foreach($core->user_info->groups as $cle => $valeur) 

@@ -413,7 +413,7 @@ function genereCode(){
 	echo $code;
 }
 
-function testChamps($titre, $texte, $rubrique, $date, $heure, $texte_image, $fichier){
+function testChamps($titre="", $texte="", $rubrique="", $date="", $heure="", $texte_image="", $fichier=""){
 	$erreur = "";
 	
 	if($titre==""){

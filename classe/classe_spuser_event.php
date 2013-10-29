@@ -13,7 +13,7 @@ password
 
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
-include_once(REAL_LOCAL_PATH.'vars/constantes_vars.php');
+//include_once(REAL_LOCAL_PATH.'vars/constantes_vars.php');
 //include_once('../vars/statics_vars.php');
 
 class Spuser {
@@ -75,7 +75,7 @@ class Spuser {
 			$this->prenom		= $_SESSION['prenom'];
 			$this->email		= $_SESSION['email'];
 			$this->groupe		= $_SESSION['groupe'];
-			$this->isSuperAdmin	= $_SESSION['isSuperAdmin']; 
+			//$this->isSuperAdmin	= $_SESSION['isSuperAdmin']; 
 			$this->userLevel	= $_SESSION['userLevel'];
 			$this->LDAP			= $_SESSION['LDAP'];
 			
@@ -343,7 +343,7 @@ class Spuser {
 	*/
 	function get_user_info(){ 
 		if($this->isAdmin){
-			$retour = NULL;
+			$retour = new stdClass();
 
 			$retour->id				= $this->id;
 			$retour->login			= $this->login;

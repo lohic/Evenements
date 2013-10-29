@@ -28,8 +28,18 @@ if( $_POST['login'] != ''  ){
 	}
 	
 }
-*/   
-session_start();
+*/
+
+include_once('../vars/config.php');
+//include_once(REAL_LOCAL_PATH.'vars/constantes_vars.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+$core = new core(); 
+
+
+//session_start();
 // Error message
 if( isset($_GET['error']) ){
 		switch($_GET['error']){
@@ -44,13 +54,7 @@ if( isset($_GET['error']) ){
 			break;
 		}
 }
-include_once('../vars/config.php');
-include_once('../vars/constantes_vars.php');
-include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
-$core = new core(); 
 
 if(!$core->isAdmin || isset($error)){ 
  
@@ -72,8 +76,7 @@ else{
 	// sinon redirection vers la liste des événements 
 	header('Location:list.php?menu_actif=evenements');
 }
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

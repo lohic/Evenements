@@ -6,6 +6,8 @@ include('connect.php');
 // functions library
 include('functions.php');
 session_start();
+
+
 if(isset($_POST['venu'])){
 	$tableauVenus = "";
 	$nbr = count($_POST['venu']);

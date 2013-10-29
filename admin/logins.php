@@ -8,6 +8,14 @@ include('connect.php');
 // functions library
 include('functions.php');
 
+//include_once('../vars/constantes_vars.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
+
+include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
+include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
+$core = new core(); 
+
 // édition ou ajout d'un utilisateur
 if( isset($_POST['type_saisie'])){
 	// query
@@ -76,13 +84,9 @@ if( isset($_GET['delete']) ){
 	$sql="DELETE FROM sp_rel_user_groupe WHERE user_id = '".$_GET['delete']."'";
 	mysql_query($sql) or die(mysql_error());
 }
-include_once('../vars/constantes_vars.php');
-include_once('../vars/statics_vars.php');
 
-include_once('../classe/classe_core_event.php');
-include_once('../classe/fonctions.php');
 
-$core = new core();  
+ 
 $sqlGetOrganisme ="SELECT organisme_id FROM sp_groupes as spg, sp_organismes as spo WHERE spg.groupe_organisme_id=spo.organisme_id AND groupe_id='".$_SESSION['id_actual_group']."'";
 $resGetOrganisme= mysql_query($sqlGetOrganisme) or die(mysql_error());
 $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
