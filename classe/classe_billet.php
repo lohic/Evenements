@@ -331,6 +331,8 @@ class Billet {
 		 */
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+		
+
 		// set document information
 		$pdf->SetCreator('Sciences Po - Formidable Studio');
 		$pdf->SetAuthor('Sciences Po - Formidable Studio');
@@ -394,6 +396,22 @@ class Billet {
 			$tbl = ob_get_contents();
 		ob_end_clean();
 
+		// trame de fond pour le billet pdf
+		/*
+		// get the current page break margin
+		$bMargin = $pdf->getBreakMargin();
+		// get current auto-page-break mode
+		$auto_page_break = $pdf->getAutoPageBreak();
+		// disable auto-page-break
+		$pdf->SetAutoPageBreak(false, 0);
+		// set bacground image
+		$img_file = $this->absoluteBilletFolder.'images/pdf/trame-billet.png';
+		$pdf->Image($img_file, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+		// restore auto-page-break status
+		$pdf->SetAutoPageBreak($auto_page_break, $bMargin);
+		// set the starting point for the page content
+		$pdf->setPageMark();
+		*/
 
 		$pdf->writeHTML($tbl, true, false, false, false, 'left');
 
