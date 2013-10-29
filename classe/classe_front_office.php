@@ -82,7 +82,7 @@ class FrontOffice {
 			$organisme = $this->organisme;
 		}
 
-		$sql = sprintf("SELECT organisme_id, organisme_shortcode, organisme_nom, organisme_banniere_chemin, organisme_logo_chemin, organisme_banniere_facebook_chemin, organisme_footer_facebook_chemin, organisme_couleur
+		$sql = sprintf("SELECT organisme_id, organisme_shortcode, organisme_nom, organisme_banniere_chemin, organisme_logo_chemin, organisme_banniere_facebook_chemin, organisme_footer_facebook_chemin, organisme_couleur, organisme_url_front
 						FROM sp_organismes
 						WHERE organisme_shortcode=%s",
 						func::GetSQLValueString($organisme, 'text'));
@@ -94,6 +94,8 @@ class FrontOffice {
 		$this->organisme_nom = $result['organisme_nom'];
 		$this->logo_url = ABSOLUTE_URL.'admin/upload/logo/'.$result['organisme_id'].'/'.$result['organisme_logo_chemin'];
 		$this->banniere_url = ABSOLUTE_URL.'admin/upload/banniere/'.$result['organisme_id'].'/'.$result['organisme_banniere_chemin'];
+
+		define('CHEMIN_FRONT_OFFICE', $result['organisme_url_front']);
 
 		// on récupère et on normalise l'url
 		if(isset($_GET['url']) && !empty($_GET['url'])){
