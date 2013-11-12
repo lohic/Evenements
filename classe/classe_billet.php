@@ -124,9 +124,9 @@ class Billet {
 		//$pass = new PKPass\PKPass();
 		$pass = new PKPass();
 
-		$pass->setCertificate(REAL_LOCAL_PATH.'certificat/CertificatsBillet.p12');  // 2. Set the path to your Pass Certificate (.p12 file)
-		$pass->setCertificatePassword('frmdbl@sciencespo');     // 2. Set password for certificate
-		$pass->setWWDRcertPath(REAL_LOCAL_PATH.'certificat/AppleWWDRCA.pem'); // 3. Set the path to your WWDR Intermediate certificate (.pem file)
+		$pass->setCertificate(REAL_LOCAL_PATH.'certificat/CertificatsBilletSciencesPo.p12');  	// 1. Set the path to your Pass Certificate (.p12 file)
+		$pass->setCertificatePassword('passbook@sciencespo');     								// 2. Set password for certificate
+		$pass->setWWDRcertPath(REAL_LOCAL_PATH.'certificat/AppleWWDRCA.pem'); 					// 3. Set the path to your WWDR Intermediate certificate (.pem file)
 		// Top-Level Keys http://developer.apple.com/library/ios/#documentation/userexperience/Reference/PassKit_Bundle/Chapters/TopLevel.html
 		$standardKeys         = array(
 		    'description'        => 'Demo pass',
