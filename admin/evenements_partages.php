@@ -1,6 +1,6 @@
 <?php 
 include_once('../vars/config.php');
-session_start(); 
+//session_start(); 
 // sécurité
 include('cookie.php');
 // connexion base de données
