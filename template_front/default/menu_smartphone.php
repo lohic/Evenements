@@ -25,7 +25,7 @@
                         while($row = mysql_fetch_array($res)){
                     ?>
                             <input type="checkbox" value=".rubrique_<?php echo $row['rubrique_id'];?>" id="rubrique_<?php echo $row['rubrique_id'];?>" class="checkbox_smart" />
-                            <label for="rubrique_<?php echo $row['rubrique_id'];?>"><span class="vide" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo utf8_encode($row['rubrique_titre']);?></label>
+                            <label for="rubrique_<?php echo $row['rubrique_id'];?>"><span class="vide" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo $row['rubrique_titre'];?></label>
                     <?php
                         }
                     ?>

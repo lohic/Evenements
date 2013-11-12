@@ -69,7 +69,7 @@
                                 while($row = mysql_fetch_array($res)){
                         ?>
                                     <li class="" id="entre_cate_<?php echo $row['rubrique_id'];?>">
-                                        <a class="nom_du_filtre" href="#" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"><span class="" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo utf8_encode($row['rubrique_titre']);?></a>
+                                        <a class="nom_du_filtre" href="#" data-filter-value=".rubrique_<?php echo $row['rubrique_id'];?>"><span class="" style="background:<?php echo $row['rubrique_couleur'];?>; border-color:<?php echo $row['rubrique_couleur'];?>;"></span><?php echo $row['rubrique_titre'];?></a>
                                     </li>
                         <?php
                                 }
