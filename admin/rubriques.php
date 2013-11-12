@@ -54,8 +54,8 @@ if( isset($_POST['rubrique_id'])){
 	if($_POST['type_saisie']=="modification"){
 		// query
 		$sql ="UPDATE sp_rubriques SET
-					rubrique_titre = '".addslashes(utf8_decode($_POST["rubrique_titre"]))."',
-					rubrique_titre_en = '".addslashes(utf8_decode($_POST["rubrique_titre_en"]))."',
+					rubrique_titre = '".$_POST["rubrique_titre"]."',
+					rubrique_titre_en = '".$_POST["rubrique_titre_en"]."',
 					rubrique_couleur = '".$_POST["rubrique_couleur"]."',
 					rubrique_editeur_id = '".$_SESSION['id']."',
 					rubrique_editeur_ip =  '".$_SERVER["REMOTE_ADDR"]."',
@@ -66,9 +66,11 @@ if( isset($_POST['rubrique_id'])){
 		$sql="DELETE FROM sp_rel_rubrique_groupe WHERE rubrique_id = '".$_POST['rubrique_id']."'";
 		mysql_query($sql) or die(mysql_error());
 
-		for ($i = 0; $i < count($_POST['groupes']); $i++) {
-			$sqlinsert ="INSERT INTO sp_rel_rubrique_groupe VALUES ('', '".$_POST['rubrique_id']."', '".$_POST['groupes'][$i]."')";
-			mysql_query($sqlinsert) or die(mysql_error());
+		if(isset($_POST['groupes'])){
+			for ($i = 0; $i < count($_POST['groupes']); $i++) {
+				$sqlinsert ="INSERT INTO sp_rel_rubrique_groupe VALUES ('', '".$_POST['rubrique_id']."', '".$_POST['groupes'][$i]."')";
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 		}
 
 		$codecouleur = explode("#", $_POST["rubrique_couleur"]);
@@ -80,7 +82,7 @@ if( isset($_POST['rubrique_id'])){
 	}
 	else{
 		// query
-		$sqlinsert ="INSERT INTO sp_rubriques VALUES ('', '".addslashes(utf8_decode($_POST["rubrique_titre"]))."', '".addslashes(utf8_decode($_POST["rubrique_titre_en"]))."', '".$_POST["rubrique_couleur"]."', '', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."','".$_POST["rubrique_groupe_id"]."')";
+		$sqlinsert ="INSERT INTO sp_rubriques VALUES ('', '".$_POST["rubrique_titre"]."', '".$_POST["rubrique_titre_en"]."', '".$_POST["rubrique_couleur"]."', '', '".$_SESSION['id']."', '".$_SERVER["REMOTE_ADDR"]."','".$_POST["rubrique_groupe_id"]."')";
 		mysql_query($sqlinsert) or die(mysql_error());
 		
 		$lastIdInsert = mysql_insert_id();
@@ -212,8 +214,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 						}
 						$iteration++;
 					?>
-								<div class="infos_large" id="titre_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo utf8_encode($row['rubrique_titre']);?></p></div>
-								<div style="display:none" id="titre_en_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo utf8_encode($row['rubrique_titre_en']);?></p></div>
+								<div class="infos_large" id="titre_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo $row['rubrique_titre'];?></p></div>
+								<div style="display:none" id="titre_en_rubrique_<?php echo $row['rubrique_id'];?>"><p><?php echo $row['rubrique_titre_en'];?></p></div>
 
 								<div class="liens modif">
 									<a href="#" id="lien_rubrique_<?php echo $row['rubrique_id'];?>" class="lien_rubrique" title="modifier"><img src="img/pencil.png" alt="modifier"/></a><a href="rubriques.php?deleterubrique=<?php echo $row['rubrique_id'];?>&amp;menu_actif=rubriques" onclick="confirmar('rubriques.php?deleterubrique=<?php echo $row['rubrique_id'];?>&amp;menu_actif=rubriques', 'Etes-vous sûr de vouloir supprimer cette rubrique? ')" title="supprimer"><img src="img/delete.png" alt="supprimer"/></a>								
