@@ -10,7 +10,7 @@ include('connect.php');
 include('functions.php');
 
 //include_once('../vars/constantes_vars.php');
-include_once(REAL_LOCAL_PATH..'vars/statics_vars.php');
+include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 
 include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
