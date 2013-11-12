@@ -5,7 +5,9 @@ include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 // TCPDF pour pdf - http://www.tcpdf.org
 include_once(REAL_LOCAL_PATH.'classe/tcpdf_min/tcpdf.php');
 // PKPass pour passbook - https://github.com/tschoffelen/PHP-PKPass
-include_once(REAL_LOCAL_PATH.'classe/PKPass/PKPass.php');
+// uncomment for php 5.1.3
+//include_once(REAL_LOCAL_PATH.'classe/PKPass/PKPass.php');
+include_once(REAL_LOCAL_PATH.'classe/PKPass/PKPass.5.2.php');
 // Image_QRCode-0.1.3 https://wiki.php.net/pear/packages/image_qrcode
 include_once(REAL_LOCAL_PATH.'classe/Image_QRCode-0.1.3/Image/QRCode.php');
 
@@ -118,7 +120,9 @@ class Billet {
 	 * @return [type] [description]
 	 */
 	function generate_passcode($show=false){
-		$pass = new PKPass\PKPass();
+		// uncomment for php 5.1.3
+		//$pass = new PKPass\PKPass();
+		$pass = new PKPass();
 
 		$pass->setCertificate(REAL_LOCAL_PATH.'certificat/CertificatsBillet.p12');  // 2. Set the path to your Pass Certificate (.p12 file)
 		$pass->setCertificatePassword('frmdbl@sciencespo');     // 2. Set password for certificate
