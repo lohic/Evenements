@@ -232,10 +232,10 @@ else{
 				<p>
 					<label for="evenement_statut" class="inline">Statut :</label>
 					<select name="evenement_statut" id="evenement_statut">
-						<option value="1"<?php if($_POST['evenement_statut']==1){echo "selected=\"selected\"";} ?>>Brouillon</option>
-						<option value="2"<?php if($_POST['evenement_statut']==2){echo "selected=\"selected\"";} ?>>Caché</option>
-						<option value="3"<?php if($_POST['evenement_statut']==3){echo "selected=\"selected\"";} ?>>Publié</option>
-						<option value="4"<?php if($_POST['evenement_statut']==4){echo "selected=\"selected\"";} ?>>Soummission</option>
+						<option value="1"<?php if(isset($_POST['evenement_statut']) && $_POST['evenement_statut']==1){echo "selected=\"selected\"";} ?>>Brouillon</option>
+						<option value="2"<?php if(isset($_POST['evenement_statut']) && $_POST['evenement_statut']==2){echo "selected=\"selected\"";} ?>>Caché</option>
+						<option value="3"<?php if(isset($_POST['evenement_statut']) && $_POST['evenement_statut']==3){echo "selected=\"selected\"";} ?>>Publié</option>
+						<option value="4"<?php if(isset($_POST['evenement_statut']) && $_POST['evenement_statut']==4){echo "selected=\"selected\"";} ?>>Soummission</option>
 					</select>
 				</p>
 			</fieldset>
@@ -245,32 +245,32 @@ else{
 				<p class="legend">informations sur l'événement</p>
 				<p>
 					<label for="evenement_titre">Titre* : </label>
-					<input name="evenement_titre" type="text" class="inputField french" id="evenement_titre" value="<?php echo $_POST["evenement_titre"] ;?>"/>
-					<input name="evenement_titre_en" type="text" class="inputField english inputdroit" id="evenement_titre_en" value="<?php echo $_POST["evenement_titre_en"] ;?>"/>
+					<input name="evenement_titre" type="text" class="inputField french" id="evenement_titre" value="<?php echo isset($_POST["evenement_titre"]) ? $_POST["evenement_titre"] : '' ;?>"/>
+					<input name="evenement_titre_en" type="text" class="inputField english inputdroit" id="evenement_titre_en" value="<?php echo isset ($_POST["evenement_titre_en"])? $_POST["evenement_titre_en"]:'' ;?>"/>
 				</p>
 				
 				<p>
 					<label for="evenement_texte">Description* :</label>
-					<textarea name="evenement_texte" cols="80" rows="4" class="inputField tinymce french" id="evenement_texte"><?php echo $_POST["evenement_texte"] ;?></textarea>
-					<textarea name="evenement_texte_en" cols="80" rows="4" class="inputField tinymce english inputdroit" id="evenement_texte_en"><?php echo $_POST["evenement_texte_en"] ;?></textarea>
+					<textarea name="evenement_texte" cols="80" rows="4" class="inputField tinymce french" id="evenement_texte"><?php echo isset ($_POST["evenement_texte"])? $_POST["evenement_texte"] : '' ;?></textarea>
+					<textarea name="evenement_texte_en" cols="80" rows="4" class="inputField tinymce english inputdroit" id="evenement_texte_en"><?php echo isset($_POST["evenement_texte_en"])?$_POST["evenement_texte_en"]:'' ;?></textarea>
 				</p>
 				
 				<p>
 					<label for="evenement_resume">Texte Newsletter :</label>
-					<textarea name="evenement_resume" rows="10" cols="20" class="inputField tinymce french" id="evenement_resume"><?php echo $_POST["evenement_resume"] ;?></textarea>
-					<textarea name="evenement_resume_en" rows="10" cols="20" class="inputField tinymce english inputdroit" id="evenement_resume_en"><?php echo $_POST["evenement_resume_en"] ;?></textarea>
+					<textarea name="evenement_resume" rows="10" cols="20" class="inputField tinymce french" id="evenement_resume"><?php echo isset($_POST["evenement_resume"]) ? $_POST["evenement_resume"]:'' ;?></textarea>
+					<textarea name="evenement_resume_en" rows="10" cols="20" class="inputField tinymce english inputdroit" id="evenement_resume_en"><?php echo isset($_POST["evenement_resume_en"]) ? $_POST["evenement_resume_en"]:'' ;?></textarea>
 				</p>
 				
 				<p>
 					<label for="evenement_organisateur">Organisateur : </label>
-					<input type="text" name="evenement_organisateur" value="<?php echo $_POST["evenement_organisateur"] ;?>" class="inputField french" id="evenement_organisateur"/>
-					<input type="text" name="evenement_organisateur_en" value="<?php echo $_POST["evenement_organisateur_en"] ;?>" class="inputField english inputdroit" id="evenement_organisateur_en"/>
+					<input type="text" name="evenement_organisateur" value="<?php echo isset($_POST["evenement_organisateur"]) ? $_POST["evenement_organisateur"]:'' ;?>" class="inputField french" id="evenement_organisateur"/>
+					<input type="text" name="evenement_organisateur_en" value="<?php echo isset($_POST["evenement_organisateur_en"]) ? $_POST["evenement_organisateur_en"]:'' ;?>" class="inputField english inputdroit" id="evenement_organisateur_en"/>
 				</p>
 				
 				<p>
 					<label for="evenement_coorganisateur">Co-organisateur : </label>
-					<input type="text" name="evenement_coorganisateur" value="<?php echo $_POST["evenement_coorganisateur"] ;?>" class="inputField french" id="evenement_coorganisateur"/>
-					<input type="text" name="evenement_coorganisateur_en" value="<?php echo $_POST["evenement_coorganisateur_en"] ;?>" class="inputField english inputdroit" id="evenement_coorganisateur_en"/>
+					<input type="text" name="evenement_coorganisateur" value="<?php echo isset($_POST["evenement_coorganisateur"]) ? $_POST["evenement_coorganisateur"] :'' ;?>" class="inputField french" id="evenement_coorganisateur"/>
+					<input type="text" name="evenement_coorganisateur_en" value="<?php echo isset($_POST["evenement_coorganisateur_en"])? $_POST["evenement_coorganisateur_en"]:'' ;?>" class="inputField english inputdroit" id="evenement_coorganisateur_en"/>
 				</p>
 
 
@@ -288,7 +288,7 @@ else{
 							$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
 							while($rowrubrique = mysql_fetch_array($resrubriques)){
 					?>
-								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($_POST['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
+								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if(isset($_POST['evenement_rubrique']) && $_POST['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
 					<?php
 							}
 						}  
@@ -310,16 +310,16 @@ else{
 				<p>
 					<label for="evenement_facebook" class="inline">Publier sur Facebook :</label>
 					<select name="evenement_facebook" id="evenement_facebook">
-						<option value="0" <?php if($_POST['evenement_facebook']==0){echo "selected=\"selected\"";} ?>>Non</option>
-						<option value="1" <?php if($_POST['evenement_facebook']==1){echo "selected=\"selected\"";} ?>>Oui</option>
+						<option value="0" <?php if(isset($_POST['evenement_facebook']) && $_POST['evenement_facebook']==0){echo "selected=\"selected\"";} ?>>Non</option>
+						<option value="1" <?php if(isset($_POST['evenement_facebook']) && $_POST['evenement_facebook']==1){echo "selected=\"selected\"";} ?>>Oui</option>
 					</select>
 				</p>
 
 				<p>
 					<label for="evenement_externe" class="inline">Inscription externe visible :</label>
 					<select name="evenement_externe" id="evenement_externe">
-						<option value="0" <?php if($_POST['evenement_externe']==0){echo "selected=\"selected\"";} ?>>Non</option>
-						<option value="1" <?php if($_POST['evenement_externe']==1){echo "selected=\"selected\"";} ?>>Oui</option>
+						<option value="0" <?php if(isset($_POST['evenement_externe']) && $_POST['evenement_externe']==0){echo "selected=\"selected\"";} ?>>Non</option>
+						<option value="1" <?php if(isset($_POST['evenement_externe']) && $_POST['evenement_externe']==1){echo "selected=\"selected\"";} ?>>Oui</option>
 					</select>
 				</p>
 				
@@ -339,12 +339,22 @@ else{
 				
 			</fieldset>
 			
-			<?php	
-					$jour_debut = date("d/m/Y",$row2['session_debut']);
-					$heure_debut = date("H:i",$row2['session_debut']);
+			<?php
+					if(isset($row2)){
 
-					$jour_fin = date("d/m/Y",$row2['session_fin']);
-					$heure_fin = date("H:i",$row2['session_fin']);
+						$jour_debut = date("d/m/Y",$row2['session_debut']);
+						$heure_debut = date("H:i",$row2['session_debut']);
+
+						$jour_fin = date("d/m/Y",$row2['session_fin']);
+						$heure_fin = date("H:i",$row2['session_fin']);
+
+					}else{
+						$jour_debut = date("d/m/Y");
+						$heure_debut = date("H:i");
+
+						$jour_fin = date("d/m/Y");
+						$heure_fin = date("H:i");
+					}
 
 					if($heure_fin=="23:59"){
 						$heure_fin="inconnue";
@@ -353,15 +363,15 @@ else{
 			<fieldset>
 				<p>
 					<label for="session_date_debut" class="inline">Date de début* : </label>
-					<input name="session_date_debut" type="text" class="inputFieldShort datepicker" id="session_date_debut" value="<?php echo $_POST["session_date_debut"] ;?>"/>
+					<input name="session_date_debut" type="text" class="inputFieldShort datepicker" id="session_date_debut" value="<?php echo isset($_POST["session_date_debut"]) ? $_POST["session_date_debut"]:date("d/m/Y") ;?>"/>
 					<input name="session_date_fin" type="text" class="inputFieldShort datepicker inputdroit" id="session_date_fin" value="<?php if(isset($_POST["session_date_fin"]) && $_POST["session_date_fin"]!=""){echo $_POST["session_date_fin"];}else{echo date("d/m/Y");}?>"/>
 					<label for="session_date_fin" class="inline labeldroit">Date de fin : </label>
 					
 				</p>
 				<p>
 					<label for="session_heure_debut" class="inline">Horaire de début* :</label>
-					<input name="session_heure_debut" type="text" id="session_heure_debut" class="inputFieldShort" value="<?php echo $_POST["session_heure_debut"] ;?>"/>
-					<input name="session_heure_fin" type="text" class="inputFieldShort inputdroit" id="session_heure_fin" value="<?php echo $_POST["session_heure_fin"] ;?>"/>
+					<input name="session_heure_debut" type="text" id="session_heure_debut" class="inputFieldShort" value="<?php echo isset($_POST["session_heure_debut"])?$_POST["session_heure_debut"]:'' ;?>"/>
+					<input name="session_heure_fin" type="text" class="inputFieldShort inputdroit" id="session_heure_fin" value="<?php echo isset($_POST["session_heure_fin"])?$_POST["session_heure_fin"]:'' ;?>"/>
 					<label for="session_heure_fin" class="inline labeldroit">Horaire de fin : </label>
 				</p>
 
@@ -372,14 +382,14 @@ else{
 			<fieldset>
 				<p>
 					<label for="session_lien" class="inline">Adresse du lien :</label>
-					<input name="session_lien" type="text" class="inputField french" id="session_lien" value="<?php echo $_POST["session_lien"] ;?>"/>
-					<input name="session_lien_en" type="text" class="inputField inputdroit english" id="session_lien_en" value="<?php echo $_POST["session_lien_en"] ;?>"/>
+					<input name="session_lien" type="text" class="inputField french" id="session_lien" value="<?php echo isset($_POST["session_lien"]) ?$_POST["session_lien"]:'' ;?>"/>
+					<input name="session_lien_en" type="text" class="inputField inputdroit english" id="session_lien_en" value="<?php echo isset($_POST["session_lien_en"]) ? $_POST["session_lien_en"]:'' ;?>"/>
 				</p>
 				
 				<p>
 					<label for="session_texte_lien">Texte du lien :</label>
-					<input type="text" name="session_texte_lien" value="<?php echo $_POST["session_texte_lien"] ;?>" class="inputField french" id="session_texte_lien"/>
-					<input type="text" name="session_texte_lien_en" value="<?php echo $_POST["session_texte_lien_en"] ;?>" class="inputField inputdroit english" id="session_texte_lien_en"/>
+					<input type="text" name="session_texte_lien" value="<?php echo isset($_POST["session_texte_lien"]) ? $_POST["session_texte_lien"]:'' ;?>" class="inputField french" id="session_texte_lien"/>
+					<input type="text" name="session_texte_lien_en" value="<?php echo isset($_POST["session_texte_lien_en"]) ? $_POST["session_texte_lien_en"]:'' ;?>" class="inputField inputdroit english" id="session_texte_lien_en"/>
 				</p>
 				<p>
 					<label for="evenement_image">Image :</label><br /><input type="file" name="evenement_image" id="evenement_image"/><span class="image">L'image doit être en png, jpg ou gif</span>
@@ -394,7 +404,7 @@ else{
 					<?php
 						foreach($langues_evenement as $cle => $valeur){
 							echo '<option value="'.$valeur.'"';
-							if($_POST['session_langue']==$valeur){echo "selected=\"selected\"";}
+							if(isset($_POST['session_langue']) && $_POST['session_langue']==$valeur){echo "selected=\"selected\"";}
 							echo '>'.$cle.'</option>';
 						}
 					?>
@@ -407,7 +417,7 @@ else{
 						echo '<option value="-1">aucun</option>';
 						while($rowlieu = mysql_fetch_array($reslieux)){
 					?>
-							<option value="<?php echo $rowlieu['lieu_id'];?>" <?php if($_POST['session_lieu']==$rowlieu['lieu_id']){echo "selected=\"selected\"";} ?>><?php echo $rowlieu['lieu_nom'];?></option>
+							<option value="<?php echo $rowlieu['lieu_id'];?>" <?php if(isset($_POST['session_lieu']) && $_POST['session_lieu']==$rowlieu['lieu_id']){echo "selected=\"selected\"";} ?>><?php echo $rowlieu['lieu_nom'];?></option>
 					<?php
 						}
 					?>	
@@ -421,7 +431,7 @@ else{
 						echo '<option value="-1" selected="selected">aucun</option>';
 						while($rowcode = mysql_fetch_array($rescodes)){
 					?>
-							<option value="<?php echo $rowcode['code_batiment_id'];?>" <?php if($_POST['session_code_batiment']==$rowcode['code_batiment_id']){echo "selected=\"selected\"";} ?>><?php echo $rowcode['code_batiment_nom']." => ".$rowcode['code_batiment_adresse'];?></option>
+							<option value="<?php echo $rowcode['code_batiment_id'];?>" <?php if(isset($_POST['session_code_batiment']) && $_POST['session_code_batiment']==$rowcode['code_batiment_id']){echo "selected=\"selected\"";} ?>><?php echo $rowcode['code_batiment_nom']." => ".$rowcode['code_batiment_adresse'];?></option>
 					<?php
 						}
 					?>
@@ -431,11 +441,11 @@ else{
 			
 				<p>
 					<label for="session_adresse1" class="inline">Nom du lieu : </label>
-					<input name="session_adresse1" type="text" class="inputField" id="session_adresse1" value="<?php echo $_POST["session_adresse1"] ;?>"/>
+					<input name="session_adresse1" type="text" class="inputField" id="session_adresse1" value="<?php echo isset($_POST["session_adresse1"]) ? $_POST["session_adresse1"]:'' ;?>"/>
 				</p>
 				<p>
 					<label for="session_adresse2" class="inline">Adresse : </label>
-					<textarea name="session_adresse2" class="textareaField" cols="20" rows="2" id="session_adresse2"><?php echo $_POST["session_adresse2"] ;?></textarea>
+					<textarea name="session_adresse2" class="textareaField" cols="20" rows="2" id="session_adresse2"><?php echo isset( $_POST["session_adresse2"])? $_POST["session_adresse2"]:'' ;?></textarea>
 				</p>
 			</fieldset>
 			
@@ -443,13 +453,13 @@ else{
 				<p>
 					<label for="session_type_inscription">Type d'inscription : </label>
 					<select name="session_type_inscription" id="session_type_inscription">
-						<option value="1" <?php if($_POST['session_type_inscription']==1){echo "selected=\"selected\"";} ?>>Entrée libre</option>
-						<option value="2" <?php if($_POST['session_type_inscription']==2){echo "selected=\"selected\"";} ?>>Inscription obligatoire par la plateforme</option>
-						<option value="3" <?php if($_POST['session_type_inscription']==3){echo "selected=\"selected\"";} ?>>Inscription obligatoire par mail ou autre</option>
+						<option value="1" <?php if(isset($_POST['session_type_inscription']) && $_POST['session_type_inscription']==1){echo "selected=\"selected\"";} ?>>Entrée libre</option>
+						<option value="2" <?php if(isset($_POST['session_type_inscription']) && $_POST['session_type_inscription']==2){echo "selected=\"selected\"";} ?>>Inscription obligatoire par la plateforme</option>
+						<option value="3" <?php if(isset($_POST['session_type_inscription']) && $_POST['session_type_inscription']==3){echo "selected=\"selected\"";} ?>>Inscription obligatoire par mail ou autre</option>
 					</select>
 					
 					<?php
-						if($_POST['session_type_inscription']==3){
+						if(isset($_POST['session_type_inscription']) && $_POST['session_type_inscription']==3){
 					?>	
 							<span id="champ_complement">
 								<label for="session_complement_type_inscription">Complément : </label>
@@ -460,7 +470,7 @@ else{
 					?>
 							<span id="champ_complement" style="display:none">
 								<label for="session_complement_type_inscription">Complément : </label>
-								<input type="text" id="session_complement_type_inscription" name="session_complement_type_inscription" class="inputField" value="<?php echo $_POST["session_complement_type_inscription"] ;?>"/>
+								<input type="text" id="session_complement_type_inscription" name="session_complement_type_inscription" class="inputField" value="<?php echo isset($_POST["session_complement_type_inscription"]) ? $_POST["session_complement_type_inscription"] : '' ;?>"/>
 							</span>
 					<?php
 						}
@@ -489,20 +499,20 @@ else{
 				<p>
 					<label for="session_statut_inscription" class="inline">Amphithéâtre : </label>
 					<input name="session_statut_inscription" type="checkbox" id="session_statut_inscription" value="1"/>
-					<input name="session_places_internes_totales" type="text" class="inputFieldTiny chiffre" id="session_places_internes_totales" value="<?php echo $_POST["session_places_internes_totales"] ;?>"/>
-					<input name="session_places_externes_totales" type="text" class="inputFieldTiny chiffre" id="session_places_externes_totales" value="<?php echo $_POST["session_places_externes_totales"] ;?>"/>
+					<input name="session_places_internes_totales" type="text" class="inputFieldTiny chiffre" id="session_places_internes_totales" value="<?php echo isset($_POST["session_places_internes_totales"]) ? $_POST["session_places_internes_totales"]:'' ;?>"/>
+					<input name="session_places_externes_totales" type="text" class="inputFieldTiny chiffre" id="session_places_externes_totales" value="<?php echo isset($_POST["session_places_externes_totales"]) ? $_POST["session_places_externes_totales"]:'' ;?>"/>
 				</p>
 				
 				<p>
 					<label for="session_statut_vision" class="inline">Retransmission :</label>
 					<input name="session_statut_vision" type="checkbox" id="session_statut_vision" value="1"/>
-					<input name="session_places_internes_totales_vision" type="text" class="inputFieldTiny chiffre" id="session_places_internes_totales_vision" value="<?php echo $_POST["session_places_internes_totales_vision"] ;?>"/>
-					<input name="session_places_externes_totales_vision" type="text" class="inputFieldTiny chiffre" id="session_places_externes_totales_vision" value="<?php echo $_POST["session_places_externes_totales"] ;?>"/>	
+					<input name="session_places_internes_totales_vision" type="text" class="inputFieldTiny chiffre" id="session_places_internes_totales_vision" value="<?php echo isset($_POST["session_places_internes_totales_vision"]) ? $_POST["session_places_internes_totales_vision"]:'' ;?>"/>
+					<input name="session_places_externes_totales_vision" type="text" class="inputFieldTiny chiffre" id="session_places_externes_totales_vision" value="<?php echo isset($_POST["session_places_externes_totales"]) ? $_POST["session_places_externes_totales"] : '' ;?>"/>	
 				
 				</p>
 			</fieldset>
 			<input type="submit" name="button" value="Enregistrer" class="buttonenregistrer" />
-			<input name="evenement_id" type="hidden" id="evenement_id" value="<?php echo $row['evenement_id']?>" />
+			<input name="evenement_id" type="hidden" id="evenement_id" value="<?php echo isset($row['evenement_id']) ? $row['evenement_id']:''?>" />
 		</form>
 	</div>
 </div>
