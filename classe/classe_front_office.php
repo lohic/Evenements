@@ -182,14 +182,18 @@ class FrontOffice {
 
 		$organisme_id = $this->organisme_id;
 
-		ob_start();
+		if(is_file($file_to_show)){
+			ob_start();
 
-			include($file_to_show);
-			$contents = ob_get_contents();
+				include($file_to_show);
+				$contents = ob_get_contents();
 
-		ob_end_clean();
+			ob_end_clean();
 
-		echo $contents;
+			echo $contents;
+		}else{
+			include('structure/404.php');
+		}
 	}
 
 }
