@@ -21,9 +21,11 @@
 ?>
 <div class="event rubrique_<?php echo $rubrique_id;?> mois_<?php echo $moisId;?> <?php echo $lesmots;?> <?php echo $lang;?>" data-sort="<?php echo $multiple;?>" id="bloc_<?php echo $row['evenement_id'];?>">
     <?php
-        if($row['evenement_image']!="" && is_file(CHEMIN_IMAGES.'evenement_'.$row['evenement_id'].'/moyen-'.$row['evenement_image'])){
+        //echo CHEMIN_IMAGES.'evenement_'.$row['evenement_id'].'/'.$row['evenement_image'];
+
+        if($row['evenement_image']!="" /*&& is_file(CHEMIN_IMAGES.'evenement_'.$row['evenement_id'].'/'.$row['evenement_image'])*/){
     ?>
-            <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/moyen-<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
+            <img src="<?php echo CHEMIN_IMAGES; ?>evenement_<?php echo $row['evenement_id'];?>/<?php echo $row['evenement_image'];?>" alt="<?php echo $row['evenement_texte_image'];?>" width="320" height="180"/>
             <div class="triangle" style="border-bottom-color:<?php echo $rubrique_couleur;?>;"></div>
     <?php
         }

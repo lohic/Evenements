@@ -425,7 +425,9 @@ class Evenement {
 
 		$image ='';
 		if(!empty($row['evenement_image'])){
-			$image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/grande-".$row['evenement_image']."?cache=".time();
+			// old
+			// $image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/grande-".$row['evenement_image']."?cache=".time();
+			$image = CHEMIN_IMAGES."evenement_".$row['evenement_id']."/".$row['evenement_image']."?cache=".time();
 		}
 
 		$inscription = func::detectURL($rowsession1['session_complement_type_inscription']);
