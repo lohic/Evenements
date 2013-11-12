@@ -147,7 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		 * (I'm aware of the naive code going on here...)
 		 *
 		 */
-		include('crop/image.class.php');
+		// uncomment for ph php 5.1.3
+		//include('crop/image.class.php');
+		include('crop/image.class.5.1.2.php');
 		$image = new imageClass();
 
 		$index = 0;
