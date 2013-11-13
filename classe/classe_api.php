@@ -373,8 +373,8 @@ class Api {
 			$sessionjson->horaire_debut 	= date("H:i:s",$session['date1']);
 			$sessionjson->horaire_fin 		= date("H:i:s",$session['date2']);
 			$sessionjson->code_langue 		= $this->langues_evenement[$session['langue']];
-			$sessionjson->code_batiment 	= utf8_encode($session['code_batiment_nom']);
-			$sessionjson->lieu 				= utf8_encode($session['lieu']);
+			$sessionjson->code_batiment 	= $session['code_batiment_nom'];
+			$sessionjson->lieu 				= $session['lieu'];
 			$sessionjson->adresse_nom		= $session['nom_adresse'];
 			$sessionjson->adresse 			= $session['adresse'];
 			$sessionjson->url 				= $session['url'];
