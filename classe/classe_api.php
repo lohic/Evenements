@@ -470,9 +470,9 @@ class Api {
 		while ($eventdata = mysql_fetch_assoc($sql_liste_events_query)){
 
 			$is_inscrits = 	(intVal($eventdata['places_internes_prises'])
-						+intVal($eventdata['places_externes_prises'])
-						+intVal($eventdata['places_internes_prises_visio'])
-						+intVal($eventdata['places_externes_prises_visio'])) >0 ? 1 : 0;
+							+intVal($eventdata['places_externes_prises'])
+							+intVal($eventdata['places_internes_prises_visio'])
+							+intVal($eventdata['places_externes_prises_visio'])) >0 ? 1 : 0;
 
 			if(! isset( $liste_events[$eventdata['id']] )) {
 				$event = new stdClass();
