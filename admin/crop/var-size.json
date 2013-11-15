@@ -16,8 +16,8 @@
 	{
 	    "id": "plasma",
 	    "label":"Vignette pour l'outil Plasma",
-	    "width": 1000,
-	    "height": 100,
+	    "width": 780,
+	    "height": 780,
 	    "suffix": "plasma"
 	}
 ]
