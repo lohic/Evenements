@@ -890,6 +890,7 @@ div.triangle_inverse {
 	float: none;
 	padding-left:29px;
 	width: auto;
+	height: auto;
 }
 
 .event p + p.organisateur{

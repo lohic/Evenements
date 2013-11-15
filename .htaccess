@@ -17,7 +17,7 @@ RewriteEngine on
 #RewriteRule ^admin - [L,NC]
 
 
-RewriteBase /Site_SCIENCESPO_EVENEMENTS/
+RewriteBase /SciencesPo_Evenements/
 
 # file
 RewriteCond %{REQUEST_FILENAME} !-f
