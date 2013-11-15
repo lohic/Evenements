@@ -95,6 +95,9 @@ class FrontOffice {
 		$this->logo_url = ABSOLUTE_URL.'admin/upload/logo/'.$result['organisme_id'].'/'.$result['organisme_logo_chemin'];
 		$this->banniere_url = ABSOLUTE_URL.'admin/upload/banniere/'.$result['organisme_id'].'/'.$result['organisme_banniere_chemin'];
 
+		$this->facebook_header = ABSOLUTE_URL.'admin/upload/banniere_facebook/'.$result['organisme_id'].'/'.$result['organisme_banniere_facebook_chemin'];
+		$this->facebook_footer = ABSOLUTE_URL.'admin/upload/footer_facebook/'.$result['organisme_id'].'/'.$result['organisme_footer_facebook_chemin'];
+
 		define('CHEMIN_FRONT_OFFICE', $result['organisme_url_front']);
 
 		// on récupère et on normalise l'url
@@ -151,8 +154,6 @@ class FrontOffice {
 
 		$template_url 		 = ABSOLUTE_URL.'template_front/' . $this->template . '/';
 		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template . '/';
-
-		
 
 
 		$file = $this->url;

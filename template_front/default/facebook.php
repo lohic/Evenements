@@ -14,18 +14,18 @@ $organisme = new organisme();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Sciences Po | événements</title>
-
-<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss_events.php" />
-<link href="css/facebook.css" rel="stylesheet" type="text/css" media="screen" />
-
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/masonry.js"></script>
-<script type="text/javascript" src="js/jquery.maximage.js"></script>
-<script type="text/javascript" src="js/jquery.adress.js"></script>
 <meta name="description" content="Le guide des événements de Sciences Po répertorie mois après mois l’éventail des 
 manifestations organisées à Sciences Po." />
 
-<script type="text/javascript" src="js/scripts.js"></script>
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss_events.php" />
+<link href="<?php echo $template_file_url ; ?>css/facebook.css" rel="stylesheet" type="text/css" media="screen" />
+
+<script type="text/javascript" src="<?php echo $template_file_url ; ?>js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo $template_file_url ; ?>js/masonry.js"></script>
+<script type="text/javascript" src="<?php echo $template_file_url ; ?>js/jquery.maximage.js"></script>
+<script type="text/javascript" src="<?php echo $template_file_url ; ?>js/jquery.adress.js"></script>
+
+<script type="text/javascript" src="<?php echo $template_file_url ; ?>js/scripts.js"></script>
 
 <!--[if lte IE 7]>
 	<link rel="stylesheet" type="text/css" href="css/ie7.css" />
@@ -57,7 +57,7 @@ manifestations organisées à Sciences Po." />
 
 	<div class="banniere_events">
 		 <a href="<?php echo CHEMIN_FRONT_OFFICE; ?>" target="_blank">
-		 	<img src="<?php echo CHEMIN_UPLOAD_GENERAL;?>banniere_facebook/<?php echo $rowOrganisme['organisme_id'];?>/<?php echo $rowOrganisme['organisme_banniere_facebook_chemin'];?>" alt="sciencesPo" width="500"/>
+		 	<img src="<?php echo $this->facebook_header;?>" alt="sciencesPo" width="500"/>
 		 </a>
 	</div>
 	<?php  
@@ -275,7 +275,7 @@ manifestations organisées à Sciences Po." />
 		<p>Retrouver tous les événements sur le site <a href="http://www.sciencespo.fr/evenements" title="Sciences Po Evénements"  target="_blank">www.sciencespo.fr/evenements</a></p>
 		<a href="<?php echo CHEMIN_FRONT_OFFICE; ?>" target="_blank">
 			<!--<img src="images/banniere_events.png" alt="sciencesPo" width="500"/>-->
-			<img src="<?php echo CHEMIN_UPLOAD_GENERAL;?>footer_facebook/<?php echo $rowOrganisme['organisme_id'];?>/<?php echo $rowOrganisme['organisme_footer_facebook_chemin'];?>" alt="sciencesPo" width="500"/>
+			<img src="<?php echo $this->facebook_footer;?>" alt="sciencesPo" width="500"/>
 		</a>
 	</div>   
 </div> <!-- .wrap --> 
