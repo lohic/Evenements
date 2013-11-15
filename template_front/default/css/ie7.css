@@ -1,0 +1,37 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#master-event > h1 {
+	margin-top:-4px;
+}
+
+img.triangle {
+    margin-top:8px;
+	margin-bottom:-5px;
+}
+
+.box .lien_event img{
+	margin-bottom:-21px;
+}
+
+#logo{
+	width:317px;
+	height:57px;
+	position:relative;
+	float:left;
+}
+
+#logo a img{
+	width:317px;
+	height:57px;
+	display:block;
+}
+
+#filtering-nav li {
+    float: left;
+}
+
+#filtering-nav li #filtering-mois{
+	float:left;
+	margin-top:-2px;
+}
