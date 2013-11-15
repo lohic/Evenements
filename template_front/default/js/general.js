@@ -62,6 +62,10 @@ $(document).ready(function(){
 		redim();
 	});
 
+	$('.event>img').load(function() {
+		centrageIsotope();
+	});
+
 	function getComboFilter( filters ) {
 		var i = 0;
 		var comboFilters = [];
@@ -816,8 +820,8 @@ function clickFiltreIsotope(){
 
 function clickTitre(){
 	$('.event>h1>a, .event > p > a.suite').click(function(e){
-		e.preventDefault();
-		
+		console.log("click titre");
+
 		var nextLastRowEvent;
 		var prevFirstRowEvent;
 		//On remets les éléments du bloc masqué en mode visible et dans l'état où ils étaient avant
@@ -848,6 +852,8 @@ function clickTitre(){
 
 		$('.isotope-item').removeClass('sinscrireEvent');
 	    // on evite le comportement normal du click   
+	    
+	    e.preventDefault();
 	});
 }
 
@@ -1010,7 +1016,7 @@ function clickEvent(clickedElement, sauv){
 	// on eneleve les classe selected et selectedEvent
 	$('#liste_evenements').isotope( 'remove', $('.resume') );
 
-	nextLastRowEvent = getNextLast(clickedElement);
+	nextLastRowEvent  = getNextLast(clickedElement);
 	prevFirstRowEvent = getPrevFirst(clickedElement);
 
 	var evenement_id = clickedElement.find('h1 > a').attr('id').split('_')[2];
@@ -1021,6 +1027,8 @@ function clickEvent(clickedElement, sauv){
 	else{
 		var la_langue="fr";
 	}
+
+	console.log("ajax :"+evenement_id);
 
 	$.ajax({
         url     :"ajax/get_event_infos.php",

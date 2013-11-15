@@ -7,6 +7,10 @@ include('connect.php');
 
 include('variables.php');
 
+if(!isset($_POST['id'])){
+	$_POST['id'] = 0;
+}
+
 $sql3 ="SELECT * FROM sp_organismes WHERE organisme_id = '".$_POST['id']."'";
 $res3 = mysql_query($sql3) or die(mysql_error());
 $row3 = mysql_fetch_array($res3);
@@ -67,7 +71,7 @@ $row3 = mysql_fetch_array($res3);
 	    <p><label for="organisme_image_billet">Image pour les billets :</label><input type="file" name="organisme_image_billet" id="organisme_image_billet"/></p>
 		<a href="organismes.php?fonction=supprimer_image_billet&amp;id=<?php echo $row3['organisme_id'];?>&amp;menu_actif=logins" class="supprimer" onclick="confirmar('organismes.php?fonction=supprimer_image_billet&amp;id=<?php echo $row3['organisme_id'];?>', 'Etes-vous sûr de vouloir supprimer cette image?')" title="supprimer"><img src="img/trash.png" alt="supprimer"/></a>	
 		<input type="hidden" name="image_billet_cache" id="image_billet_cache" value="<?php echo $row3['organisme_image_billet']; ?>"/>
-		<p><label for="organisme_url_image">Lien pour l'image des billets :</label><input name="organisme_url_image" class="inputField" type="text" id="organisme_url_image" value="<?php echo $row3['organisme_url_image'];?>" /></p>
+		<p><label for="organisme_url_image">Lien pour l'image des billets :</label><input name="organisme_url_image" class="inputField" type="text" id="organisme_url_image" value="<?php echo isset($row3['organisme_url_image']) ? $row3['organisme_url_image'] : '';?>" /></p>
 	</div>
 	<div class="liens">
 		
