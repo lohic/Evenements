@@ -4,6 +4,7 @@
 # http://amandine.aupetit.info/135/
 # http://stackoverflow.com/questions/12551382/what-does-1-qsa-l-mean-in-my-htaccess-file
 # http://fr.openclassrooms.com/forum/sujet/htaccess-rediriger-vers-un-script-41931?page=1
+# http://craym.eu/tutoriels/referencement/url_rewriting.html.
 
 RewriteEngine on
 # RewriteRule ^archive-([a-z0-9]+)\.html$  index.php?organisme=$1  [L]
@@ -16,6 +17,8 @@ RewriteEngine on
 #RewriteRule ^admin - [L,NC]
 
 
+RewriteBase /Site_SCIENCESPO_EVENEMENTS/
+
 # file
 RewriteCond %{REQUEST_FILENAME} !-f
 # directory
@@ -25,6 +28,8 @@ RewriteCond %{REQUEST_FILENAME} !-l
 
 RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
 
+# online
+# RewriteRule ^(evenements-pprd|evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
 
 
 # OLD
