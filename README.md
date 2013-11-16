@@ -57,7 +57,7 @@ RewriteEngine on
 RewriteBase /Site_SCIENCESPO_EVENEMENTS/
 
 # file
-#RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-f
 # directory
 RewriteCond %{REQUEST_FILENAME} !-d
 # symlink
