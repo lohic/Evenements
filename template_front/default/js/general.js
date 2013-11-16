@@ -675,6 +675,7 @@ function clickFiltreIsotope(){
 	var $container = $('#liste_evenements'), filters = {};
 	$('.filtre_isotope a').unbind( "click" );
 	$('.filtre_isotope a').click(function(){
+
 		$('.event>h1>a, .event > p > a.suite').unbind( "click" );
 		reInitBloc();
 		$('.selectedEvent').height($('.selectedEvent').height()-15);
