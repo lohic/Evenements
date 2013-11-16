@@ -11,6 +11,8 @@ config.php
 billet/*
 !billet/index.php
 
+.htaccess
+
 # OS generated files #
 ######################
 .DS_Store
