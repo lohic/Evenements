@@ -48,8 +48,8 @@ Pour les filtres isotopes avec checkbox :
 - http://jsfiddle.net/bj5WG/
 - 
 
+HTACCESS :
 
-Redirection d'un front-office ne faisant par partie du dossier principal via .HTACCESS
 ```bash
 
 RewriteEngine on
@@ -58,6 +58,25 @@ RewriteBase /Site_SCIENCESPO_EVENEMENTS/
 
 # file
 RewriteCond %{REQUEST_FILENAME} !-f
+# directory
+RewriteCond %{REQUEST_FILENAME} !-d
+# symlink
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
+
+
+```
+
+
+Redirection d'un front-office ne faisant par partie du dossier principal via .HTACCESS
+```bash
+
+RewriteEngine on
+
+
+# file
+#RewriteCond %{REQUEST_FILENAME} !-f
 # directory
 RewriteCond %{REQUEST_FILENAME} !-d
 # symlink
