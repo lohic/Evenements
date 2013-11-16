@@ -54,6 +54,7 @@ Redirection d'un front-office ne faisant par partie du dossier principal via .HT
 
 RewriteEngine on
 
+RewriteBase /Site_SCIENCESPO_EVENEMENTS/
 
 # file
 #RewriteCond %{REQUEST_FILENAME} !-f
