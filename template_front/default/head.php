@@ -69,6 +69,7 @@
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/js/jquery.resizend.js"></script>
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/js/jquery.jpanelmenu.min.js"></script>
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/js/jRespond.min.js"></script>
+        <script type="text/javascript" src="<?php echo $template_file_url ; ?>/js/jquery.scrollTo.min.js"></script>
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/lib/jquery.mousewheel-3.0.6.pack.js"></script>
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/source/jquery.fancybox.js?v=2.1.4"></script>
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
