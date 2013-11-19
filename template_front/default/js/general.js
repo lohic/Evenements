@@ -11,30 +11,7 @@ $.urlParam = function(name){
 
 var sauv = 0;
 
-function redim(){
 
-	$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
-	$ratioImg = $('.banniere').width() / $('.banniere').height();
-	
-	if($ratioDiv>$ratioImg){
-		$w = $('.maxDivImg').width();
-		$h = $w / $ratioImg;
-	}else{
-		$h = $('.maxDivImg').height();
-		$w = $h * $ratioImg;
-	}
-	
-	$('.banniere').width($w);
-	$('.banniere').height($h);
-
-	if($('.maxDivImg').offset() != undefined){
-
-		$xPos = ($('.maxDivImg').width()-$w)/2 + $('.maxDivImg').offset().left;
-		$yPos = ($('.maxDivImg').height()-$h)/2 + $('.maxDivImg').offset().top;
-
-		$('.banniere').offset({left:$xPos,top:$yPos});
-	}
-}
 
 $(document).ready(function(){			
 	var $container = $('#liste_evenements'), filters = {};
@@ -538,6 +515,39 @@ $(document).ready(function(){
 });
 
 
+/**
+ * [description]
+ * @return {[type]} [description]
+ */
+$(window).resize(function() {
+	console.log('> suppr resume');
+	$('#liste_evenements').isotope( 'remove', $('.resume') );
+	reInitBloc();
+	$('.selectedEvent').height($('.selectedEvent').height()-15);
+	$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
+});
+
+
+/**
+ * [onDragEnd description]
+ * @param  {[type]} ){		redim();			} [description]
+ * @param  {[type]} runOnStart         :             true [description]
+ * @param  {[type]} }                 [description]
+ * @return {[type]}                    [description]
+ */
+$(window).resizeend({
+	onDragEnd : function(){
+		redim();
+		//console.log('end resize !!!');
+	},
+	runOnStart : true,
+});
+
+
+/**
+ * [description]
+ * @return {[type]} [description]
+ */
 $(function(){  
 	var $container = $('#liste_evenements'), filters = {};
 	$body = $('body'),
@@ -576,67 +586,7 @@ $(function(){
 		sortBy : 'number', // on trie sur le numéro qu'on a créé
 		// pour ajouterles classes first et last 
 		onLayout: function (elems, instance) {
-			console.log('onLayout');
-			var items, rows, numRows, row, prev, i;
-
-			// gather info for each element
-			items = elems.map(function () {
-				var el = $(this), pos = el.data('isotope-item-position');
-				return {
-					x: pos.x,
-					y: pos.y,
-					w: el.width(),
-					h: el.height(),
-					el: el
-				};
-			});
-
-			// first pass to find the first and last items of each row
-			rows = [];
-			i = {};
-			items.each(function () {
-				var y = this.y, r = i[y];
-				if (!r) {
-					r = {
-						y: y,
-						first: null,
-						last: null
-					};
-					rows.push(r);
-					i[y] = r;
-				}
-				if (!r.first || this.x < r.first.x) {
-					r.first = this;
-				}
-				if (!r.last || this.x > r.last.x) {
-					r.last = this;
-				}
-			});
-			rows.sort(function (a, b) { return a.y - b.y; });
-			numRows = rows.length;
-
-			// compare items for each row against the previous row
-			for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
-				row = rows[i];
-				if (prev.first.x < row.first.x &&
-					prev.first.y + prev.first.h > row.y) {
-				row.first = prev.first;
-				}
-				if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
-					prev.last.y + prev.last.h > row.y) {
-				row.last = prev.last;
-				}
-			}
-
-			// assign classes to first and last elements
-			elems.removeClass('first last');
-			$.each(rows, function () {
-				this.first.el.addClass('first');
-				this.last.el.addClass('last');
-			});
-
-			getNextLast($('.selectedEvent'));
-			$('.isotope-hidden').removeClass('first last');
+			centerLayout(elems, instance);
 	    }
 	});
 
@@ -648,33 +598,20 @@ $(function(){
 	centrageIsotope();
 });
 
-function centrageIsotope(){
-	var $container = $('#liste_evenements'), filters = {};
-	$body = $('body'),
-	colW = 335,
-	columns = null;
-	$(window).smartresize(function(){
-		// measure the width of all the items
-		var itemTotalWidth = 0;
-		$container.children().each(function(){
-			itemTotalWidth += $(this).outerWidth(true);
-		});
-		// check if columns has changed
-		var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
-		itemColumns = Math.floor( itemTotalWidth / colW ),
-		currentColumns = Math.min( bodyColumns, itemColumns );
-		if ( currentColumns !== columns ) {
-			// set new column count
-			columns = currentColumns;
-		}
-		$container.width( columns * colW ).isotope().isotope('reLayout');
-	}).smartresize();
-}
 
+
+
+
+/**
+ * [clickFiltreIsotope description]
+ * @return {[type]} [description]
+ */
 function clickFiltreIsotope(){
 	var $container = $('#liste_evenements'), filters = {};
 	$('.filtre_isotope a').unbind( "click" );
 	$('.filtre_isotope a').click(function(){
+
+		console.log('FILTRE');
 
 		$('.event>h1>a, .event > p > a.suite').unbind( "click" );
 		reInitBloc();
@@ -703,7 +640,11 @@ function clickFiltreIsotope(){
 		}
 		var selector = isoFilters.join('');
 
-		$container.isotope({ filter: selector,
+		// on ajoute le bloc d'evenement que l'on ne souhaite pas filtrer
+		selector += ',.resume';
+
+		$container.isotope({
+			filter: selector,
 			resizable: false,
 			itemSelector : '.event',
 			layoutMode : 'fitRows',
@@ -721,67 +662,7 @@ function clickFiltreIsotope(){
 			sortBy : 'number', // on trie sur le numéro qu'on a créé
 			// pour ajouterles classes first et last 
 			onLayout: function (elems, instance) {
-				console.log('onLayout');
-				var items, rows, numRows, row, prev, i;
-
-				// gather info for each element
-				items = elems.map(function () {
-					var el = $(this), pos = el.data('isotope-item-position');
-					return {
-						x: pos.x,
-						y: pos.y,
-						w: el.width(),
-						h: el.height(),
-						el: el
-					};
-				});
-
-				// first pass to find the first and last items of each row
-				rows = [];
-				i = {};
-				items.each(function () {
-					var y = this.y, r = i[y];
-					if (!r) {
-						r = {
-							y: y,
-							first: null,
-							last: null
-						};
-						rows.push(r);
-						i[y] = r;
-					}
-					if (!r.first || this.x < r.first.x) {
-						r.first = this;
-					}
-					if (!r.last || this.x > r.last.x) {
-						r.last = this;
-					}
-				});
-				rows.sort(function (a, b) { return a.y - b.y; });
-				numRows = rows.length;
-
-				// compare items for each row against the previous row
-				for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
-					row = rows[i];
-					if (prev.first.x < row.first.x &&
-						prev.first.y + prev.first.h > row.y) {
-					row.first = prev.first;
-					}
-					if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
-						prev.last.y + prev.last.h > row.y) {
-					row.last = prev.last;
-					}
-				}
-
-				// assign classes to first and last elements
-				elems.removeClass('first last');
-				$.each(rows, function () {
-					this.first.el.addClass('first');
-					this.last.el.addClass('last');
-				});
-
-				getNextLast($('.selectedEvent'));
-				$('.isotope-hidden').removeClass('first last');
+				centerLayout(elems, instance);
 		    }
 		});
 
@@ -820,6 +701,10 @@ function clickFiltreIsotope(){
 	});
 }
 
+/**
+ * [clickTitre description]
+ * @return {[type]} [description]
+ */
 function clickTitre(){
 	$('.event>h1>a, .event > p > a.suite').click(function(e){
 		console.log("click titre");
@@ -859,6 +744,10 @@ function clickTitre(){
 	});
 }
 
+/**
+ * [sinscrire description]
+ * @return {[type]} [description]
+ */
 function sinscrire(){
 	$('a.sinscrire').click(function(e){
 		e.preventDefault();
@@ -920,6 +809,10 @@ function sinscrire(){
 	});
 }
 
+/**
+ * [sinscrire_multiple description]
+ * @return {[type]} [description]
+ */
 function sinscrire_multiple(){
 	$('a.sinscrire_multiple').click(function(e){
 		$('.isotope-item').removeClass('sinscrireEvent');
@@ -975,6 +868,10 @@ function sinscrire_multiple(){
 	});
 }
 
+/**
+ * [initIsotopeOuvert description]
+ * @return {[type]} [description]
+ */
 function initIsotopeOuvert(){
 	if(decodeURIComponent($.urlParam('id')) != "null"){	
 		var nextLastRowEventTest;
@@ -1012,6 +909,12 @@ function initIsotopeOuvert(){
 	}
 }
 
+/**
+ * [clickEvent description]
+ * @param  {[type]} clickedElement [description]
+ * @param  {[type]} sauv           [description]
+ * @return {[type]}                [description]
+ */
 function clickEvent(clickedElement, sauv){
 	var nextLastRowEvent;
 	var prevFirstRowEvent;
@@ -1075,6 +978,11 @@ function clickEvent(clickedElement, sauv){
 	    $('#liste_evenements').isotope('insert', $newItems);
 	    console.log('> add resume');
         console.log(dataJSON);
+
+        // on calcule la hauteur du menu (en fonction du mode smartphone ou desktop)
+        var hauteurMenu = - $('header').first().height()-20;
+        // pour scroller la page jusqu'à l'événement sélectionné
+        $('body').scrollTo('.selectedEvent>h1',1000,{offset:{top:hauteurMenu,left:0}});
 
         // quand on clique sur le bouton de fermeture de bloc événement
 	    $('a#close').click(function(e){
@@ -1185,11 +1093,18 @@ function clickEvent(clickedElement, sauv){
     });
 }
 
-
+/**
+ * [fancyboxrefresh description]
+ * @return {[type]} [description]
+ */
 function fancyboxrefresh(){
 	$.fancybox.update();
 }
 
+/**
+ * [validFancyBox description]
+ * @return {[type]} [description]
+ */
 function validFancyBox(){
 	$('.depliable h3').click(function(e){
 		e.preventDefault();
@@ -1460,6 +1375,11 @@ function validFancyBox(){
 	});
 }
 
+/**
+ * [getNextLast description]
+ * @param  {[type]} cible [description]
+ * @return {[type]}       [description]
+ */
 function getNextLast(cible){
 	var target;
 	$('.event').removeClass('nextLastRowItem');
@@ -1481,7 +1401,13 @@ function getNextLast(cible){
 
 }
 
-/*** Fonction récursive qui attribue à un élément la plus grande hauteur parmi des blocs d'une même ligne ***/
+/**
+ * Fonction récursive qui attribue à un élément la plus grande hauteur parmi des blocs d'une même ligne
+ * @param  {[type]} cible   [description]
+ * @param  {[type]} hauteur [description]
+ * @param  {[type]} element [description]
+ * @return {[type]}         [description]
+ */
 function getHauteurMax(cible, hauteur, element){
 	//on vérifie si la hauteur de la cible est supérieure à la plus grande hauteur actuelle
 	if(cible.hasClass('isotope-hidden')){
@@ -1503,6 +1429,11 @@ function getHauteurMax(cible, hauteur, element){
 	}
 }
 
+/**
+ * [getPrevFirst description]
+ * @param  {[type]} cible [description]
+ * @return {[type]}       [description]
+ */
 function getPrevFirst(cible){
 	var target;
 	$('.event').removeClass('prevFirstRowItem');
@@ -1521,6 +1452,10 @@ function getPrevFirst(cible){
 	return target;
 }
 
+/**
+ * [reInitBloc description]
+ * @return {[type]} [description]
+ */
 function reInitBloc(){
 	$('.selectedEvent > a').css('display','block');
 	$('.selectedEvent > img').css('display','inline-block');
@@ -1532,20 +1467,130 @@ function reInitBloc(){
 }
 
 
-$(window).resize(function() {
-	console.log('> suppr resume');
-	$('#liste_evenements').isotope( 'remove', $('.resume') );
-	reInitBloc();
-	$('.selectedEvent').height($('.selectedEvent').height()-15);
-	$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
-});
+
+/**
+ * [redim description]
+ * @return {[type]} [description]
+ */
+function redim(){
+
+	$ratioDiv = $('.maxDivImg').width()/ $('.maxDivImg').height();
+	$ratioImg = $('.banniere').width() / $('.banniere').height();
+	
+	if($ratioDiv>$ratioImg){
+		$w = $('.maxDivImg').width();
+		$h = $w / $ratioImg;
+	}else{
+		$h = $('.maxDivImg').height();
+		$w = $h * $ratioImg;
+	}
+	
+	$('.banniere').width($w);
+	$('.banniere').height($h);
+
+	if($('.maxDivImg').offset() != undefined){
+
+		$xPos = ($('.maxDivImg').width()-$w)/2 + $('.maxDivImg').offset().left;
+		$yPos = ($('.maxDivImg').height()-$h)/2 + $('.maxDivImg').offset().top;
+
+		$('.banniere').offset({left:$xPos,top:$yPos});
+	}
+}
+
+/**
+ * [centerLayout description]
+ * @param  {[type]} elems    [description]
+ * @param  {[type]} instance [description]
+ * @return {[type]}          [description]
+ */
+function centerLayout(elems, instance){
+	console.log('onLayout');
+	var items, rows, numRows, row, prev, i;
+
+	// gather info for each element
+	items = elems.map(function () {
+		var el = $(this), pos = el.data('isotope-item-position');
+		return {
+			x: pos.x,
+			y: pos.y,
+			w: el.width(),
+			h: el.height(),
+			el: el
+		};
+	});
+
+	// first pass to find the first and last items of each row
+	rows = [];
+	i = {};
+	items.each(function () {
+		var y = this.y, r = i[y];
+		if (!r) {
+			r = {
+				y: y,
+				first: null,
+				last: null
+			};
+			rows.push(r);
+			i[y] = r;
+		}
+		if (!r.first || this.x < r.first.x) {
+			r.first = this;
+		}
+		if (!r.last || this.x > r.last.x) {
+			r.last = this;
+		}
+	});
+	rows.sort(function (a, b) { return a.y - b.y; });
+	numRows = rows.length;
+
+	// compare items for each row against the previous row
+	for (prev = rows[0], i = 1; i < numRows; prev = row, i++) {
+		row = rows[i];
+		if (prev.first.x < row.first.x &&
+			prev.first.y + prev.first.h > row.y) {
+		row.first = prev.first;
+		}
+		if (prev.last.x + prev.last.w > row.last.x + row.last.w &&
+			prev.last.y + prev.last.h > row.y) {
+		row.last = prev.last;
+		}
+	}
+
+	// assign classes to first and last elements
+	elems.removeClass('first last');
+	$.each(rows, function () {
+		this.first.el.addClass('first');
+		this.last.el.addClass('last');
+	});
+
+	getNextLast($('.selectedEvent'));
+	$('.isotope-hidden').removeClass('first last');
+}
 
 
-
-$(window).resizeend({
-	onDragEnd : function(){
-		redim();
-		//console.log('end resize !!!');
-	},
-	runOnStart : true,
-});
+/**
+ * [centrageIsotope description]
+ * @return {[type]} [description]
+ */
+function centrageIsotope(){
+	var $container = $('#liste_evenements'), filters = {};
+	$body = $('body'),
+	colW = 335,
+	columns = null;
+	$(window).smartresize(function(){
+		// measure the width of all the items
+		var itemTotalWidth = 0;
+		$container.children().each(function(){
+			itemTotalWidth += $(this).outerWidth(true);
+		});
+		// check if columns has changed
+		var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
+		itemColumns = Math.floor( itemTotalWidth / colW ),
+		currentColumns = Math.min( bodyColumns, itemColumns );
+		if ( currentColumns !== columns ) {
+			// set new column count
+			columns = currentColumns;
+		}
+		$container.width( columns * colW ).isotope().isotope('reLayout');
+	}).smartresize();
+}
