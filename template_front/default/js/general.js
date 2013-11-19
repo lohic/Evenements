@@ -641,7 +641,7 @@ function clickFiltreIsotope(){
 		var selector = isoFilters.join('');
 
 		// on ajoute le bloc d'evenement que l'on ne souhaite pas filtrer
-		selector += ',.resume';
+		if(selector.length > 0){ selector += ',.resume' }
 
 		$container.isotope({
 			filter: selector,
