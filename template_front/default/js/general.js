@@ -586,7 +586,7 @@ $(function(){
 		sortBy : 'number', // on trie sur le numéro qu'on a créé
 		// pour ajouterles classes first et last 
 		onLayout: function (elems, instance) {
-			centerLayout(elems, instance);
+			firstLastLayout(elems, instance);
 	    }
 	});
 
@@ -662,7 +662,7 @@ function clickFiltreIsotope(){
 			sortBy : 'number', // on trie sur le numéro qu'on a créé
 			// pour ajouterles classes first et last 
 			onLayout: function (elems, instance) {
-				centerLayout(elems, instance);
+				firstLastLayout(elems, instance);
 		    }
 		});
 
@@ -1498,12 +1498,12 @@ function redim(){
 }
 
 /**
- * [centerLayout description]
+ * [firstLastLayout description]
  * @param  {[type]} elems    [description]
  * @param  {[type]} instance [description]
  * @return {[type]}          [description]
  */
-function centerLayout(elems, instance){
+function firstLastLayout(elems, instance){
 	console.log('onLayout');
 	var items, rows, numRows, row, prev, i;
 
@@ -1570,6 +1570,7 @@ function centerLayout(elems, instance){
 
 /**
  * [centrageIsotope description]
+ * ISOTOPE Centré cf : http://jsfiddle.net/desandro/P6JGY/24/
  * @return {[type]} [description]
  */
 function centrageIsotope(){
@@ -1577,7 +1578,10 @@ function centrageIsotope(){
 	$body = $('body'),
 	colW = 335,
 	columns = null;
+	maxColumns = 4;
 	$(window).smartresize(function(){
+
+		console.log('largeur '+$body.width());
 		// measure the width of all the items
 		var itemTotalWidth = 0;
 		$container.children().each(function(){
@@ -1590,6 +1594,14 @@ function centrageIsotope(){
 		if ( currentColumns !== columns ) {
 			// set new column count
 			columns = currentColumns;
+		}
+
+		if($body.width() > maxColumns*colW ){
+			columns = maxColumns;
+		}
+
+		if(columns>maxColumns){
+			columns = maxColumns;
 		}
 		$container.width( columns * colW ).isotope().isotope('reLayout');
 	}).smartresize();
