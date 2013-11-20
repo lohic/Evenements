@@ -11,6 +11,9 @@ config.php
 billet/*
 !billet/index.php
 
+admin/upload/medias/*
+admin/upload/photos/*
+
 .htaccess
 
 # OS generated files #
