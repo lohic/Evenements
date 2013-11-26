@@ -24,32 +24,34 @@ $reussi = false;
 if( isset($_POST['evenement_titre']) ){
     $erreur=func::testChampsSoumission($_POST['evenement_titre'], $_POST['evenement_texte'], $_POST["evenement_organisateur"], $_POST['evenement_rubrique'], $_POST['session_date_debut'], $_POST['session_heure_debut']);
     
-    $_SESSION['evenement_titre'] = $_POST['evenement_titre'];
-    $_SESSION['evenement_titre_en'] = $_POST['evenement_titre_en'];
-    $_SESSION['evenement_texte'] = $_POST['evenement_texte'];
-    $_SESSION['evenement_texte_en'] = $_POST['evenement_texte_en'];
-    $_SESSION['evenement_statut'] = $_POST['evenement_statut'];
-    $_SESSION['evenement_organisateur'] = $_POST['evenement_organisateur'];
-    $_SESSION['evenement_organisateur_en'] = $_POST['evenement_organisateur_en'];
-    $_SESSION['evenement_coorganisateur'] = $_POST['evenement_coorganisateur'];
-    $_SESSION['evenement_coorganisateur_en'] = $_POST['evenement_coorganisateur_en'];
-    $_SESSION['evenement_rubrique'] = $_POST['evenement_rubrique'];
-    $_SESSION['session_langue'] = $_POST['session_langue'];
-    $_SESSION['session_lien'] = $_POST['session_lien'];
-    $_SESSION['session_lien_en'] = $_POST['session_lien_en'];
-    $_SESSION['session_date_debut'] = $_POST['session_date_debut'];
-    $_SESSION['session_heure_debut'] = $_POST['session_heure_debut'];
+    $_SESSION['evenement_titre']                = $_POST['evenement_titre'];
+    $_SESSION['evenement_titre_en']             = $_POST['evenement_titre_en'];
+    $_SESSION['evenement_texte']                = $_POST['evenement_texte'];
+    $_SESSION['evenement_texte_en']             = $_POST['evenement_texte_en'];
+    $_SESSION['evenement_statut']               = $_POST['evenement_statut'];
+    $_SESSION['evenement_organisateur']         = $_POST['evenement_organisateur'];
+    $_SESSION['evenement_organisateur_en']      = $_POST['evenement_organisateur_en'];
+    $_SESSION['evenement_coorganisateur']       = $_POST['evenement_coorganisateur'];
+    $_SESSION['evenement_coorganisateur_en']    = $_POST['evenement_coorganisateur_en'];
+    $_SESSION['evenement_rubrique']             = $_POST['evenement_rubrique'];
+    $_SESSION['session_langue']                 = $_POST['session_langue'];
+    $_SESSION['session_lien']                   = $_POST['session_lien'];
+    $_SESSION['session_lien_en']                = $_POST['session_lien_en'];
+    $_SESSION['session_date_debut']             = $_POST['session_date_debut'];
+    $_SESSION['session_heure_debut']            = $_POST['session_heure_debut'];
+    
     if($_POST['session_date_fin']==""){
-        $_SESSION['session_date_fin']=$_SESSION['session_date_debut'];
+        $_SESSION['session_date_fin']           = $_SESSION['session_date_debut'];
     }
     else{
-        $_SESSION['session_date_fin'] = $_POST['session_date_fin'];
+        $_SESSION['session_date_fin']           = $_POST['session_date_fin'];
     }
+
     if($_POST['session_heure_fin']==""){
-        $_SESSION['session_heure_fin']="inconnue";
+        $_SESSION['session_heure_fin']          = "inconnue";
     }
     else{
-        $_SESSION['session_heure_fin'] = $_POST['session_heure_fin'];
+        $_SESSION['session_heure_fin']          = $_POST['session_heure_fin'];
     }
 
 
@@ -85,6 +87,7 @@ if( isset($_POST['evenement_titre']) ){
 
         $_SESSION['image'] = $photo;    
         
+        //echo 'soumettre_def.php';
         header('Location:soumettre_def.php');
     }
 }
@@ -121,7 +124,7 @@ if(isset($_SESSION['nomSP'])){
         if($reussi==false){
         ?>
             <p style="color:#333333;">Formulaire à compléter pour toute demande de publication dans le Guide des Evénements.<br/>Attention : La soumission d'un événement ne vaut pas réservation de la salle.<br/>La réservation doit avoir été confirmée au préalable par le service du planning ou par votre référent à Sciences Po en lien avec le service du planning.</p>
-            <form id="formcreer" name="formcreer" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']."?menu_actif=nouvelevenement"?>">
+            <form id="formcreer" name="formcreer" method="post" enctype="multipart/form-data" action="">
                 <input type="submit" name="button" value="Visualiser" class="buttonenregistrer"/>
                         
                 <input type="hidden" name="evenement_statut" id="evenement_statut" value="4"/>
@@ -242,7 +245,7 @@ if(isset($_SESSION['nomSP'])){
 <?php
 }
 else{
-header('Location:identification.php');
+    header('Location:identification.php');
 }
 ?>
 <script type="text/javascript">
