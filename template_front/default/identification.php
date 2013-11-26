@@ -1,8 +1,9 @@
 <?php   
 // connection to data base
-include_once('../vars/config.php');
+//include_once('../vars/config.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');// functions library
-include_once('connectLDAP.php');
+include_once(REAL_LOCAL_PATH.'inscription/connectLDAP.php');
+//include_once('connectLDAP.php');
 
 session_start();
 
@@ -40,12 +41,12 @@ if(isset($_SESSION['nomSP'])){
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Sciences Po / Evénements</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <link href="admin/jquery-ui/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>/styles.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>/admin/jquery-ui/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
     
-    <script type="text/javascript" src="admin/tools.js"></script>
-    <script type="text/javascript" src="admin/jquery-ui/js/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="admin/jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>/admin/tools.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>/admin/jquery-ui/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>/admin/jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
 </head>
 
 <body class="iframe">
