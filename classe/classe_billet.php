@@ -48,6 +48,10 @@ class Billet {
 	var $passbookFile;
 	var $HTMLticket;
 
+	var $localOutputFolder;
+	var $absoluteOutputFolder;
+	var $uploadDir;
+
 
 	/**
 	 * création d'un billet dans les 3 formats utiles en fonction des informations de l'inscrit et de l'événement auquel il s'est inscrit
@@ -80,6 +84,10 @@ class Billet {
 			$this->localBilletFolder 	= REAL_LOCAL_PATH.'template_front/'. $template . '/billet/';
 			$this->absoluteBilletFolder = ABSOLUTE_URL.'template_front/'. $template . '/billet/';
 
+			
+
+
+
 			$this->unique_id = $_unique_id;
 
 			$this->session_name	= $session_nom;
@@ -108,6 +116,14 @@ class Billet {
 			$this->url_image	= $organisme_url_image; 
 
 			$this->big_PDF		= true;
+
+
+			// on précise le chemin d'export du billet en fonction de la date yyyy/mm/jj/ de la session
+			$date_dir = $this->annee.'/'.$this->mois.'/'.$this->jour.'/';
+			$this->localOutputFolder = REAL_LOCAL_PATH.BILLETS_FOLDER.$date_dir;
+			$this->absoluteOutputFolder = ABSOLUTE_URL.BILLETS_FOLDER.$date_dir;
+			
+			$this->uploadDir = $this->createPath($this->localOutputFolder);
 		}
 
 		$this->PDFurl 		= $this->generate_pdf();
@@ -260,7 +276,9 @@ class Billet {
 
 		// Create and output the PKPass
 		if(!$show){
-			return $pass->create(false);
+			//return $pass->create(false);
+			file_put_contents( $this->localOutputFolder.'billet_'.$this->unique_id.'.pkpass',$pass->create(false) );
+			return $this->localOutputFolder.'billet_'.$this->unique_id.'.pkpass';
 		}else if(!$pass->create(true)) {
 		    echo 'Error: '.$pass->getError();
 		}
@@ -322,12 +340,7 @@ class Billet {
 			$template_billet = $this->localBilletFolder.'billet_pdf_big.php';
 		}
 
-		// on précise le chemin d'export du billet en fonction de la date yyyy/mm/jj/ de la session
-		$date_dir = $this->annee.'/'.$this->mois.'/'.$this->jour.'/';
-		$localOutputFolder = REAL_LOCAL_PATH.BILLETS_FOLDER.$date_dir;
-		$absoluteOutputFolder = ABSOLUTE_URL.BILLETS_FOLDER.$date_dir;
 		
-		$uploadDir = $this->createPath($localOutputFolder);
 
 
 		/**
@@ -424,8 +437,9 @@ class Billet {
 		if($show){
 			$pdf->Output('billet_'.$this->unique_id.'.pdf', 'I');
 		}else{
-			$pdf->Output($localOutputFolder.'billet_'.$this->unique_id.'.pdf', 'F');
-			return $absoluteOutputFolder.'billet_'.$this->unique_id.'.pdf';
+			$pdf->Output($this->localOutputFolder.'billet_'.$this->unique_id.'.pdf', 'F');
+			//return $absoluteOutputFolder.'billet_'.$this->unique_id.'.pdf';
+			return $this->localOutputFolder.'billet_'.$this->unique_id.'.pdf';
 		}
 	}
 

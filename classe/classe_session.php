@@ -428,10 +428,10 @@ class Session {
 												func::GetSQLValueString($lastIdInsert, "int"));
 
 					mysql_query($sqlupdate) or die(mysql_error());
-					$dateBillet=date("d/m/Y", $rowSession['session_debut']);
-					$dateMail=date("d/m/Y", $rowSession['session_debut']);
+					$dateBillet	= date("d/m/Y", $rowSession['session_debut']);
+					$dateMail	= date("d/m/Y", $rowSession['session_debut']);
 					$heureDebut = date("H:i", $rowSession['session_debut']);
-					$heureFin = date("H:i", $rowSession['session_fin']);
+					$heureFin 	= date("H:i", $rowSession['session_fin']);
 					
 					if($casque==1){
 						$casque = true;

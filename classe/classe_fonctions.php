@@ -252,23 +252,24 @@ class Func {
 	static function envoiMail($session, $mailHTML, $billet, $passBook, $uniqueId, $mail){
 		$mailEnvoi  = new phpmailer();
 		$mailEnvoi -> IsMail();
-		$mailEnvoi -> Host     = 'localhost';
-		$mailEnvoi -> Hostname     = 'Sciences Po';
-		$mailEnvoi -> Charset  = 'UTF-8';
-		$mailEnvoi -> SMTPAuth = FALSE;
-		$mailEnvoi -> From     = 	'no.reply@sciences-po.fr';
-		$mailEnvoi -> FromName =	utf8_decode('Sciences Po | événements');
+		$mailEnvoi -> Host      = 'localhost';
+		$mailEnvoi -> Hostname  = 'Sciences Po';
+		$mailEnvoi -> Charset   = 'UTF-8';
+		$mailEnvoi -> SMTPAuth  = FALSE;
+		$mailEnvoi -> From      = 'no.reply@sciences-po.fr';
+		$mailEnvoi -> FromName  = utf8_decode('Sciences Po | événements');
 		$mailEnvoi -> AddReplyTo('no.reply@sciences-po.fr');
-		$mailEnvoi -> WordWrap = 72;
+		$mailEnvoi -> WordWrap 	= 72;
 		$mailEnvoi -> IsHTML( TRUE );
 		
-		$mailEnvoi -> Subject		= utf8_decode("Inscription à ".$session);
+		$mailEnvoi -> Subject	= utf8_decode("Inscription à ".$session);
 
-		$mailEnvoi -> Body		.= $mailHTML;
+		$mailEnvoi -> Body	   .= utf8_decode($mailHTML);
 				
 		$mailEnvoi -> AddAttachment($billet);
+		$mailEnvoi -> AddAttachment($passBook);
 
-		$mailEnvoi -> AddStringAttachment($passBook,'billet-'.$uniqueId.'.pkpass', 'binary', 'application/vnd.apple.pkpass');
+		//$mailEnvoi -> AddStringAttachment($passBook,'billet-'.$uniqueId.'.pkpass', 'binary', 'application/vnd.apple.pkpass');
 		
 		$mailEnvoi -> AddAddress($mail);
 		$mailEnvoi->Send();
