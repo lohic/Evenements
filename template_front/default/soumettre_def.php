@@ -131,8 +131,8 @@ if( isset($_POST['evenement_id']) ){
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Sciences Po | Événements</title>
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <link href="css/stylesoumission.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>styles.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>css/stylesoumission.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="iframe">

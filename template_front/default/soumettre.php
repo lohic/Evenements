@@ -1,7 +1,7 @@
 <?php
 
 // connection to data base
-include_once('../vars/config.php');
+//include_once('../vars/config.php');
 
 include_once(REAL_LOCAL_PATH.'classe/classe_evenement.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
@@ -95,14 +95,14 @@ if( isset($_POST['evenement_titre']) ){
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Sciences Po | Événements</title>
-    <link href="css/stylesoumission.css" rel="stylesheet" type="text/css" />
-    <link href="styles.css" rel="stylesheet" type="text/css" />
-    <link href="jquery-ui/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>css/stylesoumission.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>styles.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $template_file_url ; ?>jquery-ui/css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
     
-    <script type="text/javascript" src="jquery-ui/js/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
-    <script type="text/javascript" src="jquery-ui/js/jquery.ui.datepicker-fr.js"></script>
-    <script type="text/javascript" src="tiny_mce/jquery.tinymce.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>jquery-ui/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>jquery-ui/js/jquery-ui-1.8.5.custom.min.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>jquery-ui/js/jquery.ui.datepicker-fr.js"></script>
+    <script type="text/javascript" src="<?php echo $template_file_url ; ?>tiny_mce/jquery.tinymce.js"></script>
 </head>
 
 <body class="iframe">
