@@ -121,11 +121,13 @@ if( isset($_POST['evenement_id']) ){
 		$sql="DELETE FROM sp_rel_evenement_keyword WHERE evenement_id = '".$_POST['evenement_id']."'";
 		mysql_query($sql) or die(mysql_error());
 
-		for ($i = 0; $i < count($_POST['keywords']); $i++) {
-			$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$_POST['evenement_id']."', '".$_POST['keywords'][$i]."')";
-			mysql_query($sqlinsert) or die(mysql_error());
+		if(isset($_POST['keywords'])){
+			for ($i = 0; $i < count($_POST['keywords']); $i++) {
+				$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$_POST['evenement_id']."', '".$_POST['keywords'][$i]."')";
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 		}
-		
+			
 		if($_FILES['evenement_image']['name']!=""){
 			mkdir("upload/photos/evenement_".$_POST['evenement_id']);
 			// Renseigne ici le chemin de destination de la photo
@@ -512,7 +514,7 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 							$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
 							while($rowrubrique = mysql_fetch_array($resrubriques)){
 					?>
-								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($row['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
+								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if($row['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo $rowrubrique['rubrique_titre'];?></option>
 					<?php
 							}
 						}
