@@ -121,7 +121,7 @@ if( isset($_POST['evenement_id']) ){
 					session_debut = '".$debutEvenement."',
 					session_debut_datetime = FROM_UNIXTIME(".$debutEvenement."),
 					session_fin = '".$finEvenement."',
-					session_debut_datetime = FROM_UNIXTIME(".$finEvenement."),
+					session_fin_datetime = FROM_UNIXTIME(".$finEvenement."),
 					session_langue = '".$_POST["session_langue"]."',
 					session_lieu = '".addslashes($_POST['session_lieu'])."', 
 					session_code_batiment = '".$_POST['session_code_batiment']."', 
