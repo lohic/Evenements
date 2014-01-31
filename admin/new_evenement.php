@@ -10,7 +10,7 @@ include('connect.php');
 include('functions.php');
 
 // feedcreator library
-include('feedcreator.class.php');
+// include('feedcreator.class.php');
 
 include('variables.php');
 //include_once('../vars/constantes_vars.php');
