@@ -2,6 +2,7 @@
 
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_core.php');
 
 /**
  * 
@@ -29,7 +30,9 @@ class FrontOffice {
 	 */
 	function frontoffice(){
 
-		if(!MAINTENANCE){
+		$core = new Core();
+
+		if(!MAINTENANCE || $core->isAdmin){
 
 			global $connexion_info;
 			$this->evenement_db		= new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
@@ -154,7 +157,10 @@ class FrontOffice {
 
 		$template_url 		 = ABSOLUTE_URL.'template_front/' . $this->template . '/';
 		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template . '/';
-
+		ob_start();
+		include(REAL_LOCAL_PATH.'structure/admin_bar.php');
+		$this->adminBar		 = ob_get_contents();
+		ob_end_clean();
 
 		$file = $this->url;
 

@@ -77,3 +77,4 @@
         <script type="text/javascript" src="<?php echo $template_file_url ; ?>/js/general.js"></script>
     </head>
     <body>
+        <?php echo $this->adminBar; ?>
