@@ -21,6 +21,8 @@ class FrontOffice {
 	var $logo_url;
 	var $banniere_url;
 	var $url			= '/index.php';
+
+	var $core;
 	
 	static $updated		= false;
 	
@@ -30,9 +32,9 @@ class FrontOffice {
 	 */
 	function frontoffice(){
 
-		$core = new Core();
+		$this->core = new Core();
 
-		if(!MAINTENANCE || $core->isAdmin){
+		if(!MAINTENANCE || $this->core->isAdmin){
 
 			global $connexion_info;
 			$this->evenement_db		= new connexion($connexion_info['server'],$connexion_info['user'],$connexion_info['password'],$connexion_info['db']);
@@ -157,10 +159,18 @@ class FrontOffice {
 
 		$template_url 		 = ABSOLUTE_URL.'template_front/' . $this->template . '/';
 		$template_local_path = REAL_LOCAL_PATH.'template_front/' . $this->template . '/';
-		ob_start();
-		include(REAL_LOCAL_PATH.'structure/admin_bar.php');
-		$this->adminBar		 = ob_get_contents();
-		ob_end_clean();
+
+
+		if($this->core->isAdmin){
+			ob_start();
+
+			include(REAL_LOCAL_PATH.'structure/admin_bar.php');
+			$this->adminBar		 = ob_get_contents();
+
+			ob_end_clean();
+		}else{
+			$this->adminBar		 = '';
+		}
 
 		$file = $this->url;
 
