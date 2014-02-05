@@ -566,7 +566,8 @@ if($core->isAdmin && $core->userLevel<=1){
 		});
 		
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		//document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
 		
 		$('textarea.tinymce').tinymce({
 			// Location of TinyMCE script

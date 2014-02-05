@@ -261,7 +261,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 		
 	   		
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		//document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
 	});
 </script>
 </body>

@@ -1113,7 +1113,8 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 		});
 		
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		//document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
 	});
 </script>
 </body>

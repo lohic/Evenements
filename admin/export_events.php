@@ -361,7 +361,9 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 <script type="text/javascript">
 	$(window).load(function(){
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		//document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
+		
 
 		$.datepicker.setDefaults($.datepicker.regional['fr']);
 		var dateDuJour = new Date();

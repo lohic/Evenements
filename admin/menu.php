@@ -71,13 +71,15 @@ if($core->isAdmin){
 		$("li.menu_principal").mouseover(function(e){
 			var tableau_id=$(this).attr("id").split('_');
 			var identifiant = "secondaire_"+tableau_id[1];
-			document.getElementById(identifiant).style.display="block";
+			//document.getElementById(identifiant).style.display="block";
+			$('#'+identifiant).show();
 	   	});
 			
 		$("li.menu_principal").mouseout(function(e){
 			var tableau_id=$(this).attr("id").split('_');
 			var identifiant = "secondaire_"+tableau_id[1];
-			document.getElementById(identifiant).style.display="none";
+			//document.getElementById(identifiant).style.display="none";
+			$('#'+identifiant).hide();
 	   	});
 	});
 </script>

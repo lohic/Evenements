@@ -290,15 +290,18 @@ if(isset($_GET['delete'])){
 	header("Location:list.php?menu_actif=evenements");
 }
 
+
 $sql ="SELECT * FROM sp_evenements WHERE evenement_id = '".$_GET['id']."'";
 $res = mysql_query($sql) or die(mysql_error());
 $row = mysql_fetch_array($res);
+
 
 
 if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_image"){
 	$sql ="UPDATE sp_evenements SET evenement_image = '' WHERE evenement_id = '".$_GET['id']."'";
 	mysql_query($sql) or die(mysql_error());  
 }
+
 
 if( isset($_GET['fonction']) && $_GET['fonction']=="supprimer_document"){ 
 	$sql ="DELETE FROM sp_medias WHERE media_id = '".$_GET['idDoc']."'";
@@ -1238,7 +1241,8 @@ if(($core->isAdmin && $core->userLevel<=1) || $row['evenement_groupe_id']==$_SES
 			document.getElementById("session_adresse2_creation").value = adresse;
 		});
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
+		//document.getElementById(actif).className = "actif";
 	});
 </script>
 </body>

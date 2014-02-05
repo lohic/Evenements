@@ -321,7 +321,8 @@ $rowGetOrganisme = mysql_fetch_array($resGetOrganisme);
 			location.href = "evenements_partages.php?mois="+mois+"&year="+annee+"&rubrique="+rubrique+"&menu_actif=evenementspartage";
 		});
 		var actif = getParamValue('menu_actif');
-		document.getElementById(actif).className = "actif";
+		$('#'+actif).addClass('actif');
+		//document.getElementById(actif).className = "actif";
 	});
 </script>
 </body>
