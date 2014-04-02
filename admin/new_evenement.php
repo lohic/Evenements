@@ -288,7 +288,7 @@ else{
 							$resrubriques = mysql_query($sqlrubriques) or die(mysql_error());
 							while($rowrubrique = mysql_fetch_array($resrubriques)){
 					?>
-								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if(isset($_POST['evenement_rubrique']) && $_POST['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo utf8_encode($rowrubrique['rubrique_titre']);?></option>
+								<option value="<?php echo $rowrubrique['rubrique_id'];?>" <?php if(isset($_POST['evenement_rubrique']) && $_POST['evenement_rubrique']==$rowrubrique['rubrique_id']){echo "selected=\"selected\"";} ?>><?php echo $rowrubrique['rubrique_titre'];?></option>
 					<?php
 							}
 						}  

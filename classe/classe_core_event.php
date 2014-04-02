@@ -1,7 +1,7 @@
 <?php
 
 include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
-//include_once('classe_user.php');
+//include_once('classe_spuser.php');
 include_once(REAL_LOCAL_PATH.'classe/classe_spuser_event.php');
 include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
 //include_once(REAL_LOCAL_PATH.'classe/connexion_vars.php');
@@ -11,6 +11,7 @@ class Core {
 	var $isSuperAdmin	= false;
 	var $evenement_db	= NULL;
 	//var $news_db		= NULL;
+	//
 	var $user;
 	var $user_info		= NULL;
 	var $groups_id		= NULL;
@@ -47,11 +48,9 @@ class Core {
 	
 		if($this->user_info){
 			$this->isAdmin		= $this->user_info->isAdmin;
-			//$this->isSuperAdmin	= $this->user_info->isSuperAdmin;
 			$this->userLevel	= $this->user_info->userLevel;
 		}else{
 			$this->isAdmin		= false;
-			//$this->isSuperAdmin	= false;   
 			$this->userLevel	= false;
 		}
 	}

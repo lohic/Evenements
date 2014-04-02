@@ -31,11 +31,11 @@ if( $_POST['login'] != ''  ){
 */
 
 include_once('../vars/config.php');
-//include_once(REAL_LOCAL_PATH.'vars/constantes_vars.php');
 include_once(REAL_LOCAL_PATH.'vars/statics_vars.php');
 
 include_once(REAL_LOCAL_PATH.'classe/classe_core_event.php');
 include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
+
 $core = new core(); 
 
 
@@ -57,19 +57,22 @@ if( isset($_GET['error']) ){
 
 
 if(!$core->isAdmin || isset($error)){ 
- 
+
 }
 else{
 
-	$sql = "SELECT * FROM sp_users
-			WHERE user_login = '". $_POST['login'] ."'
-			LIMIT 1";
-	$res = mysql_query($sql) or die(mysql_error());
-	$row = mysql_fetch_array($res);
-	
-	setcookie('CMSCookie', '1' , 0);
-	setcookie('admin', $row['user_id'] , 0);
-	
+
+	if(isset($_POST['login'])){
+		$sql = "SELECT * FROM sp_users
+				WHERE user_login = '". $_POST['login'] ."'
+				LIMIT 1";
+		$res = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($res);
+		
+		//setcookie('CMSCookie', '1' , 0);
+		setcookie('admin', $row['user_id'] , 0);
+	}
+		
 	/*if( $row['user_admin'] == 1 ) {
 		$_SESSION['admin'] = 1;
 	}*/
