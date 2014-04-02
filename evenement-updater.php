@@ -1,16 +1,16 @@
 <?php
 
+include_once('vars/config.php');
 // connection to data base
-include('connect.php');
-
+include_once(REAL_LOCAL_PATH.'admin/connect.php');
 // functions library
-include('functions.php');
+include_once(REAL_LOCAL_PATH.'admin/functions.php');
 
   
-$connexion_info['server'] 		= 'localhost';
+/*$connexion_info['server'] 		= 'localhost';
 $connexion_info['user'] 		= 'root';
-$connexion_info['password'] 	= 'root';
-$connexion_info['db']		 	= 'evenements';
+$connexion_info['password'] 	= 'z6po';
+$connexion_info['db']		 	= 'sciences_po_evenements_new_db-test';*/
 
 
 $connect = mysql_connect($connexion_info['server'], $connexion_info['user'], $connexion_info['password']); 
@@ -114,10 +114,10 @@ while($rowcode = mysql_fetch_array($rescodes)){
 }
 
 // POUR RELIER TOUS LES LIEUX AUX ORGANISMES
-$sqllieux ="SELECT lieu_id FROM sp_lieux ORDER BY lieu_id ASC";
+$sqllieux = "SELECT lieu_id FROM sp_lieux ORDER BY lieu_id ASC";
 $reslieux = mysql_query($sqllieux) or die(mysql_error());
 while($rowlieu = mysql_fetch_array($reslieux)){
-	$sqlorganismes ="SELECT organisme_id FROM sp_organismes ORDER BY organisme_id ASC";
+	$sqlorganismes = "SELECT organisme_id FROM sp_organismes ORDER BY organisme_id ASC";
 	$resorganismes = mysql_query($sqlorganismes) or die(mysql_error());
 	while($roworganisme = mysql_fetch_array($resorganismes)){
 		$sql ="INSERT INTO sp_rel_lieu_organisme VALUES('','".$rowlieu["lieu_id"]."','".$roworganisme["organisme_id"]."')";
