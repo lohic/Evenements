@@ -38,21 +38,38 @@
 
 		}
 
+		body{
+			background: #F0F0F0;
+		}
+
         h1{
             text-align:center;
-            margin: 100px;
-            font-family: 'proxima_nova_rgbold', arial, sans-serif;
+            margin: 100px auto;
+            font-family: 'proxima_nova_rgregular', arial, sans-serif;
+            font-weight: normal;
+            background: #FFFFFF;
+            width: 760px;
+            height: 50px;
+            padding: 0;
+        	position:relative;
         }
 
-        #logo{
+        h1 span{
+        	position: absolute;
+        	top: 8px;
+        	left: 192px;
+        }
+
+        h1 #logo{
+        	position: absolute;
+        	top:0;
+        	left:0;
         	margin-right: 8px;
-        	position: relative;
-        	top:14px;
         }
     </style>
 </head>
 <body>
-    <h1><a href="http://www.sciencespo.fr"><img src="<?php //echo $template_file_url.'/' ; ?>graphisme/ScPo-logo-Rouge.gif" id="logo" alt="Sciences Po"/></a>Le site événement est en maintenance !</h1>
+    <h1><a href="http://www.sciencespo.fr"><img src="<?php //echo $template_file_url.'/' ; ?>graphisme/ScPo-logo-Rouge.gif" id="logo" alt="Sciences Po"/></a><span>Le site événement est en maintenance !</span></h1>
 </body>
 </html>
 
