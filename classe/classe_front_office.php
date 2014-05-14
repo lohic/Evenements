@@ -108,6 +108,8 @@ class FrontOffice {
 		// on récupère et on normalise l'url
 		if(isset($_GET['url']) && !empty($_GET['url'])){
 
+			echo $_GET['url'];
+
 			if(substr($_GET['url'],0,1) != '/'){
 				$this->url = '/'.$_GET['url'];
 			}else if($_GET['url'] != '/'){
