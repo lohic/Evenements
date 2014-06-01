@@ -36,6 +36,7 @@ if( isset($_POST['evenement_titre']) ){
 		$debutEvenement = mktime($tableauHeureDebut[0], $tableauHeureDebut[1],0,$tableauDateDebut[1],$tableauDateDebut[0],$tableauDateDebut[2]);
 		$finEvenement = retourneTimestamp($_POST["session_heure_fin"], $_POST["session_date_fin"], $_POST["session_date_debut"]);
 
+		$photo = "";
 		$extension = getExtension($_FILES['evenement_image']['name']);
 
 		if(isExtAuthorized($extension)){
@@ -74,15 +75,27 @@ if( isset($_POST['evenement_titre']) ){
 		$lastIdInsert = mysql_insert_id(); 
         
         //créations des liaisons avec les groupes partagés
-		for ($i = 0; $i < count($_POST['groupes']); $i++) {
-			$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$lastIdInsert."', '".$_POST['groupes'][$i]."')";
-			mysql_query($sqlinsert) or die(mysql_error());
+        if(!empty($_POST['groupes'])){
+			for ($i = 0; $i < count($_POST['groupes']); $i++) {
+				$sqlinsert ="INSERT INTO sp_rel_evenement_groupe VALUES ('', '".$lastIdInsert."', '".$_POST['groupes'][$i]."')";
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
 		}
 
 		//créations des liaisons avec les mots-clés choisis
-		for ($i = 0; $i < count($_POST['keywords']); $i++) {
-			$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$lastIdInsert."', '".$_POST['keywords'][$i]."')";
-			mysql_query($sqlinsert) or die(mysql_error());
+		if(!empty($_POST['keywords'])){
+			for ($i = 0; $i < count($_POST['keywords']); $i++) {
+				$sqlinsert ="INSERT INTO sp_rel_evenement_keyword VALUES ('', '".$lastIdInsert."', '".$_POST['keywords'][$i]."')";
+				mysql_query($sqlinsert) or die(mysql_error());
+			}
+		}
+
+		if(!isset($_POST["session_statut_inscription"])){
+			$_POST["session_statut_inscription"] = 0;
+		}
+
+		if(!isset($_POST["session_statut_vision"])){
+			$_POST["session_statut_vision"] = 0;
 		}
 
 		$sql2 ="INSERT INTO sp_sessions
@@ -103,12 +116,12 @@ if( isset($_POST['evenement_titre']) ){
 				'".addslashes($_POST["session_texte_lien_en"])."',
 				'".$_POST["session_type_inscription"]."',
 				'".addslashes($_POST["session_complement_type_inscription"])."',
-				'".$_POST["session_statut_inscription"]."',
+				".GetSQLValueString($_POST["session_statut_inscription"],'int').",
 				'".$_POST["session_places_internes_totales"]."',
 				'',
 				'".$_POST["session_places_externes_totales"]."',
 				'',
-				'".$_POST["session_statut_vision"]."',
+				".GetSQLValueString($_POST["session_statut_vision"],'int').",
 				'".$_POST["session_places_internes_totales_vision"]."',
 				'',
 				'".$_POST["session_places_externes_totales_vision"]."',
@@ -126,7 +139,7 @@ if( isset($_POST['evenement_titre']) ){
 
 		mysql_query($sql2) or die(mysql_error());
 
-		if($_FILES['evenement_image']['name']!=""){
+		/*if($_FILES['evenement_image']['name']!=""){
 			mkdir("upload/photos/evenement_".$lastIdInsert);
 			// Renseigne ici le chemin de destination de la photo
 			$file_url = 'upload/photos/evenement_'.$lastIdInsert;
@@ -134,8 +147,8 @@ if( isset($_POST['evenement_titre']) ){
 			$extension = getExtension($_FILES['evenement_image']['name']);
 
 			if(isExtAuthorized($extension)){
-				$photo = 'image'.$extension;
-				$original = 'original'.$extension;		
+				$photo 		= 'image'.$extension;
+				$original	= 'original'.$extension;		
 				// Upload fichier
 				if (@move_uploaded_file($_FILES['evenement_image']['tmp_name'], $file_url.'/'.$photo)){
 					@chmod("$file_url/$photo", 0777);
@@ -155,6 +168,49 @@ if( isset($_POST['evenement_titre']) ){
 			}else{
 				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
 			}
+			// reedirect
+			header( "Location:crop.php?menu_actif=nouvelevenement&id=".$lastIdInsert);
+		}
+		else{
+			header( "Location:list.php?menu_actif=evenements");
+		}*/
+		if($_FILES['evenement_image']['name']!=""){
+			//echo REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id'];
+
+			if(!is_dir(REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id'])) mkdir(REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id']);
+			// Renseigne ici le chemin de destination de la photo
+			$file_url = REAL_LOCAL_PATH.CHEMIN_UPLOAD.'evenement_'.$_POST['evenement_id'];
+			// Définition des extensions de fichier autorisées (avec le ".")
+			$extension = getExtension($_FILES['evenement_image']['name']);
+
+			if(isExtAuthorized($extension)){
+				$photo = 'image'.$extension;
+				//echo $file_url.'/'.$photo;
+
+				// Upload fichier
+				if(file_put_contents($file_url.'/'.$photo, file_get_contents($_FILES['evenement_image']['tmp_name'] ))){
+				//if (@move_uploaded_file($_FILES['evenement_image']['tmp_name'], $file_url.'/'.$photo)){
+					@chmod("$file_url/$photo", 0777);
+					$img="$file_url/$photo";
+					
+					$original = 'original'.$extension;
+					$destination = "$file_url/$original"; 
+					
+					copy($img, $destination);
+					
+					//$repertoire_destination="./".$file_url."/";
+					//
+					$repertoire_destination = $file_url.'/';
+					make_miniature($img, 320, 180, $repertoire_destination, "moyen-");
+					make_miniature($img, 160, 90, $repertoire_destination, "mini-");
+				}
+				else{
+					echo "Erreur, impossible d'envoyer le fichier $photo";
+				}
+			}else{
+				echo ("les fichiers avec l'extension $extension ne sont pas acceptés.") ;
+			}
+
 			// reedirect
 			header( "Location:crop.php?menu_actif=nouvelevenement&id=".$lastIdInsert);
 		}

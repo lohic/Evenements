@@ -19,6 +19,8 @@ include_once(REAL_LOCAL_PATH.'classe/fonctions.php');
 
 $core = new core();
 
+$erreur="";
+
 
 /**
  * Jcrop image cropping plugin for jQuery
@@ -34,7 +36,7 @@ $core = new core();
 		
 		$sql ="UPDATE sp_evenements SET
 					evenement_texte_image = '".addslashes($_POST["evenement_texte_image"])."'
-				WHERE evenement_id = '".$_GET['id']."'";
+					WHERE evenement_id = '".$_GET['id']."'";
 		mysql_query($sql) or die(mysql_error());
 		
 		$targ_w = $_POST['w'];
@@ -45,12 +47,15 @@ $core = new core();
 		$res = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_array($res);
 
-		$src = 'upload/photos/evenement_'.$_POST['id'].'/'.$row['evenement_image'];
+		//$src = 'upload/photos/evenement_'.$_POST['id'].'/'.$row['evenement_image'];
+		//$src = REAL_LOCAL_PATH.CHEMIN_UPLOAD.$_POST['id'].'/'.$row['evenement_image'];
+		$src = $row['evenement_image'];
 
 		$extension_img = substr(strchr($src,'.'),1);
 		
-		$src = 'upload/photos/evenement_'.$_POST['id'].'/original.'.$extension_img;
-
+		//$src = 'upload/photos/evenement_'.$_POST['id'].'/original.'.$extension_img;
+		$src = REAL_LOCAL_PATH.CHEMIN_UPLOAD.'evenement_'.$_POST['id'].'/original.'.$extension_img;
+		//$src = ABSOLUTE_URL.CHEMIN_UPLOAD.$_POST['id'].'/original.'.$extension_img;
 
 		if(ereg('(jpeg|jpg|gif|png)$',$extension_img)){
 			switch ($extension_img){
@@ -97,7 +102,7 @@ $core = new core();
 		$repertoire_destination="./upload/photos/evenement_".$_POST['id']."/";
 		make_miniature($file_url, 480, 270, $repertoire_destination, "grande-");
 		make_miniature($file_url, 320, 180, $repertoire_destination, "moyen-");
-		make_miniature($file_url, 160, 90, $repertoire_destination, "mini-");
+		make_miniature($file_url, 160, 90,  $repertoire_destination, "mini-");
 
 		header("Location:list.php?menu_actif=evenements");
 	}
@@ -125,7 +130,7 @@ $image_url = 'upload/photos/evenement_'.$_GET['id'].'/original.'.$extension_img;
 //$image_url = 'crop/images/1490-image.jpg';
 $dimensions = json_decode(file_get_contents('crop/var-size.json'));
 
-$erreur="";
+
 /**
  * This is part of https://github.com/nilopc/NilPortugues_Javascript_Multiple_JCrop
  *
@@ -271,6 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				<div class="article">
 					<h1>Recadrage de l'image</h1>
 					<form method="post" id="crop_form">
+						<input type="hidden" name="id" value="<?php echo $_GET['id'];?>" />
 						
 						<?php foreach($dimensions as $dimension){ ?>
 

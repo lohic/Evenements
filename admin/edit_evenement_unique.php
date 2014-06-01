@@ -129,16 +129,21 @@ if( isset($_POST['evenement_id']) ){
 		}
 			
 		if($_FILES['evenement_image']['name']!=""){
-			mkdir("upload/photos/evenement_".$_POST['evenement_id']);
+			//echo REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id'];
+
+			if(!is_dir(REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id'])) mkdir(REAL_LOCAL_PATH.CHEMIN_UPLOAD."evenement_".$_POST['evenement_id']);
 			// Renseigne ici le chemin de destination de la photo
-			$file_url = 'upload/photos/evenement_'.$_POST['evenement_id'];
+			$file_url = REAL_LOCAL_PATH.CHEMIN_UPLOAD.'evenement_'.$_POST['evenement_id'];
 			// Définition des extensions de fichier autorisées (avec le ".")
 			$extension = getExtension($_FILES['evenement_image']['name']);
 
 			if(isExtAuthorized($extension)){
-				$photo = 'image'.$extension;		
+				$photo = 'image'.$extension;
+				//echo $file_url.'/'.$photo;
+
 				// Upload fichier
-				if (@move_uploaded_file($_FILES['evenement_image']['tmp_name'], $file_url.'/'.$photo)){
+				if(file_put_contents($file_url.'/'.$photo, file_get_contents($_FILES['evenement_image']['tmp_name'] ))){
+				//if (@move_uploaded_file($_FILES['evenement_image']['tmp_name'], $file_url.'/'.$photo)){
 					@chmod("$file_url/$photo", 0777);
 					$img="$file_url/$photo";
 					
@@ -147,7 +152,9 @@ if( isset($_POST['evenement_id']) ){
 					
 					copy($img, $destination);
 					
-					$repertoire_destination="./".$file_url."/";
+					//$repertoire_destination="./".$file_url."/";
+					//
+					$repertoire_destination = $file_url.'/';
 					make_miniature($img, 320, 180, $repertoire_destination, "moyen-");
 					make_miniature($img, 160, 90, $repertoire_destination, "mini-");
 				}
