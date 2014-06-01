@@ -31,7 +31,7 @@
         }
     ?>
     <h1 style="background-color:<?php echo $rubrique_couleur;?>" class="titre">
-        <a href="/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event couleur_<?php echo $rubrique_couleur;?>" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
+        <a href="?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" rel="address:/?lang=<?php echo $lang;?>&amp;id=<?php echo $row['evenement_id'];?>" class="lien_event couleur_<?php echo $rubrique_couleur;?>" id="titre_lien_<?php echo $row['evenement_id'];?>"><?php echo $event->get_title($row, $lang);?></a>
     </h1>                               
     <div class="triangle_inverse" style="border-top-color:<?php echo $rubrique_couleur;?>;"></div>
     <p class="date h5-like"><?php echo $horaires;?></p>
