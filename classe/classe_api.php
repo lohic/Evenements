@@ -159,7 +159,8 @@ class Api {
 												S.session_langue AS langue,
 												L.lieu_nom AS lieu,
 												B.code_batiment_nom AS code_batiment_nom,
-												S.session_complement_type_inscription AS type_inscription,
+												S.session_type_inscription AS type_inscription,
+												S.session_complement_type_inscription AS complement_type_inscription,
 												S.session_adresse1 AS nom_adresse,
 												S.session_adresse2 AS adresse,
 												S.session_statut_inscription AS statut_inscription,
@@ -193,6 +194,8 @@ class Api {
 						+intVal($session_info['places_internes_prises_visio'])
 						+intVal($session_info['places_externes_prises_visio'])) > 0 ? 1 : 0;
 
+
+		date_default_timezone_set("Europe/Paris");
 
 		$this->json->session = new stdClass();
 
@@ -229,6 +232,8 @@ class Api {
 			$this->json->session->places_enregistrees 			= $session_info['places_enregistrees'];
 			$this->json->session->places_enregistrees_visio 	= $session_info['places_enregistrees_visio'];
 
+
+			date_default_timezone_set("Europe/Paris");
 
 			$this->json->liste_inscrits = array();
 
@@ -294,6 +299,7 @@ class Api {
 															E.evenement_organisateur AS organisateur,
 															E.evenement_coorganisateur AS coorganisateur,
 															E.evenement_image AS image,
+															R.rubrique_titre".$add." AS rubrique,
 															R.rubrique_couleur AS couleur,
 															O.organisme_url_front AS url_front
 													FROM sp_evenements AS E, sp_rubriques AS R, sp_organismes AS O, sp_groupes AS G
@@ -314,6 +320,7 @@ class Api {
 		$organisateur_qualite = "";
 		$coorganisateur_qualite = "";
 
+		date_default_timezone_set("Europe/Paris");
 
 		$this->json->evenement->id 						= $event_info['id'];
 		$this->json->evenement->titre 					= $event_info['titre'];
@@ -328,6 +335,9 @@ class Api {
 		$this->json->evenement->url 					= $event_info['url_front'];
 		$this->json->evenement->url_image 				= 'http://www.sciencespo.fr/evenements/admin/upload/photos/evenement_'.$event_info['id'].'/'.$event_info['image'];
 		$this->json->evenement->couleur 				= $event_info['couleur'];
+		$this->json->evenement->rubrique 				= $event_info['rubrique'];
+
+
 
 
 		// information des session
@@ -339,7 +349,8 @@ class Api {
 															L.lieu_nom AS lieu,
 															B.code_batiment_nom AS code_batiment_nom,
 															S.session_lien".$add." AS url,
-															S.session_complement_type_inscription AS type_inscription,
+															S.session_type_inscription AS type_inscription,
+															S.session_complement_type_inscription AS complement_type_inscription,
 															S.session_adresse1 AS nom_adresse,
 															S.session_adresse2 AS adresse,
 															S.session_places_internes_prises AS places_internes_prises,
@@ -379,6 +390,7 @@ class Api {
 			$sessionjson->adresse 			= $session['adresse'];
 			$sessionjson->url 				= $session['url'];
 			$sessionjson->type_inscription 	= $session['type_inscription'];
+			$sessionjson->complement_type_inscription 	= $session['complement_type_inscription'];
 			$sessionjson->is_inscrits 		= $is_inscrits;
 
 
