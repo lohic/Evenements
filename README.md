@@ -63,7 +63,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # symlink
 RewriteCond %{REQUEST_FILENAME} !-l
 
-RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
+RewriteRule ^(evenement|autre|instance|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
 
 
 ```
