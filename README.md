@@ -1,7 +1,7 @@
 Événements
 ==========
 
-Système de gestion des évenements de Sciencespo
+Système de gestion d'événements.
 
 Le système est une web-app PHP/HTML/CSS/JAVASCRIPT.
 
@@ -82,8 +82,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # symlink
 RewriteCond %{REQUEST_FILENAME} !-l
 
-#RewriteRule ^(evenement|picasso|ceri|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
+#RewriteRule ^(evenement|autre|instance|)(.+)$ index.php?organisme=$1&url=$2 [QSA,L]
 
-RewriteRule ^()(.+)$ http://localhost:8888/Site_SCIENCESPO_EVENEMENTS/index.php?organisme=ceri&url=$2 [QSA,L]
+RewriteRule ^()(.+)$ http://localhost:8888/Site_EVENEMENTS/index.php?organisme=ceri&url=$2 [QSA,L]
 
 ```
