@@ -1036,8 +1036,12 @@ a.sinscrire span, a.sinscrire_multiple span{
 	border-top: none;
 }
 
-.event .resumeContent p.langue, .event .resumeContent p.lieu, .event .resumeContent p.inscription, 
-.event .resumeContent p.organisateur, .event .resumeContent p.infos, .event .resumeContent p.plan{
+.event .resumeContent p.langue,
+.event .resumeContent p.lieu,
+.event .resumeContent p.inscription, 
+.event .resumeContent p.organisateur,
+.event .resumeContent p.infos,
+.event .resumeContent p.plan{
 	border-bottom: 1px solid #CCCCCC;
     font-family: "proxima_novasemibold",helvetica,arial,sans-serif;
     line-height: 1.55em;
@@ -1045,14 +1049,22 @@ a.sinscrire span, a.sinscrire_multiple span{
     padding: 4px 0 2px;
 }
 
-.event .resumeContent p.langue a, .event .resumeContent p.lieu a, .event .resumeContent p.inscription a, 
-.event .resumeContent p.organisateur a, .event .resumeContent p.infos a, .event .resumeContent p.plan a{
+.event .resumeContent p.langue a,
+.event .resumeContent p.lieu a,
+.event .resumeContent p.inscription a, 
+.event .resumeContent p.organisateur a,
+.event .resumeContent p.infos a,
+.event .resumeContent p.plan a{
     font-family: "proxima_nova_rgbold",helvetica,arial,sans-serif;
     color:#000;
 }
 
-.event .resumeContent p.langue > span, .event .resumeContent p.lieu > span, .event .resumeContent p.inscription > span, 
-.event .resumeContent p.organisateur > span, .event .resumeContent p.infos > span, .event .resumeContent p.plan > span{
+.event .resumeContent p.langue > span,
+.event .resumeContent p.lieu > span,
+.event .resumeContent p.inscription > span, 
+.event .resumeContent p.organisateur > span,
+.event .resumeContent p.infos > span,
+.event .resumeContent p.plan > span{
 	margin-top: 0px;
 }
 
@@ -1145,13 +1157,13 @@ body .fancybox-overlay{
 
 body .fancybox-opened .fancybox-skin {
 	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
+	   -moz-border-radius: 0;
+			border-radius: 0;
 	/*width: 385px !important;
 	width: 1385px !important;*/
 	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;	
+	   -moz-box-shadow: none;
+			box-shadow: none;	
 	background: #cb021a;
 }
 
@@ -1474,14 +1486,14 @@ body.iframe input#envoyer{
 }
 
 .selectedEvent > h1{
-	position: absolute;
+	/*position: absolute;
 	bottom:15px;
-	width: 320px;
+	width: 320px;*/
 }
 
 .selectedEvent > div.triangle_inverse{
-	position: absolute;
-	bottom:0px;
+	/*position: absolute;
+	bottom:0px;*/
 }
 
 .resume{
@@ -1523,26 +1535,26 @@ body.iframe input#envoyer{
 /*.isotope,*/
 .isotope .isotope-item {
 	-webkit-transition-duration: 0.8s;
-	 -moz-transition-duration: 0.8s;
-	  -ms-transition-duration: 0.8s;
-	   -o-transition-duration: 0.8s;
-	      transition-duration: 0.8s;
+	   -moz-transition-duration: 0.8s;
+		-ms-transition-duration: 0.8s;
+		 -o-transition-duration: 0.8s;
+			transition-duration: 0.8s;
 }
 
 /*.isotope {
 	-webkit-transition-property: height, width;
-	 -moz-transition-property: height, width;
-	  -ms-transition-property: height, width;
-	   -o-transition-property: height, width;
-	      transition-property: height, width;
+	   -moz-transition-property: height, width;
+		-ms-transition-property: height, width;
+		 -o-transition-property: height, width;
+			transition-property: height, width;
 }*/
 
 .isotope .isotope-item {
 	-webkit-transition-property: -webkit-transform, opacity;
-	 -moz-transition-property:    -moz-transform, opacity;
-	  -ms-transition-property:     -ms-transform, opacity;
-	   -o-transition-property:      -o-transform, opacity;
-	      transition-property:         transform, opacity;
+	   -moz-transition-property:    -moz-transform, opacity;
+		-ms-transition-property:     -ms-transform, opacity;
+		 -o-transition-property:      -o-transform, opacity;
+			transition-property:         transform, opacity;
 }
 
 /**** disabling Isotope CSS3 transitions ****/
@@ -1551,10 +1563,10 @@ body.iframe input#envoyer{
 .isotope.no-transition .isotope-item,
 .isotope .isotope-item.no-transition {
 	-webkit-transition-duration: 0s;
-	 -moz-transition-duration: 0s;
-	  -ms-transition-duration: 0s;
-	   -o-transition-duration: 0s;
-	      transition-duration: 0s;
+	   -moz-transition-duration: 0s;
+		-ms-transition-duration: 0s;
+		 -o-transition-duration: 0s;
+			transition-duration: 0s;
 }
 
 
@@ -1692,139 +1704,139 @@ ul.icon.after:after {content:""}
 .icon-unrate > li:before,
 .icon-unrate.after:after, 
 .icon-unrate.after > li:after {
-  content: "\2606";
+	content: "\2606";
 }
 .icon-check:before, 
 .icon-check > li:before,
 .icon-check.after:after, 
 .icon-check.after > li:after {
-  content: "\2713";
+	content: "\2713";
 }
 .icon-uncheck:before, 
 .icon-uncheck > li:before,
 .icon-uncheck.after:after, 
 .icon-uncheck.after > li:after {
-  content: "\2717";
+	content: "\2717";
 }
 .icon-cloud:before, 
 .icon-cloud > li:before,
 .icon-cloud.after:after, 
 .icon-cloud.after > li:after {
-  content: "\2601";
+	content: "\2601";
 }
 .icon-dl:before, 
 .icon-dl > li:before,
 .icon-dl.after:after, 
 .icon-dl.after > li:after {
-  content: "\21E3";
-  font-weight: bold;
+	content: "\21E3";
+	font-weight: bold;
 }
 .icon-cross:before, 
 .icon-cross > li:before,
 .icon-cross.after:after, 
 .icon-cross.after > li:after {
-  content: "\2716";
-  font-weight: bold;
+	content: "\2716";
+	font-weight: bold;
 }
 .icon-arrow1:before, 
 .icon-arrow1 > li:before,
 .icon-arrow1.after:after, 
 .icon-arrow1.after > li:after {
-  content: "\2192";
-  position: relative; top: -0.15em;
+	content: "\2192";
+	position: relative; top: -0.15em;
 }
 .icon-arrow2:before, 
 .icon-arrow2 > li:before,
 .icon-arrow2.after:after, 
 .icon-arrow2.after > li:after {
-  content: "\279E";
+	content: "\279E";
 }
 .icon-arrow3:before, 
 .icon-arrow3 > li:before,
 .icon-arrow3.after:after, 
 .icon-arrow3.after > li:after {
-  content: "\279A";
+	content: "\279A";
 }
 .icon-bracket1:before, 
 .icon-bracket1 > li:before,
 .icon-bracket1.after:after, 
 .icon-bracket1.after > li:after {
-  content: "\2039";
-  font-weight: bold;
-  font-size: 1.6em;
-  position: relative; top: -0.15em;
+	content: "\2039";
+	font-weight: bold;
+	font-size: 1.6em;
+	position: relative; top: -0.15em;
 }
 .icon-bracket2:before, 
 .icon-bracket2 > li:before,
 .icon-bracket2.after:after, 
 .icon-bracket2.after > li:after {
-  content: "\203A";
-  font-weight: bold;
-  font-size: 1.6em;
-  position: relative; top: -0.15em;
+	content: "\203A";
+	font-weight: bold;
+	font-size: 1.6em;
+	position: relative; top: -0.15em;
 }
 .icon-up:before, 
 .icon-up > li:before,
 .icon-up.after:after, 
 .icon-up.after > li:after {
-  content: "\25B2";
+	content: "\25B2";
 }
 .icon-down:before, 
 .icon-down > li:before,
 .icon-down.after:after, 
 .icon-down.after > li:after {
-  content: "\25BC";
+	content: "\25BC";
 }
 .icon-bull:before, 
 .icon-bull > li:before,
 .icon-bull.after:after, 
 .icon-bull.after > li:after {
-  content: "\2022";
-  font-size: 1.2em;
-  top: -0.05em;
+	content: "\2022";
+	font-size: 1.2em;
+	top: -0.05em;
 }
 .icon-bull2:before, 
 .icon-bull2 > li:before,
 .icon-bull2.after:after, 
 .icon-bull2.after > li:after {
-  content: "\25E6";
-  top: -0.05em;
+	content: "\25E6";
+	top: -0.05em;
 }
 .icon-bull3:before, 
 .icon-bull3 > li:before,
 .icon-bull3.after:after, 
 .icon-bull3.after > li:after {
-  content: "\2023";
-  font-size: 1.6em;
-  top: -0.05em;
+	content: "\2023";
+	font-size: 1.6em;
+	top: -0.05em;
 }
 .icon-nav:before, 
 .icon-nav > li:before,
 .icon-nav.after:after, 
 .icon-nav.after > li:after {
-  content: "\2261";
-  font-weight: bold;
+	content: "\2261";
+	font-weight: bold;
 }
 .icon-losange:before, 
 .icon-losange > li:before,
 .icon-losange.after:after, 
 .icon-losange.after > li:after {
-  content: "\25C6";
+	content: "\25C6";
 }
 .icon-asteri:before, 
 .icon-asteri > li:before,
 .icon-asteri.after:after, 
 .icon-asteri.after > li:after {
-  content: "\2731";
-  font-weight: bold;
+	content: "\2731";
+	font-weight: bold;
 }
 .icon-mail:before, 
 .icon-mail > li:before,
 .icon-mail.after:after, 
 .icon-mail.after > li:after {
-  content: "\2709";
-  font-size: 1.6em;
-  top: -.05em;
+	content: "\2709";
+	font-size: 1.6em;
+	top: -.05em;
 }
 
 ol.styled {counter-reset: styled;} 

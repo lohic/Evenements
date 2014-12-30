@@ -10,6 +10,7 @@ $.urlParam = function(name){
 }
 
 var sauv = 0;
+var hauteurMaxTest = 0;
 
 
 
@@ -356,6 +357,7 @@ $(document).ready(function(){
 					sinscrire_multiple();
 					//fonction recentrant les éléments dans la fenêtre
 					centrageIsotope();
+
 
 					$('#jPanelMenu-menu #validation_smart').unbind( "click" );
 					$('#jPanelMenu-menu #validation_smart').click(function(e){
@@ -716,11 +718,18 @@ function clickTitre(){
 		$('.selectedEvent').height(sauv);
 
 		sauv = $(this).parent().parent().height();
+		
+		// on enleve la classe du premier et dernier element de la liste
 		$('.event').removeClass('nextLastRowItem').removeClass('selectedEvent');
 		$('.event').removeClass('selectedEvent');
-		nextLastRowEvent = getNextLast($(this).parent().parent());
-		prevFirstRowEvent = getPrevFirst($(this).parent().parent());
-		var hauteurMaxTest=prevFirstRowEvent.height();
+
+		// on récupere le nouveau premier et dernier
+		nextLastRowEvent   = getNextLast($(this).parent().parent());
+		prevFirstRowEvent  = getPrevFirst($(this).parent().parent());
+
+		// on récupère la hauteur du bloc le plus haut
+		hauteurMaxTest = prevFirstRowEvent.height();
+		console.log('hauteur : '+hauteurMaxTest);
 		getHauteurMax(prevFirstRowEvent, hauteurMaxTest, $(this).parent().parent());
 
 		$(this).parent().parent().addClass('selectedEvent');
@@ -729,144 +738,28 @@ function clickTitre(){
 		var couleur = classe.split('_')[1];
 		couleur = couleur.split('#')[1];
 		clickEvent($('.selectedEvent'), sauv);
-		$('.selectedEvent').css('background','none');
+		/*$('.selectedEvent').css('background','none');
 		$('.selectedEvent > a').css('display','none');
 		$('.selectedEvent > img').css('display','none');
 		$('.selectedEvent > p').css('display','none');
 		$('.selectedEvent > div').css('display','none');
 		$('.selectedEvent > span').css('display','none');	
-		$('.selectedEvent > div.triangle_inverse').css('display','block');
+		$('.selectedEvent > div.triangle_inverse').css('display','block');*/
+
+		$('.selectedEvent>*:not(h1, div.triangle_inverse)').hide();
+		$('.selectedEvent > div.triangle_inverse').show();
+		$('.selectedEvent').height('auto');
+
+		//$('.selectedEvent').css('-webkit-transform','translateY('+hauteurMaxTest+'px)');
 
 		$('.isotope-item').removeClass('sinscrireEvent');
-	    // on evite le comportement normal du click   
-	    
+
+	    // on evite le comportement normal du click   	    
 	    e.preventDefault();
 	});
 }
 
-/**
- * [sinscrire description]
- * @return {[type]} [description]
- */
-function sinscrire(){
-	$('a.sinscrire').click(function(e){
-		e.preventDefault();
-		$('.isotope-item').removeClass('sinscrireEvent');
-		$(this).parent().addClass('sinscrireEvent');
-		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-		if($('.sinscrireEvent').hasClass('en')){
-			var la_langue="en";
-		}
-		else{
-			var la_langue="fr";
-		}
 
-		var code = "";
-
-		if($(this).attr('id')=="avec_code"){
-			code="oui";
-		}
-
-		$.ajax({
-	        url     :"ajax/get_event_infos_inscription.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_event : evenement_id,
-	            langue : la_langue,
-	            code : code
-	        }
-	    }).done(function (dataJSON) {
-	    	console.log(dataJSON.titre);
-			inscription_data = {
-				id:   dataJSON.evenement_id,
-				session_id:   dataJSON.session_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        casque:   dataJSON.casque,
-		        interneOuvert: dataJSON.interneOuvert,
-		        interneComplet: dataJSON.interneComplet,
-		        externeOuvert:   dataJSON.externeOuvert,
-		        externeComplet: dataJSON.externeComplet,
-		        toutClos: dataJSON.toutClos,
-		        toutComplet:   dataJSON.toutComplet,
-		        alerteInterne: dataJSON.alerteInterne,
-		        alerteExterne: dataJSON.alerteExterne,
-		        code: dataJSON.codeExterne,
-		        mention : dataJSON.mention,
-	        };
-
-	        inscription = ich.inscription_form(inscription_data);
-
-	        $.fancybox( inscription , {
-	            title : 'Inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-	        validFancyBox();
-	    });
-	});
-}
-
-/**
- * [sinscrire_multiple description]
- * @return {[type]} [description]
- */
-function sinscrire_multiple(){
-	$('a.sinscrire_multiple').click(function(e){
-		$('.isotope-item').removeClass('sinscrireEvent');
-		$(this).parent().addClass('sinscrireEvent');
-		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
-
-		if($('.sinscrireEvent').hasClass('en')){
-			var la_langue="en";
-		}
-		else{
-			var la_langue="fr";
-		}
-
-		var code = "";
-
-		if($(this).attr('id')=="avec_code"){
-			code="oui";
-		}
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/get_event_infos_inscription_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_event : evenement_id,
-	            langue : la_langue,
-	            code : code
-	        }
-	    }).done(function (dataJSON) {
-	    	console.log(dataJSON.titre);
-			inscription_data = {
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        sessions: dataJSON.sessions,
-		        code: dataJSON.codeExterne,
-		        interneOuvert: dataJSON.interneOuvert,
-		        externeOuvert: dataJSON.externeOuvert,
-		        toutComplet: dataJSON.toutComplet,
-		        mention : dataJSON.mention,
-	        };
-
-	        inscription = ich.inscription_form_multiple(inscription_data);
-
-	        $.fancybox( inscription , {
-	            title : 'Inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-}
 
 /**
  * [initIsotopeOuvert description]
@@ -945,27 +838,27 @@ function clickEvent(clickedElement, sauv){
         }
     }).done(function (dataJSON) {
     	event_data = {
-	        titre:   dataJSON.titre,
-	        date: dataJSON.date,
-	        rubrique: dataJSON.rubrique,
-	        couleur: dataJSON.couleur,
-	        langue: dataJSON.langue,
-	        lieu: dataJSON.lieu,
-	        batiment: dataJSON.batiment,
-	        organisateur: dataJSON.organisateur,
-	        coorganisateur: dataJSON.coorganisateur,
-	        infos: dataJSON.lien,
-	        infos_texte: dataJSON.texte_lien,
-	        inscription: dataJSON.inscription,
-	        image: dataJSON.image,
-	        texte_image: dataJSON.texte_image,
-	        texte: dataJSON.texte,
-	        facebook: dataJSON.facebook,
-	        twitter: dataJSON.twitter,
-	        ical: dataJSON.ical,
-	        sinscrire: dataJSON.sinscrire,
-	        medias: dataJSON.medias,
-	        adresse: dataJSON.adresse,
+	        titre			: dataJSON.titre,
+	        date			: dataJSON.date,
+	        rubrique		: dataJSON.rubrique,
+	        couleur			: dataJSON.couleur,
+	        langue			: dataJSON.langue,
+	        lieu			: dataJSON.lieu,
+	        batiment		: dataJSON.batiment,
+	        organisateur	: dataJSON.organisateur,
+	        coorganisateur	: dataJSON.coorganisateur,
+	        infos			: dataJSON.lien,
+	        infos_texte		: dataJSON.texte_lien,
+	        inscription		: dataJSON.inscription,
+	        image			: dataJSON.image,
+	        texte_image		: dataJSON.texte_image,
+	        texte			: dataJSON.texte,
+	        facebook		: dataJSON.facebook,
+	        twitter			: dataJSON.twitter,
+	        ical			: dataJSON.ical,
+	        sinscrire		: dataJSON.sinscrire,
+	        medias			: dataJSON.medias,
+	        adresse			: dataJSON.adresse,
 	    };
 	    // on crée le bloc de résumé des informations (après on va le créer avec iCanHaz + json pour les données) 
 		var $newItems = ich.event_info(event_data);
@@ -1019,22 +912,22 @@ function clickEvent(clickedElement, sauv){
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
 				inscription_data = {
-					id:   dataJSON.evenement_id,
-					session_id:   dataJSON.session_id,
-		            titre:   dataJSON.titre,
-			        date: dataJSON.date,
-			        lieu: dataJSON.lieu,
-			        casque:   dataJSON.casque,
-			        interneOuvert: dataJSON.interneOuvert,
-			        interneComplet: dataJSON.interneComplet,
-			        externeOuvert:   dataJSON.externeOuvert,
-			        externeComplet: dataJSON.externeComplet,
-			        toutClos: dataJSON.toutClos,
-			        toutComplet:   dataJSON.toutComplet,
-			        alerteInterne: dataJSON.alerteInterne,
-			        alerteExterne: dataJSON.alerteExterne,
-			        code: dataJSON.codeExterne,
-			        mention : dataJSON.mention,
+					id				: dataJSON.evenement_id,
+					session_id		: dataJSON.session_id,
+		            titre			: dataJSON.titre,
+			        date			: dataJSON.date,
+			        lieu			: dataJSON.lieu,
+			        casque			: dataJSON.casque,
+			        interneOuvert	: dataJSON.interneOuvert,
+			        interneComplet	: dataJSON.interneComplet,
+			        externeOuvert	: dataJSON.externeOuvert,
+			        externeComplet	: dataJSON.externeComplet,
+			        toutClos		: dataJSON.toutClos,
+			        toutComplet		: dataJSON.toutComplet,
+			        alerteInterne	: dataJSON.alerteInterne,
+			        alerteExterne	: dataJSON.alerteExterne,
+			        code			: dataJSON.codeExterne,
+			        mention			: dataJSON.mention,
 		        };
 
 		        inscription = ich.inscription_form(inscription_data);
@@ -1062,21 +955,21 @@ function clickEvent(clickedElement, sauv){
 		        dataType:'json',
 		        data    : {
 		            id_event : evenement_id,
-		            langue : la_langue,
-		            code : code
+		            langue   : la_langue,
+		            code 	 : code
 		        }
 		    }).done(function (dataJSON) {
 		    	console.log(dataJSON.titre);
 				inscription_data = {
-					id:   dataJSON.evenement_id,
-		            titre:   dataJSON.titre,
-			        date: dataJSON.date,
-			        sessions: dataJSON.sessions,
-			        code: dataJSON.codeExterne,
-			        mention : dataJSON.mention,
-			        interneOuvert: dataJSON.interneOuvert,
-		        	externeOuvert: dataJSON.externeOuvert,
-		        	toutComplet: dataJSON.toutComplet,
+					id			  : dataJSON.evenement_id,
+		            titre		  : dataJSON.titre,
+			        date		  : dataJSON.date,
+			        sessions	  : dataJSON.sessions,
+			        code		  : dataJSON.codeExterne,
+			        mention 	  : dataJSON.mention,
+			        interneOuvert : dataJSON.interneOuvert,
+		        	externeOuvert : dataJSON.externeOuvert,
+		        	toutComplet   : dataJSON.toutComplet,
 		        };
 
 		        inscription = ich.inscription_form_multiple(inscription_data);
@@ -1093,287 +986,6 @@ function clickEvent(clickedElement, sauv){
     });
 }
 
-/**
- * [fancyboxrefresh description]
- * @return {[type]} [description]
- */
-function fancyboxrefresh(){
-	$.fancybox.update();
-}
-
-/**
- * [validFancyBox description]
- * @return {[type]} [description]
- */
-function validFancyBox(){
-	$('.depliable h3').click(function(e){
-		e.preventDefault();
-		$('.depliable').removeClass('open');
-		$(this).parent().addClass('open');
-
-		var updater = setInterval(fancyboxrefresh,40);
-
-		$('.depliable:not(.open)').find('form').slideUp(200);
-		$('.depliable.open').find('form').slideDown(200,function(){
-			$.fancybox.update();
-
-			clearInterval(updater);
-			//$.fancybox.reposition();
-		});
-		//$(this).siblings('form').toggle(200);
-	});
-
-	$('a#envoyer, a#renvoyer').click(function(e){
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/make_inscription.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_session : $('#id_session').val(),
-	            login:$('#login').val(),
-	            password:$('#password').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            lieu:$('#lieu').val(),
-	            casque:$('#inscrit_casque').val()
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				session_id:   dataJSON.session_id,
-				title: dataJSON.titre_bloc,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom:   dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        type: dataJSON.type_inscription,
-		        numero:   dataJSON.numero,
-		        important: dataJSON.important,
-		        casque:   dataJSON.casque,
-		        alerteInterne: dataJSON.alerteInterne,
-		        erreurLDAP: dataJSON.erreurLDAP,
-		        inscriptionOK: dataJSON.inscriptionOK,
-		        champVide: dataJSON.champVide,
-		        completeDerniereMinute: dataJSON.completeDerniereMinute,
-	        };
-
-	        validation = ich.validation_form(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_externe, a#renvoyer_externe').click(function(e){
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/make_inscription_externe.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            id_session : $('#id_session_externe').val(),
-	            nom:$('#nom').val(),
-	            prenom:$('#prenom').val(),
-	            mail:$('#mail').val(),
-	            entreprise:$('#entreprise').val(),
-	            fonction:$('#fonction').val(),
-	            casque:$('#inscrit_casque').val(),
-	            titre:$('#titre_externe').val(),
-	            date:$('#date_externe').val(),
-	            lieu:$('#lieu_externe').val()
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				session_id:   dataJSON.session_id,
-				title: dataJSON.titre_bloc,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        lieu: dataJSON.lieu,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom:   dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        type: dataJSON.type_inscription,
-		        numero:   dataJSON.numero,
-		        important: dataJSON.important,
-		        casque:   dataJSON.casque,
-		        alerteExterne: dataJSON.alerteExterne,
-		        erreurChamps: dataJSON.erreurChamps,
-		        inscriptionOK: dataJSON.inscriptionOK,
-		        dejaInscrit: dataJSON.dejaInscrit,
-		        completeDerniereMinute: dataJSON.completeDerniereMinute,
-	        };
-
-	        validation = ich.validation_externe_form(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_multiple, a#renvoyer_multiple').click(function(e){
-		e.preventDefault();
-
-		var inputs = document.getElementsByTagName("input");
-		var tabsessions = [];
-		var tabcasques = [];
-		for(var i=0,l=inputs.length;i<l;i++) {
-			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
-				tabsessions.push(inputs[i].value);
-			}
-			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
-				tabcasques.push(inputs[i].value);
-			}
-		}
-
-		$.ajax({
-	        url     :"ajax/make_inscription_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            sessions : tabsessions,
-	            id_evenement : $('#id_evenement').val(),
-	            login:$('#login').val(),
-	            password:$('#password').val(),
-	            titre:$('#titre').val(),
-	            date:$('#date').val(),
-	            casques : tabcasques
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				title:   dataJSON.titre_bloc,
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom: dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        sessions: dataJSON.sessions,
-		        toutesLesSessions: dataJSON.toutesLesSessions,
-		        important: dataJSON.important,
-		        erreurLDAP: dataJSON.erreurLDAP,
-		        champVide: dataJSON.champVide,
-		        erreurChamps: dataJSON.erreurChamps,
-		        inscritPartout: dataJSON.inscritPartout,
-				tousDerniereMinute: dataJSON.tousDerniereMinute,
-		        mention : dataJSON.mention,
-	        };
-
-	        validation = ich.validation_form_multiple(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_externe_multiple, a#renvoyer_externe_multiple').click(function(e){
-		e.preventDefault();
-
-		var inputs = document.getElementsByTagName("input");
-		var tabsessions = [];
-		var tabcasques = [];
-		for(var i=0,l=inputs.length;i<l;i++) {
-			if(inputs[i].name == "sessions_externe[]" && inputs[i].checked == true) {
-				tabsessions.push(inputs[i].value);
-			}
-			if(inputs[i].name == "inscrit_casque_externe[]" && inputs[i].checked == true) {
-				tabcasques.push(inputs[i].value);
-			}
-		}
-
-		$.ajax({
-	        url     :"ajax/make_inscription_externe_multiple.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            sessions : tabsessions,
-	            id_evenement : $('#id_evenement_externe').val(),
-	            nom:$('#nom').val(),
-	            prenom:$('#prenom').val(),
-	            mail:$('#mail').val(),
-	            entreprise:$('#entreprise').val(),
-	            fonction:$('#fonction').val(),
-	            casques : tabcasques,
-	            titre:$('#titre_externe').val(),
-	            date:$('#date_externe').val(),
-	        }
-	    }).done(function (dataJSON) {
-			validation_data = {
-				title: dataJSON.titre_bloc,
-				id:   dataJSON.evenement_id,
-	            titre:   dataJSON.titre,
-		        date: dataJSON.date,
-		        infos_inscription: dataJSON.infos_inscription,
-		        nom: dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        sessions: dataJSON.sessions,
-		        toutesLesSessions: dataJSON.toutesLesSessions,
-		        important: dataJSON.important,
-		        erreurChamps: dataJSON.erreurChamps,
-		        inscritPartout: dataJSON.inscritPartout,
-				tousDerniereMinute: dataJSON.tousDerniereMinute,
-		        mention : dataJSON.mention,
-	        };
-
-	        validation = ich.validation_externe_form_multiple(validation_data);
-
-	        $.fancybox( validation , {
-	            title : 'validation de l‘inscription',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-
-	$('a#envoyer_login_soumission, a#renvoyer_login_soumission').click(function(e){
-		e.preventDefault();
-		$.ajax({
-	        url     :"ajax/login_soumission.php",
-	        type    : "GET",
-	        dataType:'json',
-	        data    : {
-	            login:$('#login').val(),
-	            password:$('#password').val()
-	        }
-	    }).done(function (dataJSON) {
-			soumission_data = {
-				title: dataJSON.titre_bloc,
-		        nom:   dataJSON.nom,
-		        prenom: dataJSON.prenom,
-		        erreurLDAP: dataJSON.erreurLDAP,
-		        champVide: dataJSON.champVide,
-	        };
-
-	        soumettre = ich.soumission_form(soumission_data);
-
-	        $.fancybox( soumettre , {
-	            title : 'Proposer un événement',
-	            maxWidth : 355,
-	            wrapCSS : 'non-plan',
-	        });
-
-	        validFancyBox();
-	    });
-	});
-}
 
 /**
  * [getNextLast description]
@@ -1457,12 +1069,20 @@ function getPrevFirst(cible){
  * @return {[type]} [description]
  */
 function reInitBloc(){
-	$('.selectedEvent > a').css('display','block');
+	/*$('.selectedEvent > a').css('display','block');
 	$('.selectedEvent > img').css('display','inline-block');
 	$('.selectedEvent > p').css('display','block');
 	$('.selectedEvent > div').css('display','block');
 	$('.selectedEvent > div.triangle_inverse').css('display','none');
 	$('.selectedEvent > span').css('display','block');
+	$('.selectedEvent').css('background','#fff');*/
+
+	$('.selectedEvent > a').show();
+	$('.selectedEvent > img').show();
+	$('.selectedEvent > p').show();
+	$('.selectedEvent > div').show();
+	$('.selectedEvent > span').show();
+	$('.selectedEvent > div.triangle_inverse').hide();
 	$('.selectedEvent').css('background','#fff');
 }
 
@@ -1526,9 +1146,9 @@ function firstLastLayout(elems, instance){
 		var y = this.y, r = i[y];
 		if (!r) {
 			r = {
-				y: y,
-				first: null,
-				last: null
+				y	  : y,
+				first : null,
+				last  : null
 			};
 			rows.push(r);
 			i[y] = r;
@@ -1589,8 +1209,8 @@ function centrageIsotope(){
 		});
 		// check if columns has changed
 		var bodyColumns = Math.floor( ( $body.width() -10 ) / colW ),
-		itemColumns = Math.floor( itemTotalWidth / colW ),
-		currentColumns = Math.min( bodyColumns, itemColumns );
+		itemColumns 	= Math.floor( itemTotalWidth / colW ),
+		currentColumns  = Math.min( bodyColumns, itemColumns );
 		if ( currentColumns !== columns ) {
 			// set new column count
 			columns = currentColumns;
@@ -1606,3 +1226,433 @@ function centrageIsotope(){
 		$container.width( columns * colW ).isotope().isotope('reLayout');
 	}).smartresize();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ *
+ *           			INSCRIPTIONS
+ * 
+ * ++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+ */
+
+
+
+
+/**
+ * [sinscrire description]
+ * @return {[type]} [description]
+ */
+function sinscrire(){
+	$('a.sinscrire').click(function(e){
+		e.preventDefault();
+		$('.isotope-item').removeClass('sinscrireEvent');
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
+		}
+
+		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
+
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id				: dataJSON.evenement_id,
+				session_id		: dataJSON.session_id,
+	            titre			: dataJSON.titre,
+		        date			: dataJSON.date,
+		        lieu			: dataJSON.lieu,
+		        casque			: dataJSON.casque,
+		        interneOuvert	: dataJSON.interneOuvert,
+		        interneComplet	: dataJSON.interneComplet,
+		        externeOuvert	: dataJSON.externeOuvert,
+		        externeComplet	: dataJSON.externeComplet,
+		        toutClos		: dataJSON.toutClos,
+		        toutComplet		: dataJSON.toutComplet,
+		        alerteInterne	: dataJSON.alerteInterne,
+		        alerteExterne	: dataJSON.alerteExterne,
+		        code			: dataJSON.codeExterne,
+		        mention			: dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+	        validFancyBox();
+	    });
+	});
+}
+
+/**
+ * [sinscrire_multiple description]
+ * @return {[type]} [description]
+ */
+function sinscrire_multiple(){
+	$('a.sinscrire_multiple').click(function(e){
+		$('.isotope-item').removeClass('sinscrireEvent');
+		$(this).parent().addClass('sinscrireEvent');
+		var evenement_id = $('.sinscrireEvent').find('h1 > a').attr('id').split('_')[2];
+
+		if($('.sinscrireEvent').hasClass('en')){
+			var la_langue="en";
+		}
+		else{
+			var la_langue="fr";
+		}
+
+		var code = "";
+
+		if($(this).attr('id')=="avec_code"){
+			code="oui";
+		}
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/get_event_infos_inscription_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_event : evenement_id,
+	            langue : la_langue,
+	            code : code
+	        }
+	    }).done(function (dataJSON) {
+	    	console.log(dataJSON.titre);
+			inscription_data = {
+				id			  : dataJSON.evenement_id,
+	            titre		  : dataJSON.titre,
+		        date		  : dataJSON.date,
+		        sessions	  : dataJSON.sessions,
+		        code		  : dataJSON.codeExterne,
+		        interneOuvert : dataJSON.interneOuvert,
+		        externeOuvert : dataJSON.externeOuvert,
+		        toutComplet   : dataJSON.toutComplet,
+		        mention 	  : dataJSON.mention,
+	        };
+
+	        inscription = ich.inscription_form_multiple(inscription_data);
+
+	        $.fancybox( inscription , {
+	            title : 'Inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+}
+
+
+/**
+ * [fancyboxrefresh description]
+ * @return {[type]} [description]
+ */
+function fancyboxrefresh(){
+	$.fancybox.update();
+}
+
+/**
+ * [validFancyBox description]
+ * @return {[type]} [description]
+ */
+function validFancyBox(){
+	$('.depliable h3').click(function(e){
+		e.preventDefault();
+		$('.depliable').removeClass('open');
+		$(this).parent().addClass('open');
+
+		var updater = setInterval(fancyboxrefresh,40);
+
+		$('.depliable:not(.open)').find('form').slideUp(200);
+		$('.depliable.open').find('form').slideDown(200,function(){
+			$.fancybox.update();
+
+			clearInterval(updater);
+			//$.fancybox.reposition();
+		});
+		//$(this).siblings('form').toggle(200);
+	});
+
+	$('a#envoyer, a#renvoyer').click(function(e){
+		e.preventDefault();
+		$.ajax({
+	        url      :"ajax/make_inscription.php",
+	        type     : "GET",
+	        dataType :'json',
+	        data     : {
+	            id_session : $('#id_session').val(),
+	            login	   : $('#login').val(),
+	            password   : $('#password').val(),
+	            titre	   : $('#titre').val(),
+	            date	   : $('#date').val(),
+	            lieu	   : $('#lieu').val(),
+	            casque	   : $('#inscrit_casque').val()
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				session_id		  	   : dataJSON.session_id,
+				title			  	   : dataJSON.titre_bloc,
+	            titre			  	   : dataJSON.titre,
+		        date			  	   : dataJSON.date,
+		        lieu			  	   : dataJSON.lieu,
+		        infos_inscription 	   : dataJSON.infos_inscription,
+		        nom				  	   : dataJSON.nom,
+		        prenom			  	   : dataJSON.prenom,
+		        type			  	   : dataJSON.type_inscription,
+		        numero			  	   : dataJSON.numero,
+		        important		  	   : dataJSON.important,
+		        casque			  	   : dataJSON.casque,
+		        alerteInterne	  	   : dataJSON.alerteInterne,
+		        erreurLDAP		  	   : dataJSON.erreurLDAP,
+		        inscriptionOK	  	   : dataJSON.inscriptionOK,
+		        champVide		  	   : dataJSON.champVide,
+		        completeDerniereMinute : dataJSON.completeDerniereMinute,
+	        };
+
+	        validation = ich.validation_form(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#envoyer_externe, a#renvoyer_externe').click(function(e){
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/make_inscription_externe.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            id_session 	: $('#id_session_externe').val(),
+	            nom			: $('#nom').val(),
+	            prenom		: $('#prenom').val(),
+	            mail		: $('#mail').val(),
+	            entreprise	: $('#entreprise').val(),
+	            fonction	: $('#fonction').val(),
+	            casque		: $('#inscrit_casque').val(),
+	            titre		: $('#titre_externe').val(),
+	            date		: $('#date_externe').val(),
+	            lieu		: $('#lieu_externe').val()
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				session_id			  : dataJSON.session_id,
+				title				  : dataJSON.titre_bloc,
+	            titre				  : dataJSON.titre,
+		        date				  : dataJSON.date,
+		        lieu				  : dataJSON.lieu,
+		        infos_inscription	  : dataJSON.infos_inscription,
+		        nom					  : dataJSON.nom,
+		        prenom				  : dataJSON.prenom,
+		        type				  : dataJSON.type_inscription,
+		        numero				  : dataJSON.numero,
+		        important			  : dataJSON.important,
+		        casque				  : dataJSON.casque,
+		        alerteExterne		  : dataJSON.alerteExterne,
+		        erreurChamps		  : dataJSON.erreurChamps,
+		        inscriptionOK		  : dataJSON.inscriptionOK,
+		        dejaInscrit			  : dataJSON.dejaInscrit,
+		        completeDerniereMinute: dataJSON.completeDerniereMinute,
+	        };
+
+	        validation = ich.validation_externe_form(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#envoyer_multiple, a#renvoyer_multiple').click(function(e){
+		e.preventDefault();
+
+		var inputs = document.getElementsByTagName("input");
+		var tabsessions = [];
+		var tabcasques = [];
+		for(var i=0,l=inputs.length;i<l;i++) {
+			if(inputs[i].name == "sessions[]" && inputs[i].checked == true) {
+				tabsessions.push(inputs[i].value);
+			}
+			if(inputs[i].name == "inscrit_casque[]" && inputs[i].checked == true) {
+				tabcasques.push(inputs[i].value);
+			}
+		}
+
+		$.ajax({
+	        url     :"ajax/make_inscription_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            sessions 	 : tabsessions,
+	            id_evenement : $('#id_evenement').val(),
+	            login		 : $('#login').val(),
+	            password	 : $('#password').val(),
+	            titre		 : $('#titre').val(),
+	            date		 : $('#date').val(),
+	            casques 	 : tabcasques
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				title				: dataJSON.titre_bloc,
+				id					: dataJSON.evenement_id,
+	            titre				: dataJSON.titre,
+		        date				: dataJSON.date,
+		        infos_inscription	: dataJSON.infos_inscription,
+		        nom					: dataJSON.nom,
+		        prenom				: dataJSON.prenom,
+		        sessions			: dataJSON.sessions,
+		        toutesLesSessions	: dataJSON.toutesLesSessions,
+		        important			: dataJSON.important,
+		        erreurLDAP			: dataJSON.erreurLDAP,
+		        champVide			: dataJSON.champVide,
+		        erreurChamps		: dataJSON.erreurChamps,
+		        inscritPartout		: dataJSON.inscritPartout,
+				tousDerniereMinute	: dataJSON.tousDerniereMinute,
+		        mention 			: dataJSON.mention,
+	        };
+
+	        validation = ich.validation_form_multiple(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#envoyer_externe_multiple, a#renvoyer_externe_multiple').click(function(e){
+		e.preventDefault();
+
+		var inputs = document.getElementsByTagName("input");
+		var tabsessions = [];
+		var tabcasques = [];
+		for(var i=0,l=inputs.length;i<l;i++) {
+			if(inputs[i].name == "sessions_externe[]" && inputs[i].checked == true) {
+				tabsessions.push(inputs[i].value);
+			}
+			if(inputs[i].name == "inscrit_casque_externe[]" && inputs[i].checked == true) {
+				tabcasques.push(inputs[i].value);
+			}
+		}
+
+		$.ajax({
+	        url     :"ajax/make_inscription_externe_multiple.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            sessions 		: tabsessions,
+	            id_evenement 	: $('#id_evenement_externe').val(),
+	            nom				: $('#nom').val(),
+	            prenom			: $('#prenom').val(),
+	            mail			: $('#mail').val(),
+	            entreprise		: $('#entreprise').val(),
+	            fonction		: $('#fonction').val(),
+	            casques 		: tabcasques,
+	            titre			: $('#titre_externe').val(),
+	            date			: $('#date_externe').val(),
+	        }
+	    }).done(function (dataJSON) {
+			validation_data = {
+				title				: dataJSON.titre_bloc,
+				id					: dataJSON.evenement_id,
+	            titre				: dataJSON.titre,
+		        date				: dataJSON.date,
+		        infos_inscription	: dataJSON.infos_inscription,
+		        nom					: dataJSON.nom,
+		        prenom				: dataJSON.prenom,
+		        sessions			: dataJSON.sessions,
+		        toutesLesSessions	: dataJSON.toutesLesSessions,
+		        important			: dataJSON.important,
+		        erreurChamps		: dataJSON.erreurChamps,
+		        inscritPartout		: dataJSON.inscritPartout,
+				tousDerniereMinute	: dataJSON.tousDerniereMinute,
+		        mention 			: dataJSON.mention,
+	        };
+
+	        validation = ich.validation_externe_form_multiple(validation_data);
+
+	        $.fancybox( validation , {
+	            title : 'validation de l‘inscription',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+
+	$('a#envoyer_login_soumission, a#renvoyer_login_soumission').click(function(e){
+		e.preventDefault();
+		$.ajax({
+	        url     :"ajax/login_soumission.php",
+	        type    : "GET",
+	        dataType:'json',
+	        data    : {
+	            login:$('#login').val(),
+	            password:$('#password').val()
+	        }
+	    }).done(function (dataJSON) {
+			soumission_data = {
+				title		: dataJSON.titre_bloc,
+		        nom			: dataJSON.nom,
+		        prenom		: dataJSON.prenom,
+		        erreurLDAP	: dataJSON.erreurLDAP,
+		        champVide	: dataJSON.champVide,
+	        };
+
+	        soumettre = ich.soumission_form(soumission_data);
+
+	        $.fancybox( soumettre , {
+	            title : 'Proposer un événement',
+	            maxWidth : 355,
+	            wrapCSS : 'non-plan',
+	        });
+
+	        validFancyBox();
+	    });
+	});
+}
+
