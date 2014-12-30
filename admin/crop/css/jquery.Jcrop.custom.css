@@ -1,0 +1,51 @@
+#target
+{
+	background-color: #ccc;
+	font-size: 24px;
+	display: block;
+}
+/************************************************************************************
+This fixes a weird KNOWN scrolling bug from JCrop
+*************************************************************************************/
+.jcrop-keymgr{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 0;
+}
+/************************************************************************************ 
+ * JCrop instance separator. Contains row spacing
+*************************************************************************************/ 
+.jcrop-item
+{
+	margin-bottom:20px;
+}
+/************************************************************************************ 
+ * Background for the transparency.
+*************************************************************************************/ 
+.jcrop-transparent-bg
+{
+	background-color:none;
+	background-image:url('transparent-bg-pattern.png');
+}
+/************************************************************************************ 
+ * Apply these styles only when .preview-pane has
+ * been placed within the Jcrop widget 
+ ************************************************************************************/
+.jcrop-holder .jcrop-preview-pane
+{
+	position:relative;
+	float:left;
+	left:320px;
+	border:1px solid #ddd;
+	background-image:url('transparent-bg-pattern.png');
+}
+/************************************************************************************ 
+ * The Javascript code will set the aspect ratio of the crop area based on the size of
+ * the thumbnail preview, specified here 
+ ************************************************************************************/
+.jcrop-preview-pane .jcrop-preview-container 
+{
+  overflow: hidden;
+
+}

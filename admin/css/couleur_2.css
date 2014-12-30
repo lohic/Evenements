@@ -1,0 +1,13 @@
+/* CSS Document */
+
+#header, #header_export{
+	background:none repeat scroll 0 0 #f39400;
+} 
+
+#menu a.actif{
+	background:#f39400;
+}
+
+.infos .titre_heure p.titre, .infos .titre_heure p.titre a, .places p .prises, p.intro_modif, p.erreur, a.lien_inscription{
+	color:#f39400;
+}

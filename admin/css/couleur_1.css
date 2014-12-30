@@ -1,0 +1,13 @@
+/* CSS Document */
+
+#header, #header_export{
+	background:none repeat scroll 0 0 #CB021A;
+} 
+
+#menu a.actif{
+	background:#CB021A;
+}
+
+.infos .titre_heure p.titre, .infos .titre_heure p.titre a, .places p .prises, p.intro_modif, p.erreur, a.lien_inscription{
+	color:#CB021A;
+}

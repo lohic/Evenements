@@ -1,0 +1,23 @@
+[
+	{
+	    "id": "evenement",
+	    "label":"Vignette pour le site événement",
+	    "width": 320,
+	    "height": 180,
+	    "suffix": ""
+	},
+	{
+	    "id": "newsletter",
+	    "label":"Vignette pour les newsletters",
+	    "width": 300,
+	    "height": 300,
+	    "suffix": "newsletter"
+	},
+	{
+	    "id": "plasma",
+	    "label":"Vignette pour l'outil Plasma",
+	    "width": 780,
+	    "height": 780,
+	    "suffix": "plasma"
+	}
+]

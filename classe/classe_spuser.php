@@ -12,9 +12,9 @@ password
 */
 
 
-include_once('../vars/config.php');
-include_once('classe_connexion.php');
-include_once('classe_fonctions.php');
+//include_once('../vars/config.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_connexion.php');
+include_once(REAL_LOCAL_PATH.'classe/classe_fonctions.php');
 
 class Spuser {
 
@@ -135,7 +135,7 @@ class Spuser {
 								
 				$this->connexion->connect_db();
 			
-				$login_query	= sprintf("SELECT * FROM ".TB."user_tb WHERE email=%s", func::GetSQLValueString($LDAPinfo->email, "text")); 
+				$login_query	= sprintf("SELECT * FROM ".TB."users WHERE user_email=%s", func::GetSQLValueString($LDAPinfo->email, "text")); 
 				
 			
 				$login_info		= mysql_query($login_query) or die(mysql_error());
@@ -267,7 +267,7 @@ class Spuser {
 	function check_login($login=NULL,$password=NULL){
 		//$this->connexion->connect_db();
 		
-		$login__query	= sprintf("SELECT * FROM ".TB."user_tb WHERE login=%s AND password=%s",
+		$login__query	= sprintf("SELECT * FROM ".TB."users WHERE user_login=%s AND user_password=%s",
 																func::GetSQLValueString($login, "text"),
 																func::GetSQLValueString($password, "text")); 
 	
@@ -389,13 +389,13 @@ class Spuser {
 			
 			$this->connexion->connect_db();
 
-			$updateSQL 		= sprintf("UPDATE ".TB."user_tb	SET login=%s,
-															password=%s,
-															type=%s,
-															nom=%s,
-															prenom=%s,
-															email=%s,
-															account_type=%s
+			$updateSQL 		= sprintf("UPDATE ".TB."users	SET user_login=%s,
+															user_password=%s,
+															user_type=%s,
+															user_nom=%s,
+															user_prenom=%s,
+															user_email=%s,
+															user_account_type=%s
 															WHERE id=%s",
 													func::GetSQLValueString($_array_val['login'], "text"),
 									   				func::GetSQLValueString($_array_val['password'], "text"),
@@ -422,7 +422,7 @@ class Spuser {
 		if($this->isAdmin){
 					
 			$this->connexion->connect_db();
-			$updateSQL 		= sprintf("INSERT INTO ".TB."user_tb	(login,password,type,nom,prenom,email,account_type) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+			$updateSQL 		= sprintf("INSERT INTO ".TB."users	(user_login,user_password,user_type,user_nom,user_prenom,user_email,user_account_type) VALUES (%s,%s,%s,%s,%s,%s,%s)",
 													func::GetSQLValueString($_array_val['login'], "text"),
 									   				func::GetSQLValueString($_array_val['password'], "text"),
 									   				func::GetSQLValueString($_array_val['type'], "text"),
@@ -451,7 +451,7 @@ class Spuser {
 			
 			$this->connexion->connect_db();
 			foreach($_array_groupe as $_id_groupe){
-				$insertSQL 		= sprintf("INSERT INTO ".TB."rel_user_groupe_tb (id_user,id_groupe) VALUES (%s,%s)",
+				$insertSQL 		= sprintf("INSERT INTO ".TB."rel_user_groupe (user_id,groupe_id) VALUES (%s,%s)",
 														func::GetSQLValueString($_id_user, "int"),
 														func::GetSQLValueString($_id_groupe, "int"));
 				$insert_query	= mysql_query($insertSQL) or die(mysql_error());
@@ -468,7 +468,7 @@ class Spuser {
 		if(!empty($_id_user)){
 			$this->connexion->connect_db();
 
-			$supprSQL		= sprintf("DELETE FROM ".TB."rel_user_groupe_tb WHERE id_user=%s", func::GetSQLValueString($_id_user,'int'));
+			$supprSQL		= sprintf("DELETE FROM ".TB."rel_user_groupe WHERE id_user=%s", func::GetSQLValueString($_id_user,'int'));
 			
 			$suppr_query	= mysql_query($supprSQL) or die(mysql_error());
 			
@@ -486,7 +486,7 @@ class Spuser {
 			$this->connexion->connect_db();
 			
 			$this->clean_groupe($_id_user);
-			$supprSQL		= sprintf("DELETE FROM ".TB."user_tb WHERE id=%s", func::GetSQLValueString($_id_user,'int'));
+			$supprSQL		= sprintf("DELETE FROM ".TB."users WHERE user_id=%s", func::GetSQLValueString($_id_user,'int'));
 			
 			$suppr_query	= mysql_query($supprSQL) or die(mysql_error());
 			
@@ -525,11 +525,11 @@ class Spuser {
 	@
 	*/
 	function get_groups(){		
-		$query	= sprintf("SELECT g.id as id, g.libelle AS libelle, g.type AS type, g.id_organisme AS id_organisme
-							FROM ".TB."user_groupes_tb g, ".TB."user_tb u, ".TB."rel_user_groupe_tb r
-							WHERE r.id_user = u.id
-							AND r.id_groupe = g.id
-							AND u.id = %s", func::GetSQLValueString($this->id, "int")); 
+		$query	= sprintf("SELECT g.groupe_id as id, g.groupe_libelle AS libelle, g.groupe_type AS type, g.groupe_organisme_id AS id_organisme
+							FROM ".TB."groupes g, ".TB."users u, ".TB."rel_user_groupe r
+							WHERE r.user_id = u.user_id
+							AND r.groupe_id = g.groupe_id
+							AND u.user_id = %s", func::GetSQLValueString($this->id, "int")); 
 	
 		$result	= mysql_query($query) or die(mysql_error());
 		
@@ -574,7 +574,7 @@ class Spuser {
 	@
 	*/
 	function get_user_list(){
-		$sql_liste_user = 'SELECT * FROM '.TB.'user_tb ORDER BY account_type DESC, nom';
+		$sql_liste_user = 'SELECT * FROM '.TB.'users ORDER BY user_account_type DESC, user_nom';
 		$sql_liste_user_query = mysql_query($sql_liste_user) or die(mysql_error());
 
 		$users = array();
@@ -584,15 +584,15 @@ class Spuser {
 		while ($user = mysql_fetch_assoc($sql_liste_user_query)){
 			
 			$class 			= 'listItemRubrique'.($i+1);
-			$id				= $user['id'];
-			$login			= $user['login'];
-			$password		= $user['password'];
-			$type			= $user['type'];
-			$nom			= $user['nom'];
-			$prenom			= $user['prenom'];
-			$email			= $user['email'];
+			$id				= $user['user_id'];
+			$login			= $user['user_login'];
+			$password		= $user['user_password'];
+			$type			= $user['user_type'];
+			$nom			= $user['user_nom'];
+			$prenom			= $user['user_prenom'];
+			$email			= $user['user_email'];
 			$levelTab		= $this->get_admin_level();
-			$account_type	= $user['account_type'];
+			$account_type	= $user['user_account_type'];
 			$groupes		= $this->get_groupe($id,$id);
 			
 			global $typeTab;
@@ -611,7 +611,7 @@ class Spuser {
 	*/
 	function get_groupe($_id=NULL,$id_user=NULL){
 		
-		$sql_liste_groupe	= 'SELECT * FROM '.TB.'user_groupes_tb ORDER BY libelle';
+		$sql_liste_groupe	= 'SELECT * FROM '.TB.'groupes ORDER BY groupe_libelle';
 		$sql_liste_groupe_query = mysql_query($sql_liste_groupe) or die(mysql_error());
 		
 	
@@ -629,11 +629,11 @@ class Spuser {
 			$temp->classe	= 'inline';
 			
 			if(isset($id_user)){
-				$sql_liste_user	= "SELECT * FROM ".TB."rel_user_groupe_tb WHERE id_groupe=".$groupe['id'];
+				$sql_liste_user	= "SELECT * FROM ".TB."rel_user_groupe WHERE groupe_id=".$groupe['id'];
 				$sql_liste_user_query = mysql_query($sql_liste_user) or die(mysql_error());
 				
 				while ($user = mysql_fetch_assoc($sql_liste_user_query)){
-					if($user['id_user']==$id_user){
+					if($user['user_id']==$id_user){
 						$temp->select	= 'ok';
 					}
 				}
@@ -660,13 +660,13 @@ class Spuser {
 	@
 	*/
 	function get_admin_level(){
-		$sql_liste_level	= 'SELECT * FROM '.TB.'user_level_tb ORDER BY level';
+		$sql_liste_level	= 'SELECT * FROM '.TB.'user_level ORDER BY user_level_level';
 		$sql_liste_level_query = mysql_query($sql_liste_level) or die(mysql_error());
 		
 		$retour = array();
 		
 		while ($level = mysql_fetch_assoc($sql_liste_level_query)){
-			$retour[ $level['level']]	= $level['libelle'];
+			$retour[ $level['user_level_level']]	= $level['user_level_libelle'];
 		}
 		
 		return $retour;
@@ -681,13 +681,13 @@ class Spuser {
 	function isAuthorised(){
 		
 		if($this->LDAP){
-			$query	= sprintf("SELECT COUNT(email) AS nbr
-								FROM ".TB."user_tb
-								WHERE email= %s", func::GetSQLValueString($this->email, "text")); 
+			$query	= sprintf("SELECT COUNT(user_email) AS nbr
+								FROM ".TB."users
+								WHERE user_email= %s", func::GetSQLValueString($this->email, "text")); 
 		}else{
-			$query	= sprintf("SELECT COUNT(login) AS nbr
-								FROM ".TB."user_tb
-								WHERE login= %s", func::GetSQLValueString($this->login, "text")); 	
+			$query	= sprintf("SELECT COUNT(user_login) AS nbr
+								FROM ".TB."users
+								WHERE user_login= %s", func::GetSQLValueString($this->login, "text")); 	
 		}
 	
 		$result	= mysql_query($query) or die(mysql_error());

@@ -1,0 +1,296 @@
+@charset "UTF-8";
+/* CSS Document */
+
+*{
+	border:0;
+	margin:0;
+	padding:0;
+	font-family:Arial, "Times New Roman", serif;
+}
+
+body{
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+#master-event{
+	width:500px;
+	background:#ffffff;
+	position:relative;
+	padding-bottom:15px;
+	float:left;
+}
+
+#master-event .triangle{
+	width:40px;
+	height:20px;
+	position:relative;
+	margin: -20px 0 0 20px;
+}  
+
+#master-event .illus{
+	width:500px;
+	float:left; 
+	margin-bottom:8px;
+}
+
+#master-event>h1{
+	color:#FFF;
+	margin:0;
+	padding:10px;
+	font-size:20px;
+	line-height:25px;
+	font-weight:normal;
+	text-transform:uppercase;
+}
+
+#master-event>h1.avec_image{
+	float:left;
+	height:261px;
+	width:140px;
+} 
+
+#master-event>h1 a{
+	color:#FFF;
+	text-decoration:none;
+}
+
+.col1{
+	width:240px;
+}
+
+.box {
+	background: none repeat scroll 0 0 #ffffff;
+	float: left;
+	margin: 10px 0px 0px 20px;
+	padding-bottom:10px;
+}
+
+.box p{
+	padding:5px 10px 5px 10px;
+	margin:0px;
+	font-size:0.75em;
+}
+
+.box p a.suite{
+	display: inline-block;
+	height: 8px;
+}
+
+.box p.titre{
+	font-size:0.875em;
+}
+
+.box p.titre a{
+	color:#ffffff;
+	text-transform:uppercase;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+.box p a.reseaux, #master-event .texte a.reseaux{
+	float:left;
+	width:20px;
+	height:20px;
+	margin-right:5px;
+}
+
+.box p a.reseaux img{
+	border:0;
+}
+
+.box p a.reseaux{
+	margin-top:1px;
+}
+
+.box p.date{
+	color:#000000;
+	font-weight:bold;
+	font-size:0.875em;
+	margin-top:5px;
+}
+
+.wrap{
+	background: none repeat scroll 0 0 #ffffff;
+	border: 0 solid #445566;
+	clear: both;
+	margin-bottom: 0px;
+	padding: 10px 0px;
+	overflow: hidden; 
+	width:500px;
+}
+
+img.triangle{
+	margin-top:-10px;
+	margin-left:10px;
+	width:20px;
+	height:10px;
+}
+
+a.sinscrire{
+	float:left;
+	color:#ffffff;
+	font-size:0.875em;
+	padding:3px 7px 3px 7px;
+	text-decoration:none;
+	margin-right:8px;
+}
+
+p.organisateur{
+	padding:5px 0px 2px 0px;
+	border-top:1px solid #cccccc;
+	border-bottom:1px solid #cccccc;
+	margin-left:10px;
+	width:220px;
+	margin-bottom:5px;
+	font-size:0.6875em;
+	min-height:17px;
+}
+
+p.organisateur img, p.session_lien img, p.type_inscription img, p.batiment img{
+	float:left;
+	margin-right:5px;
+	margin-top:-3px;
+}
+
+#master-event p{
+	font-size:0.75em;
+	margin-left:10px;
+	width:480px;
+}
+
+#master-event p.date{
+	font-size:1.125em;
+	font-weight:bold;
+	margin-top:10px;
+	margin-bottom:10px;
+	border-bottom:none; 
+	float:left;
+}
+
+#master-event p.infos{
+	padding:5px 0px 3px 0px;
+	border-bottom:1px solid #cccccc;
+	float:left;
+}
+
+#master-event p.batiment, #master-event p.organisateur, #master-event p.type_inscription, #master-event p.session_lien{
+	font-size:0.6875em;
+}
+
+#master-event p.type_inscription a{
+	font-weight:bold;
+	text-decoration:none;
+}
+
+#master-event p.organisateur{
+	margin-bottom:0px;
+	border-top:none;
+}
+
+#master-event p.session_lien{
+	margin-bottom:10px;
+}
+
+#master-event p.session_lien a{
+	text-decoration:none;
+	font-weight:bold;
+	color:#000000;
+}
+
+#master-event .texte a.sinscrire{
+	float:right;
+	color:#ffffff;
+	font-size:1em;
+	padding:5px 10px 3px 10px;
+	text-decoration:none;
+	margin-right:0px;
+	margin-top:10px;
+}
+
+#master-event .texte a.reseaux{
+	margin-top:9px;
+}
+
+#master-event .texte .lien_fermeture{
+	color: #FFFFFF;
+	float: right;
+	margin-top: 5px;
+	padding: 5px 10px 3px 10px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.maxDivImg a{
+	display:block;
+}
+
+span.complet{
+	float:left;
+	background:#888888;
+	color:#ffffff;
+	padding:3px 10px 2px 10px;
+	margin-right:6px;
+}
+
+#master-event span.complet{
+	padding:5px 10px 4px 10px;
+	font-size:1em;
+	margin-top:4px;
+}
+
+#master-event .texte a{
+	color:#CB021A;
+} 
+
+#master-event .texte a.image{    
+	display:inline-block;
+}
+
+#autres_liens{
+	padding-left:10px;
+	float:left;
+	margin-top:20px;
+} 
+
+#autres_liens h5{
+	text-transform:uppercase; 
+	margin-bottom:10px;
+}
+
+#autres_liens li{
+	list-style-type:square;  
+	list-style-position:inside;
+}
+
+#autres_liens a{
+	color:#000000;
+	font-weight:bold;
+	font-size:0.875em;
+}  
+
+.banniere_events{
+	float: left;
+	margin-bottom: 20px;
+} 
+
+.banniere_events p{
+	color: #000000;
+	font-size: 0.875em;
+	font-weight: bold; 
+	margin-bottom:5px;
+	padding-left:10px;
+}
+
+.banniere_events p a{
+	color: #000000;
+	font-weight: bold;
+}
+
+
+ul.autres_events{
+	margin-bottom:20px;
+} 
+
+.box.first_child{
+	margin-left:0px;
+}
